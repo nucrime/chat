@@ -21,7 +21,7 @@ import lombok.Setter;
 
 import java.util.Objects;
 
-@Route("/")
+@Route("chat")
 @Push
 public class MainView extends VerticalLayout {
   public static final String CHAT_MESSAGE_TEMPLATE = "**%s**: %s";
