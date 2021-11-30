@@ -21,23 +21,22 @@ import lombok.Setter;
 
 import java.util.Objects;
 
-@Route("/")
+@Route("chat")
 @Push
-public class MainView extends VerticalLayout {
+public class ChatView extends VerticalLayout {
   public static final String CHAT_MESSAGE_TEMPLATE = "**%s**: %s";
   private final Grid<ChatMessage> grid;
   private final Storage storage;
   private Registration registration;
   private VerticalLayout chat;
   private VerticalLayout login;
-  @Getter
-  @Setter
-  private String user;
+  private final UserDetails user;
 
-  public MainView(Storage storage) {
+  public ChatView(Storage storage, UserDetails user) {
     this.storage = storage;
+    this.user = user;
 
-    buildLogin();
+//    buildLogin();
     grid = buildChatGrid(storage);
   }
 
@@ -50,7 +49,7 @@ public class MainView extends VerticalLayout {
       {
         addClickListener(click -> {
           var user = username.getValue();
-          setUser(user);
+//          setUser(user);
           login.setVisible(false);
           chat.setVisible(true);
           storage.addMessageUserJoined(String.format("**%s** joined", user));
@@ -84,7 +83,7 @@ public class MainView extends VerticalLayout {
               {
                 addClickListener(
                   click -> {
-                    storage.addMessage(user, textField.getValue());
+                    storage.addMessage(user.getUsername(), textField.getValue());
                     textField.clear();
                   });
                 addClickShortcut(Key.ENTER);
