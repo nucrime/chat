@@ -9,10 +9,11 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
-@Route("/login")
+@Route(LoginView.PATH)
 @PageTitle("Login")
 public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
+  public static final String PATH = "/login";
   private LoginForm login = new LoginForm();
 
   public LoginView() {

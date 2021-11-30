@@ -19,10 +19,11 @@ import com.vaadin.flow.shared.Registration;
 
 import java.util.Objects;
 
-@Route("/")
+@Route(ChatView.PATH)
 @Push
 public class ChatView extends VerticalLayout {
   public static final String CHAT_MESSAGE_TEMPLATE = "**%s**: %s";
+  public static final String PATH = "/";
   private final Grid<ChatMessage> grid;
   private final Storage storage;
   private Registration registration;

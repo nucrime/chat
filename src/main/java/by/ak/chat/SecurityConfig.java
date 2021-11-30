@@ -18,12 +18,7 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-  private static final String LOGIN_PROCESSING_URL = "/login";
-  private static final String LOGIN_FAILURE_URL = "/login?error";
-  private static final String LOGIN_URL = "/login";
-  private static final String LOGOUT_SUCCESS_URL = "/login";
-  private static final String REGISTER_PAGE = "/register";
-  private static final String ROOT = "/";
+  private static final String LOGIN_FAILURE_URL = LoginView.PATH + "?error";
 
   /**
    * Require login to access internal pages and configure login form.
@@ -38,24 +33,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
       // Restrict access to our application.
       .and().authorizeRequests()
-
+      .antMatchers(RegistrationView.PATH).permitAll()
 
       // Allow all Vaadin internal requests.
       .requestMatchers(SecurityUtils::isFrameworkInternalRequest).permitAll()
-      .antMatchers(REGISTER_PAGE).permitAll()
 
       // Allow all requests by logged-in users.
       .anyRequest().authenticated()
 
       // Configure the login page.
       .and().formLogin()
-      .loginPage(LOGIN_URL).permitAll()
-      .loginProcessingUrl(LOGIN_PROCESSING_URL)
-      .successForwardUrl(ROOT)
+      .loginPage(LoginView.PATH).permitAll()
+      .loginProcessingUrl(LoginView.PATH)
+      .successForwardUrl(ChatView.PATH)
       .failureUrl(LOGIN_FAILURE_URL)
 
       // Configure logout
-      .and().logout().logoutSuccessUrl(LOGOUT_SUCCESS_URL);
+      .and().logout().logoutSuccessUrl(LoginView.PATH);
   }
 
   @Profile("dev")
