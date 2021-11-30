@@ -2,6 +2,7 @@ package by.ak.chat;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -9,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 
@@ -20,6 +22,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   private static final String LOGIN_FAILURE_URL = "/login?error";
   private static final String LOGIN_URL = "/login";
   private static final String LOGOUT_SUCCESS_URL = "/login";
+  private static final String REGISTER_PAGE = "/register";
+  private static final String ROOT = "/";
 
   /**
    * Require login to access internal pages and configure login form.
@@ -35,8 +39,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       // Restrict access to our application.
       .and().authorizeRequests()
 
+
       // Allow all Vaadin internal requests.
       .requestMatchers(SecurityUtils::isFrameworkInternalRequest).permitAll()
+      .antMatchers(REGISTER_PAGE).permitAll()
 
       // Allow all requests by logged-in users.
       .anyRequest().authenticated()
@@ -45,17 +51,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       .and().formLogin()
       .loginPage(LOGIN_URL).permitAll()
       .loginProcessingUrl(LOGIN_PROCESSING_URL)
+      .successForwardUrl(ROOT)
       .failureUrl(LOGIN_FAILURE_URL)
 
       // Configure logout
       .and().logout().logoutSuccessUrl(LOGOUT_SUCCESS_URL);
   }
 
+  @Profile("dev")
+  @SuppressWarnings("deprecation")
+  @Bean
+  public static NoOpPasswordEncoder passwordEncoder() {
+    return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
+  }
+
   @Bean
   @Override
   public UserDetailsService userDetailsService() {
     UserDetails user = User.withUsername("user")
-      .password("{noop}userpass")
+      .password("123")
       .roles("USER")
       .build();
 
@@ -88,6 +102,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       "/styles/**",
 
       // (development mode) H2 debugging console
-      "/h2-console/**");
+      "/h2-console/**",
+
+      // register page
+      "/register");
   }
 }

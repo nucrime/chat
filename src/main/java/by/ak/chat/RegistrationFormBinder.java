@@ -9,6 +9,7 @@ import com.vaadin.flow.data.binder.ValueContext;
 
 public class RegistrationFormBinder {
 
+  public static final String ROOT = "/";
   private RegistrationForm registrationForm;
 
   /**
@@ -25,7 +26,7 @@ public class RegistrationFormBinder {
    * to the registration form
    */
   public void addBindingAndValidation() {
-    BeanValidationBinder<UserDetails> binder = new BeanValidationBinder<>(UserDetails.class);
+    BeanValidationBinder<User> binder = new BeanValidationBinder<>(User.class);
     binder.bindInstanceFields(registrationForm);
 
     // A custom validator for password fields
@@ -50,7 +51,7 @@ public class RegistrationFormBinder {
     registrationForm.getSubmitButton().addClickListener(event -> {
       try {
         // Create empty bean to store the details into
-        UserDetails userBean = new UserDetails();
+        User userBean = new User();
 
         // Run validators and write the values to the bean
         binder.writeBean(userBean);
@@ -102,11 +103,11 @@ public class RegistrationFormBinder {
   /**
    * We call this method when form submission has succeeded
    */
-  private void showSuccess(UserDetails userBean) {
+  private void showSuccess(User userBean) {
     Notification notification =
       Notification.show("Data saved, welcome " + userBean.getFirstName());
     notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
 
-    // Here you'd typically redirect the user to another view
+    registrationForm.getUI().ifPresent(ui -> ui.navigate(ROOT));
   }
 }

@@ -7,7 +7,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Data
-public class UserDetails {
+public class User {
     @NotBlank
     @Size(min = 3, max = 30)
     private String username;

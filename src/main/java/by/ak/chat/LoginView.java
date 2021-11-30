@@ -9,7 +9,7 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
-@Route("/")
+@Route("/login")
 @PageTitle("Login")
 public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
@@ -22,7 +22,7 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
     setJustifyContentMode(JustifyContentMode.CENTER);
     setAlignItems(Alignment.CENTER);
 
-    login.setAction("chat");
+    login.setAction("login");
     add(new H1("Chat"), login);
     add(new Button("Register", e -> getUI().ifPresent(ui -> ui.navigate("register"))));
   }

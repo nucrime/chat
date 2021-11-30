@@ -16,12 +16,10 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.Objects;
 
-@Route("chat")
+@Route("/")
 @Push
 public class ChatView extends VerticalLayout {
   public static final String CHAT_MESSAGE_TEMPLATE = "**%s**: %s";
@@ -30,11 +28,11 @@ public class ChatView extends VerticalLayout {
   private Registration registration;
   private VerticalLayout chat;
   private VerticalLayout login;
-  private final UserDetails user;
+  private final SecurityService securityService;
 
-  public ChatView(Storage storage, UserDetails user) {
+  public ChatView(Storage storage, SecurityService securityService) {
     this.storage = storage;
-    this.user = user;
+    this.securityService = securityService;
 
 //    buildLogin();
     grid = buildChatGrid(storage);
@@ -63,7 +61,7 @@ public class ChatView extends VerticalLayout {
 
   private Grid<ChatMessage> buildChatGrid(Storage storage) {
     chat = new VerticalLayout();
-    chat.setVisible(false);
+    chat.setVisible(true);
     add(chat);
     final Grid<ChatMessage> grid;
     grid = new Grid<>();
@@ -72,7 +70,9 @@ public class ChatView extends VerticalLayout {
       .setAutoWidth(true);
     var textField = new TextField();
     textField.setAutofocus(true);
+    Button logout = new Button("Log out", e -> securityService.logout());
     chat.add(
+      logout,
       new H3("Chat"),
       grid,
       new HorizontalLayout() {
@@ -83,7 +83,7 @@ public class ChatView extends VerticalLayout {
               {
                 addClickListener(
                   click -> {
-                    storage.addMessage(user.getUsername(), textField.getValue());
+                    storage.addMessage(securityService.getAuthenticatedUser().getUsername(), textField.getValue());
                     textField.clear();
                   });
                 addClickShortcut(Key.ENTER);
