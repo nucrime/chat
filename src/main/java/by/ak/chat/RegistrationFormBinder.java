@@ -105,7 +105,7 @@ public class RegistrationFormBinder {
    */
   private void showSuccess(User userBean) {
     Notification notification =
-      Notification.show("Data saved, welcome " + userBean.getFirstName());
+      Notification.show("Registration successful, welcome " + userBean.getFirstName() + " \nPlease use your credentials to log in");
     notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
 
     registrationForm.getUI().ifPresent(ui -> ui.navigate(ROOT));
