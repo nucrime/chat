@@ -17,9 +17,9 @@ public class UserService {
     repository.save(user);
   }
 
-  public User find(String email) {
-    log.info("[{}] Searching user by email: {}", log.getName(), email);
-    return repository.findByEmail(email).block();
+  public User find(String username) {
+    log.info("[{}] Searching user by username: {}", log.getName(), username);
+    return repository.findByUsername(username).block();
   }
 
   public void delete(User user) {

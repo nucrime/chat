@@ -1,6 +1,8 @@
 package by.ak.chat.security;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import by.ak.chat.model.User;
 import lombok.AllArgsConstructor;

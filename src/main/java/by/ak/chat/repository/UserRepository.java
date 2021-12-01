@@ -5,5 +5,5 @@ import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import reactor.core.publisher.Mono;
 
 public interface UserRepository extends ReactiveMongoRepository<User, Long> {
-  Mono<User> findByEmail(String email);
+  Mono<User> findByUsername(String email);
 }
