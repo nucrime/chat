@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -14,12 +16,12 @@ public class UserService {
 
   public void save(User user) {
     log.info("[{}] Saving user: {}", log.getName(), user);
-    repository.save(user);
+    repository.save(user).block();
   }
 
-  public User find(String username) {
+  public Optional<User> find(String username) {
     log.info("[{}] Searching user by username: {}", log.getName(), username);
-    return repository.findByUsername(username).block();
+    return repository.findByUsername(username).blockOptional();
   }
 
   public void delete(User user) {
