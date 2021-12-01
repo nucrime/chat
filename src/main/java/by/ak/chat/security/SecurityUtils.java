@@ -1,4 +1,4 @@
-package by.ak.chat;
+package by.ak.chat.security;
 
 import com.vaadin.flow.server.HandlerHelper.RequestType;
 import com.vaadin.flow.shared.ApplicationConstants;

@@ -1,5 +1,8 @@
-package by.ak.chat;
+package by.ak.chat.view;
 
+import by.ak.chat.model.ChatMessage;
+import by.ak.chat.security.SecurityService;
+import by.ak.chat.model.Storage;
 import com.github.rjeschke.txtmark.Processor;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.DetachEvent;
@@ -27,37 +30,15 @@ public class ChatView extends VerticalLayout {
   private final Grid<ChatMessage> grid;
   private final Storage storage;
   private Registration registration;
+  //todo show only last 200 messages
   private VerticalLayout chat;
-  private VerticalLayout login;
   private final SecurityService securityService;
 
   public ChatView(Storage storage, SecurityService securityService) {
     this.storage = storage;
     this.securityService = securityService;
 
-//    buildLogin();
     grid = buildChatGrid(storage);
-  }
-
-  private void buildLogin() {
-    login = new VerticalLayout();
-    login.setVisible(true);
-    var username = new TextField("Username");
-    username.setAutofocus(true);
-    login.add(username, new Button("Login") {
-      {
-        addClickListener(click -> {
-          var user = username.getValue();
-//          setUser(user);
-          login.setVisible(false);
-          chat.setVisible(true);
-          storage.addMessageUserJoined(String.format("**%s** joined", user));
-        });
-        addClickShortcut(Key.ENTER);
-      }
-    });
-
-    add(login);
   }
 
   private Grid<ChatMessage> buildChatGrid(Storage storage) {

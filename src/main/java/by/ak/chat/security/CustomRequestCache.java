@@ -1,4 +1,4 @@
-package by.ak.chat;
+package by.ak.chat.security;
 
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 

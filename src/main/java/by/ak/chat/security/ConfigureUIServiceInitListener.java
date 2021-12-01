@@ -1,5 +1,7 @@
-package by.ak.chat;
+package by.ak.chat.security;
 
+import by.ak.chat.view.LoginView;
+import by.ak.chat.view.RegistrationView;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.server.ServiceInitEvent;
@@ -17,6 +19,9 @@ public class ConfigureUIServiceInitListener implements VaadinServiceInitListener
     });
   }
 
+  /*
+  Adds redirect to login in case if user is not authenticated
+  * */
   private void authenticateNavigation(BeforeEnterEvent event) {
     // Enable login view for anonymous users
     if (!(LoginView.class.equals(event.getNavigationTarget())

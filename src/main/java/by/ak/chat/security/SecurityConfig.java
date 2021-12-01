@@ -1,8 +1,15 @@
-package by.ak.chat;
+package by.ak.chat.security;
 
+import by.ak.chat.view.LoginView;
+import by.ak.chat.view.RegistrationView;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -10,13 +17,20 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 
 @EnableWebSecurity
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+  private final ChatRedirectingAuthenticationSuccessHandler authorisedHandler;
+  private final UserDetailsService userDetailsService;
+  private final AuthenticationProvider provider;
+  private final PasswordEncoder passwordEncoder;
 
   private static final String LOGIN_FAILURE_URL = LoginView.PATH + "?error";
 
@@ -45,7 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       .and().formLogin()
       .loginPage(LoginView.PATH).permitAll()
       .loginProcessingUrl(LoginView.PATH)
-      .successForwardUrl(ChatView.PATH)
+      .successHandler(authorisedHandler)
       .failureUrl(LOGIN_FAILURE_URL)
 
       // Configure logout
@@ -54,21 +68,36 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Profile("dev")
   @SuppressWarnings("deprecation")
+  @Order(1)
   @Bean
   public static NoOpPasswordEncoder passwordEncoder() {
     return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
   }
 
-  @Bean
   @Override
-  public UserDetailsService userDetailsService() {
-    UserDetails user = User.withUsername("user")
-      .password("123")
-      .roles("USER")
-      .build();
-
-    return new InMemoryUserDetailsManager(user);
+  protected void configure(AuthenticationManagerBuilder authenticationManagerBuilder)
+    throws Exception {
+    authenticationManagerBuilder
+      .authenticationProvider(provider)
+      .userDetailsService(userDetailsService)
+      .passwordEncoder(passwordEncoder);
   }
+
+  @Bean
+  public AuthenticationManager authenticationManagerBean() throws Exception {
+    return super.authenticationManagerBean();
+  }
+//  @Bean
+//  @Override
+//  public UserDetailsService userDetailsService() {
+//    // todo change to UserService call when mongo is here
+//    UserDetails user = User.withUsername("user")
+//      .password("123")
+//      .roles("USER")
+//      .build();
+//
+//    return new InMemoryUserDetailsManager(user);
+//  }
 
   /**
    * Allows access to static resources, bypassing Spring Security.

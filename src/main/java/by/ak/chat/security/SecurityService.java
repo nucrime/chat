@@ -1,4 +1,4 @@
-package by.ak.chat;
+package by.ak.chat.security;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.server.VaadinServletRequest;

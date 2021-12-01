@@ -1,4 +1,4 @@
-package by.ak.chat;
+package by.ak.chat.form;
 
 import com.vaadin.flow.component.HasValueAndElement;
 import com.vaadin.flow.component.button.Button;
@@ -20,6 +20,7 @@ public class RegistrationForm extends FormLayout {
   private TextField lastName;
 
   private EmailField email;
+  private TextField userName;
 
   private PasswordField password;
   private PasswordField passwordConfirm;
@@ -34,11 +35,12 @@ public class RegistrationForm extends FormLayout {
     firstName = new TextField("First name");
     lastName = new TextField("Last name");
     email = new EmailField("Email");
+    userName = new TextField("User name");
 
     password = new PasswordField("Password");
     passwordConfirm = new PasswordField("Confirm password");
 
-    setRequiredIndicatorVisible(firstName, lastName, email, password,
+    setRequiredIndicatorVisible(firstName, lastName, email, userName, password,
       passwordConfirm);
 
     errorMessageField = new Span();
@@ -46,23 +48,30 @@ public class RegistrationForm extends FormLayout {
     submitButton = new Button("Register");
     submitButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
-    add(title, firstName, lastName, email, password,
+    add(title, firstName, lastName, email, userName, password,
       passwordConfirm, errorMessageField,
       submitButton);
 
-    // Max width of the Form
+    /*
+    * Max width of the Form
+    */
     setMaxWidth("500px");
 
-    // Allow the form layout to be responsive.
-    // On device widths 0-490px we have one column.
-    // Otherwise, we have two columns.
+    /*
+    * Allow the form layout to be responsive.
+    * On device widths 0-490px we have one column.
+    * Otherwise, we have two columns.
+    */
     setResponsiveSteps(
       new ResponsiveStep("0", 1, ResponsiveStep.LabelsPosition.TOP),
       new ResponsiveStep("490px", 2, ResponsiveStep.LabelsPosition.TOP));
 
-    // These components always take full width
+    /*
+    * These components always take full width
+    */
     setColspan(title, 2);
     setColspan(email, 2);
+    setColspan(userName, 2);
     setColspan(errorMessageField, 2);
     setColspan(submitButton, 2);
   }

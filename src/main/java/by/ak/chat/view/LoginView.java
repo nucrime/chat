@@ -1,4 +1,4 @@
-package by.ak.chat;
+package by.ak.chat.view;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
@@ -25,7 +25,7 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
     login.setAction("login");
     add(new H1("Chat"), login);
-    add(new Button("Register", e -> getUI().ifPresent(ui -> ui.navigate("register"))));
+    add(new Button("Register", e -> getUI().ifPresent(ui -> ui.navigate(RegistrationView.PATH))));
   }
 
   @Override
