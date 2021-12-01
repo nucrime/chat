@@ -1,13 +1,18 @@
-package by.ak.chat;
+package by.ak.chat.model;
 
 import lombok.Data;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Data
+@Document
 public class User {
+    @MongoId
+    private String id;
     @NotBlank
     @Size(min = 3, max = 30)
     private String username;
@@ -27,4 +32,6 @@ public class User {
     @NotBlank
     @Email
     private String email;
+
+    private Role role = Role.USER;
 }
