@@ -1,0 +1,8 @@
+spring:
+  data:
+    mongodb:
+#      host: localhost || default
+#      port: 27017 || default
+      uuid-representation: standard
+  activemq:
+    in-memory: on
