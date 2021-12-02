@@ -25,7 +25,7 @@ import java.util.Objects;
 @Route(ChatView.PATH)
 @Push
 public class ChatView extends VerticalLayout {
-  public static final String CHAT_MESSAGE_TEMPLATE = "**%s**: %s";
+  public static final String CHAT_MESSAGE_TEMPLATE = "%s   **%s**: %s";
   public static final String PATH = "/";
   public static final String TITLE = "FUAGRA";
   private final Grid<ChatMessage> grid;
@@ -66,6 +66,8 @@ public class ChatView extends VerticalLayout {
               {
                 addClickListener(
                   click -> {
+                    //todo investigate why always looking up to db for user
+                    // [FUAGRA] Searching user by username
                     storage.addMessage(securityService.getAuthenticatedUser().getUsername(), textField.getValue());
                     textField.clear();
                   });
@@ -102,6 +104,6 @@ public class ChatView extends VerticalLayout {
   private String renderRow(ChatMessage message) {
     if (Objects.isNull(message.getUser())) {
       return Processor.process(message.getText());
-    } else return Processor.process(String.format(CHAT_MESSAGE_TEMPLATE, message.getUser(), message.getText()));
+    } else return Processor.process(String.format(CHAT_MESSAGE_TEMPLATE, message.created(), message.getUser(), message.getText()));
   }
 }
