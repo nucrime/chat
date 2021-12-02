@@ -5,7 +5,7 @@ server:
     min-response-size: 1024
   http2:
     enabled: true
-  port: 5000
+  port: 8080
 spring:
   profiles:
     active: production
