@@ -5,6 +5,7 @@ import by.ak.chat.repository.ChatRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Slf4j
@@ -14,13 +15,18 @@ public class ChatService {
   private final ChatRepository repository;
 
   public Mono<ChatMessage> save(ChatMessage chatMessage) {
-    log.info("[{}] Saving chat message: {}", log.getName(), chatMessage);
+    log.info("[FUAGRA] Saving chat message: {}", chatMessage);
     return repository.save(chatMessage);
   }
 
   public ChatMessage find(String user) {
-    log.info("[{}] Searching chat message by email: {}", log.getName(), user);
+    log.info("[FUAGRA] Searching chat message by email: {}", user);
     return repository.findByUser(user);
+  }
+
+  public Flux<ChatMessage> findAll() {
+    log.info("[FUAGRA] Searching all chat messages");
+    return repository.findAll();
   }
 
   /*  todo decide if it is needed at all.

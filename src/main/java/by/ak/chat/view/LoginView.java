@@ -9,6 +9,8 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
+import static by.ak.chat.view.ChatView.TITLE;
+
 @Route(LoginView.PATH)
 @PageTitle("Login")
 public class LoginView extends VerticalLayout implements BeforeEnterObserver {
@@ -24,7 +26,7 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
     setAlignItems(Alignment.CENTER);
 
     login.setAction("login");
-    add(new H1("Chat"), login);
+    add(new H1(TITLE), login);
     add(new Button("Register", e -> getUI().ifPresent(ui -> ui.navigate(RegistrationView.PATH))));
   }
 

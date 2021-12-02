@@ -10,6 +10,7 @@ import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -30,8 +31,7 @@ public class Storage {
     ChatMessage newMessage = new ChatMessage(user, message);
     messages.add(newMessage);
     eventBus.fireEvent(new ChatEvent());
-    // todo do it reactively
-    chatService.save(newMessage);
+    chatService.save(newMessage).subscribe();
   }
 
   public void addMessageUserJoined(String message) {
@@ -39,6 +39,7 @@ public class Storage {
     userJoined.setText(message);
     messages.add(userJoined);
     eventBus.fireEvent(new ChatEvent());
+    chatService.save(userJoined).subscribe();
   }
 
   //todo google: vaadin events, component events
@@ -52,5 +53,14 @@ public class Storage {
   //  On new message asynchronously saves to mongo
   public Registration attachListener(ComponentEventListener<ChatEvent> listener) {
     return eventBus.addListener(ChatEvent.class, listener);
+  }
+
+
+  /*
+  * Fetch messages from DB before app is started to show to user previous messages
+  * */
+  @PostConstruct
+  public void init() {
+    chatService.findAll().subscribe(messages::add);
   }
 }

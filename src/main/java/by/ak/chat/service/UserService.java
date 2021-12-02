@@ -17,18 +17,18 @@ public class UserService {
   private final UserRepository repository;
 
   public void save(User user) {
-    log.info("[{}] Saving user: {}", log.getName(), user);
+    log.info("[FUAGRA] Saving user: {}", user);
     user.setPassword(passwordEncoder.encode(user.getPassword()));
     repository.save(user).block();
   }
 
   public Optional<User> find(String username) {
-    log.info("[{}] Searching user by username: {}", log.getName(), username);
+    log.info("[FUAGRA] Searching user by username: {}", username);
     return repository.findByUsername(username).blockOptional();
   }
 
   public void delete(User user) {
-    log.info("[{}] Deleting user {}", log.getName(), user);
+    log.info("[FUAGRA] Deleting user {}", user);
     repository.delete(user);
   }
 }
