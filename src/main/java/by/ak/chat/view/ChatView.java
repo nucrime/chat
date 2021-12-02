@@ -27,6 +27,7 @@ import java.util.Objects;
 public class ChatView extends VerticalLayout {
   public static final String CHAT_MESSAGE_TEMPLATE = "**%s**: %s";
   public static final String PATH = "/";
+  public static final String TITLE = "FUAGRA";
   private final Grid<ChatMessage> grid;
   private final Storage storage;
   private Registration registration;
@@ -55,7 +56,7 @@ public class ChatView extends VerticalLayout {
     Button logout = new Button("Log out", e -> securityService.logout());
     chat.add(
       logout,
-      new H3("Chat"),
+      new H3(TITLE),
       grid,
       new HorizontalLayout() {
         {
