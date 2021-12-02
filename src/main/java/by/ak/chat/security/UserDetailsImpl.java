@@ -15,13 +15,13 @@ import java.util.List;
 @AllArgsConstructor
 public class UserDetailsImpl implements UserDetails {
   private String id;
-  private String email;
+  private String username;
   private String password;
   private Collection<GrantedAuthority> authorities;
 
   public static UserDetailsImpl build(User user) {
     List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(user.getRole().name()));
-    return new UserDetailsImpl(user.getId(), user.getEmail(), user.getPassword(), authorities);
+    return new UserDetailsImpl(user.getId(), user.getUsername(), user.getPassword(), authorities);
   }
 
   @Override
@@ -36,7 +36,7 @@ public class UserDetailsImpl implements UserDetails {
 
   @Override
   public String getUsername() {
-    return email;
+    return username;
   }
 
   @Override
