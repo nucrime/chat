@@ -16,5 +16,5 @@ spring:
       max-request-size: 7MB
   data:
     mongodb:
-      # %40 in the url stays for @
-      uri: mongodb+srv://user:Val!dP%40ssw0rd@cluster0.0gupx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
+      # if explicit url is needed than it should be noted that %40 in the url stays for @
+      uri: ${MONGODB_URL}
