@@ -11,3 +11,6 @@ spring:
       file-size-threshold: 2KB
       max-file-size: 5MB
       max-request-size: 7MB
+  data:
+    mongodb:
+      uri: mongodb+srv://user:Val!dP@ssw0rd@cluster0.0gupx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority

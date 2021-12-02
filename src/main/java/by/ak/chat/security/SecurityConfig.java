@@ -87,17 +87,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   public AuthenticationManager authenticationManagerBean() throws Exception {
     return super.authenticationManagerBean();
   }
-//  @Bean
-//  @Override
-//  public UserDetailsService userDetailsService() {
-//    // todo change to UserService call when mongo is here
-//    UserDetails user = User.withUsername("user")
-//      .password("123")
-//      .roles("USER")
-//      .build();
-//
-//    return new InMemoryUserDetailsManager(user);
-//  }
 
   /**
    * Allows access to static resources, bypassing Spring Security.
