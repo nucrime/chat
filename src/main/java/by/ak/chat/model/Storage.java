@@ -1,6 +1,5 @@
 package by.ak.chat.model;
 
-import by.ak.chat.repository.ChatRepository;
 import by.ak.chat.service.ChatService;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventBus;

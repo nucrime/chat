@@ -1,8 +1,8 @@
 package by.ak.chat.view;
 
 import by.ak.chat.model.ChatMessage;
-import by.ak.chat.security.SecurityService;
 import by.ak.chat.model.Storage;
+import by.ak.chat.security.SecurityService;
 import com.github.rjeschke.txtmark.Processor;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.DetachEvent;
