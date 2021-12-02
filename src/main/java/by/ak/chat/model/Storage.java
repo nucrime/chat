@@ -28,7 +28,7 @@ public class Storage {
   private ChatService chatService;
 
   public void addMessage(String user, String message) {
-    var newMessage = new ChatMessage(user, message);
+    ChatMessage newMessage = new ChatMessage(user, message);
     messages.add(newMessage);
     eventBus.fireEvent(new ChatEvent());
     // todo do it reactively
@@ -36,7 +36,7 @@ public class Storage {
   }
 
   public void addMessageUserJoined(String message) {
-    var userJoined = new ChatMessage();
+    ChatMessage userJoined = new ChatMessage();
     userJoined.setText(message);
     messages.add(userJoined);
     eventBus.fireEvent(new ChatEvent());

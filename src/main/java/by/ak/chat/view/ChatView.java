@@ -50,7 +50,7 @@ public class ChatView extends VerticalLayout {
     grid.setItems(storage.getMessages());
     grid.addColumn(new ComponentRenderer<>(message -> new Html(renderRow(message))))
       .setAutoWidth(true);
-    var textField = new TextField();
+    TextField textField = new TextField();
     textField.setAutofocus(true);
     Button logout = new Button("Log out", e -> securityService.logout());
     chat.add(

@@ -27,7 +27,7 @@ public class ChatRedirectingAuthenticationSuccessHandler implements Authenticati
 
   @Override
   public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
-    var user = securityService.getAuthenticatedUser().getUsername();
+    String user = securityService.getAuthenticatedUser().getUsername();
     storage.addMessageUserJoined(String.format(USER_JOINED_MSG, user));
     httpServletResponse.sendRedirect(ChatView.PATH);
   }
