@@ -16,7 +16,7 @@ import static by.ak.chat.view.ChatView.TITLE;
 public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
   public static final String PATH = "/login";
-  private LoginForm login = new LoginForm();
+  protected LoginForm login = new LoginForm();
 
   public LoginView() {
     addClassName("login-view");
@@ -26,6 +26,9 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
     setAlignItems(Alignment.CENTER);
 
     login.setAction("login");
+    login.addForgotPasswordListener(event -> {
+      getUI().ifPresent(ui -> ui.navigate(ForgotPasswordView.PATH));
+      });
     add(new H1(TITLE), login);
     add(new Button("Register", e -> getUI().ifPresent(ui -> ui.navigate(RegistrationView.PATH))));
   }
