@@ -1,5 +1,6 @@
 package by.ak.chat.security;
 
+import by.ak.chat.view.ForgotPasswordView;
 import by.ak.chat.view.LoginView;
 import by.ak.chat.view.RegistrationView;
 import lombok.RequiredArgsConstructor;
@@ -44,6 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       // Restrict access to our application.
       .and().authorizeRequests()
       .antMatchers(RegistrationView.PATH).permitAll()
+      .antMatchers(ForgotPasswordView.PATH).permitAll()
 
       // Allow all Vaadin internal requests.
       .requestMatchers(SecurityUtils::isFrameworkInternalRequest).permitAll()
@@ -113,6 +115,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       "/h2-console/**",
 
       // register page
-      "/register");
+      "/register",
+      "/forgotPassword");
   }
 }
