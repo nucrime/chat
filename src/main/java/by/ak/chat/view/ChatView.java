@@ -66,9 +66,7 @@ public class ChatView extends VerticalLayout {
               {
                 addClickListener(
                   click -> {
-                    //todo investigate why always looking up to db for user
-                    // [FUAGRA] Searching user by username
-                    storage.addMessage(securityService.getAuthenticatedUser().getUsername(), textField.getValue());
+                    storage.addMessage(securityService.getLoggedInUserName(), textField.getValue());
                     textField.clear();
                   });
                 addClickShortcut(Key.ENTER);
@@ -76,6 +74,7 @@ public class ChatView extends VerticalLayout {
             });
         }
       });
+    grid.scrollToEnd(); //todo scroll to last message. does not work yet
     return grid;
   }
 

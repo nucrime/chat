@@ -13,10 +13,9 @@ import static by.ak.chat.view.ChatView.TITLE;
 //        to reset password to user if email was found in a database
 @Route(ForgotPasswordView.PATH)
 @PageTitle("Forgot Password")
-public class ForgotPasswordView extends LoginView { // do we need it?
+public class ForgotPasswordView extends LoginView { // do we need it? extend from Login view
   public static final String PATH = "/forgotPassword";
     public ForgotPasswordView() {
-        super();
       addClassName("forgot-password-view");
       setSizeFull();
 

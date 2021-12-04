@@ -42,6 +42,14 @@ public class Storage {
     chatService.save(userJoined).subscribe();
   }
 
+  public void addMessageUserLeft(String message) {
+    ChatMessage userLeft = new ChatMessage();
+    userLeft.setText(message);
+    messages.add(userLeft);
+    eventBus.fireEvent(new ChatEvent());
+    chatService.save(userLeft).subscribe();
+  }
+
   //todo google: vaadin events, component events
   public static class ChatEvent extends ComponentEvent<Div> {
     public ChatEvent() {
