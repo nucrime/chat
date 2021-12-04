@@ -29,6 +29,8 @@ public class ChatService {
     return repository.findAll();
   }
 
+  // todo add update message
+
   /*  todo decide if it is needed at all.
   public void delete(ChatMessage chatMessage) {
     repository.delete(chatMessage);

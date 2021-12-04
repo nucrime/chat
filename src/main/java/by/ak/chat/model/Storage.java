@@ -16,13 +16,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 @Component
 public class Storage {
-  // todo google: amqp spring boot / or any in-memory concurrency stable messaging.
-  //  have a look to activeMQ (see application-dev.yaml)
-  //  !limit max size 200 messages with ability to remove older than 200.
-  //  ability to set max size of 200 messages > should be deleted to keep Messaging platform clean
-  //  instead of app storage ConcurrentLinkedQueue
   @Getter
   private final Queue<ChatMessage> messages = new ConcurrentLinkedQueue<>();
+  // todo change to private final ConcurrentLinkedDeque<ChatMessage> messages = new ConcurrentLinkedDeque<>();
+  //   use     messages.pollLast(); if messages.size() > 200
   private final ComponentEventBus eventBus = new ComponentEventBus(new Div());
   @Autowired
   private ChatService chatService;

@@ -22,6 +22,8 @@ import com.vaadin.flow.shared.Registration;
 
 import java.util.Objects;
 
+import static org.springframework.util.StringUtils.hasText;
+
 @Route(ChatView.PATH)
 @Push
 public class ChatView extends VerticalLayout {
@@ -42,6 +44,7 @@ public class ChatView extends VerticalLayout {
     grid = buildChatGrid(storage);
   }
 
+  // rework using https://vaadin.com/docs/v14/ce/components/collaboration-message-list
   private Grid<ChatMessage> buildChatGrid(Storage storage) {
     chat = new VerticalLayout();
     chat.setVisible(true);
@@ -66,12 +69,14 @@ public class ChatView extends VerticalLayout {
               {
                 addClickListener(
                   click -> {
-                    storage.addMessage(securityService.getLoggedInUserName(), textField.getValue());
-                    textField.clear();
+                    if (hasText(textField.getValue())) {
+                      storage.addMessage(securityService.getLoggedInUserName(), textField.getValue());
+                      textField.clear();
+                    }
                   });
                 addClickShortcut(Key.ENTER);
               }
-            });
+            }); // todo add edit messages??
         }
       });
     grid.scrollToEnd(); //todo scroll to last message. does not work yet

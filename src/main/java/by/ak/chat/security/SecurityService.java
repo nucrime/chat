@@ -17,7 +17,7 @@ public class SecurityService {
 
   private static final String LOGOUT_SUCCESS_URL = "/";
   private SecurityContext context = SecurityContextHolder.getContext();
-  private final CustomLogoutHandler logoutHandler;
+  private final ChatLogoutHandler logoutHandler;
   private String username;
 
   public boolean isUserLoggedIn() {

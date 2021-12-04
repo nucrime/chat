@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class CustomLogoutHandler extends SecurityContextLogoutHandler {
+public class ChatLogoutHandler extends SecurityContextLogoutHandler {
   private static final String USER_LEFT_MSG = "**%s** left";
   private final Storage storage;
 
