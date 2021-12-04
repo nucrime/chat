@@ -1,11 +1,8 @@
 package by.ak.chat.view;
 
-import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-
-import static by.ak.chat.view.ChatView.TITLE;
 
 // todo similar to login view, but of course without login and forgot password buttons
 //  instead, send password reset email ->

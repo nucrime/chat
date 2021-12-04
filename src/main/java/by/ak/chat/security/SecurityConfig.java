@@ -61,7 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       .failureUrl(LOGIN_FAILURE_URL)
 
       // Configure logout
-      .and().logout().logoutSuccessUrl(LoginView.PATH);
+      .and().logout();
   }
 
   @Profile("dev")
