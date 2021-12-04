@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 
 @Data
 @Document
@@ -34,4 +35,6 @@ public class User {
     private String email;
 
     private Role role = Role.USER;
+
+    private LocalDateTime created = LocalDateTime.now();
 }

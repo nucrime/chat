@@ -18,3 +18,4 @@ spring:
     mongodb:
       # if explicit url is needed than it should be noted that %40 in the url stays for @
       uri: ${MONGODB_URL}
+      uuid-representation: standard

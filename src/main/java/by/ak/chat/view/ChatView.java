@@ -3,6 +3,7 @@ package by.ak.chat.view;
 import by.ak.chat.model.ChatMessage;
 import by.ak.chat.model.Storage;
 import by.ak.chat.security.SecurityService;
+import by.ak.chat.util.DateTimeProvider;
 import com.github.rjeschke.txtmark.Processor;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.DetachEvent;
@@ -20,6 +21,7 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 import static org.springframework.util.StringUtils.hasText;
@@ -30,6 +32,7 @@ public class ChatView extends VerticalLayout {
   public static final String CHAT_MESSAGE_TEMPLATE = "%s   **%s**: %s";
   public static final String PATH = "/";
   public static final String TITLE = "FUAGRA";
+  public static final String LOG_OUT = "Log out";
   private final Grid<ChatMessage> grid;
   private final Storage storage;
   private Registration registration;
@@ -37,14 +40,14 @@ public class ChatView extends VerticalLayout {
   private VerticalLayout chat;
   private final SecurityService securityService;
 
-  public ChatView(Storage storage, SecurityService securityService) {
+  public ChatView(Storage storage, SecurityService securityService, DateTimeProvider dateTimeProvider) {
     this.storage = storage;
     this.securityService = securityService;
 
     grid = buildChatGrid(storage);
   }
 
-  // rework using https://vaadin.com/docs/v14/ce/components/collaboration-message-list
+  // todo add edit messages??
   private Grid<ChatMessage> buildChatGrid(Storage storage) {
     chat = new VerticalLayout();
     chat.setVisible(true);
@@ -54,33 +57,44 @@ public class ChatView extends VerticalLayout {
     grid.setItems(storage.getMessages());
     grid.addColumn(new ComponentRenderer<>(message -> new Html(renderRow(message))))
       .setAutoWidth(true);
+    chat.add(
+      logoutButton(),
+      title(),
+      grid,
+      inputAndSendButton());
+    //todo scroll to last message. does not work yet
+    return grid;
+  }
+
+  private Button logoutButton() {
+    return new Button(LOG_OUT, e -> securityService.logout());
+  }
+
+  private H3 title() {
+    return new H3(TITLE);
+  }
+
+  private HorizontalLayout inputAndSendButton() {
     TextField textField = new TextField();
     textField.setAutofocus(true);
-    Button logout = new Button("Log out", e -> securityService.logout());
-    chat.add(
-      logout,
-      new H3(TITLE),
-      grid,
-      new HorizontalLayout() {
-        {
-          add(
-            textField,
-            new Button("➤") {
-              {
-                addClickListener(
-                  click -> {
-                    if (hasText(textField.getValue())) {
-                      storage.addMessage(securityService.getLoggedInUserName(), textField.getValue());
-                      textField.clear();
-                    }
-                  });
-                addClickShortcut(Key.ENTER);
-              }
-            }); // todo add edit messages??
-        }
-      });
-    grid.scrollToEnd(); //todo scroll to last message. does not work yet
-    return grid;
+    return new HorizontalLayout() {
+      {
+        add(
+          textField,
+          new Button("➤") {
+            {
+              addClickListener(
+                click -> {
+                  if (hasText(textField.getValue())) {
+                    storage.addMessage(securityService.getLoggedInUserName(), textField.getValue());
+                    textField.clear();
+                  }
+                });
+              addClickShortcut(Key.ENTER);
+            }
+          });
+      }
+    };
   }
 
   public void onMessage(Storage.ChatEvent event) {
@@ -110,4 +124,8 @@ public class ChatView extends VerticalLayout {
       return Processor.process(message.getText());
     } else return Processor.process(String.format(CHAT_MESSAGE_TEMPLATE, message.created(), message.getUser(), message.getText()));
   }
+
+/*  private String formatTime(LocalDateTime dateTime) {
+    return DateTimeProvider.stringFromLocalDateTimeBrowserOffset(getUI(), dateTime);
+  }*/
 }

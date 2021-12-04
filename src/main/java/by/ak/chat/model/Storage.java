@@ -7,6 +7,7 @@ import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.shared.Registration;
 import lombok.Getter;
+import org.atmosphere.inject.annotation.ApplicationScoped;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +16,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 @Component
+@ApplicationScoped
 public class Storage {
   @Getter
   private final Queue<ChatMessage> messages = new ConcurrentLinkedQueue<>();

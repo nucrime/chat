@@ -3,4 +3,5 @@ spring:
     mongodb:
 #      host: localhost || default
 #      port: 27017 || default
+      uri: ${MONGODB_URL_DEV}
       uuid-representation: standard
