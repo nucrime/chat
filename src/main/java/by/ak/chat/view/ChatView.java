@@ -40,7 +40,7 @@ public class ChatView extends VerticalLayout {
   private VerticalLayout chat;
   private final SecurityService securityService;
 
-  public ChatView(Storage storage, SecurityService securityService, DateTimeProvider dateTimeProvider) {
+  public ChatView(Storage storage, SecurityService securityService) {
     this.storage = storage;
     this.securityService = securityService;
 
@@ -77,6 +77,7 @@ public class ChatView extends VerticalLayout {
   private HorizontalLayout inputAndSendButton() {
     TextField textField = new TextField();
     textField.setAutofocus(true);
+    textField.setWidthFull();
     return new HorizontalLayout() {
       {
         add(
@@ -122,10 +123,10 @@ public class ChatView extends VerticalLayout {
   private String renderRow(ChatMessage message) {
     if (Objects.isNull(message.getUser())) {
       return Processor.process(message.getText());
-    } else return Processor.process(String.format(CHAT_MESSAGE_TEMPLATE, message.created(), message.getUser(), message.getText()));
+    } else return Processor.process(String.format(CHAT_MESSAGE_TEMPLATE, formatTime(message.getCreated()), message.getUser(), message.getText()));
   }
 
-/*  private String formatTime(LocalDateTime dateTime) {
+  private String formatTime(LocalDateTime dateTime) {
     return DateTimeProvider.stringFromLocalDateTimeBrowserOffset(getUI(), dateTime);
-  }*/
+  }
 }

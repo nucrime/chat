@@ -10,6 +10,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class DateTimeProvider {
@@ -54,23 +55,24 @@ public class DateTimeProvider {
     return dateTime.toString();
   }
 
-  // localdatetime to string using browser offset
- /* public static String stringFromLocalDateTimeBrowserOffset(Optional<UI> ui, LocalDateTime dateTime) {
+  public static String stringFromLocalDateTimeBrowserOffset(Optional<UI> ui, LocalDateTime dateTime) {
+    AtomicInteger offsetInt = new AtomicInteger();
     ui.ifPresent(uiElement -> {
-      int offsetInt = uiElement.getPage().getWebBrowser().getTimezoneOffset();
+      uiElement.getPage().retrieveExtendedClientDetails(extendedClientDetails ->
+        offsetInt.set(extendedClientDetails.getRawTimezoneOffset()));
+    });
 
-      int MILLISECONDS_IN_HOUR = 3_600_000;
-      int MILLISECONDS_IN_MINUTE = 60000;
-      int SECONDS_IN_MINUTE = 60;
-      String offset = String.format("%02d:%02d",
-        Math.abs(offsetInt / MILLISECONDS_IN_HOUR),
-        Math.abs((offsetInt / MILLISECONDS_IN_MINUTE) % SECONDS_IN_MINUTE));
-      offset = (offsetInt >= 0 ? "+" : "-") + offset;
-      ZoneId zoneId = ZoneId.of(offset);
+    int offsetVal = offsetInt.intValue();
+    int MILLISECONDS_IN_HOUR = 3_600_000;
+    int MILLISECONDS_IN_MINUTE = 60000;
+    int SECONDS_IN_MINUTE = 60;
+    String offset = String.format("%02d:%02d",
+      Math.abs(offsetVal / MILLISECONDS_IN_HOUR),
+      Math.abs((offsetVal / MILLISECONDS_IN_MINUTE) % SECONDS_IN_MINUTE));
+    offset = (offsetVal >= 0 ? "+" : "-") + offset;
+    ZoneId zoneId = ZoneId.of(offset);
 
-      DateTimeFormatter simpleDateFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
-      return ZonedDateTime.of(dateTime, zoneId).format(simpleDateFormat);
-    }
-  }*/
-
+    DateTimeFormatter simpleDateFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
+    return ZonedDateTime.of(dateTime, zoneId).format(simpleDateFormat);
+  }
 }
