@@ -16,6 +16,7 @@ import java.time.format.DateTimeFormatter;
 @VaadinSessionScope
 public class DateTimeProvider {
   public int timeOffset;
+  public ZoneId zoneId;
 
   public String stringCurrentDateTime() {
     return LocalDateTime.now().toString();
@@ -58,14 +59,16 @@ public class DateTimeProvider {
   }
 
   public String stringFromLocalDateTimeBrowserOffset(LocalDateTime dateTime) {
-    int MILLISECONDS_IN_HOUR = 3_600_000;
-    int MILLISECONDS_IN_MINUTE = 60000;
-    int SECONDS_IN_MINUTE = 60;
-    String offset = String.format("%02d:%02d",
-      Math.abs(timeOffset / MILLISECONDS_IN_HOUR),
-      Math.abs((timeOffset / MILLISECONDS_IN_MINUTE) % SECONDS_IN_MINUTE));
-    offset = (timeOffset >= 0 ? "+" : "-") + offset;
-    ZoneId zoneId = ZoneId.of(offset);
+    if (zoneId == null) {
+      int MILLISECONDS_IN_HOUR = 3_600_000;
+      int MILLISECONDS_IN_MINUTE = 60000;
+      int SECONDS_IN_MINUTE = 60;
+      String offset = String.format("%02d:%02d",
+        Math.abs(timeOffset / MILLISECONDS_IN_HOUR),
+        Math.abs((timeOffset / MILLISECONDS_IN_MINUTE) % SECONDS_IN_MINUTE));
+      offset = (timeOffset >= 0 ? "+" : "-") + offset;
+      zoneId = ZoneId.of(offset);
+    }
 
     DateTimeFormatter simpleDateFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
     return ZonedDateTime.of(dateTime, zoneId).format(simpleDateFormat);

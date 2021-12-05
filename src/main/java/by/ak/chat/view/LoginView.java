@@ -6,10 +6,13 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.page.Page;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+
+import java.time.ZoneId;
 
 import static by.ak.chat.view.ChatView.TITLE;
 
@@ -55,9 +58,12 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
   private void initializeTimeOffset() {
     getUI().ifPresent(uiElement -> {
-      uiElement.getPage().retrieveExtendedClientDetails(extendedClientDetails -> {
+      Page page = uiElement.getPage();
+      page.retrieveExtendedClientDetails(extendedClientDetails -> {
         dateTimeProvider.timeOffset = extendedClientDetails.getTimezoneOffset();
       });
+      page.executeJs("return Intl.DateTimeFormat().resolvedOptions().timeZone")
+        .then(String.class, result -> dateTimeProvider.zoneId = ZoneId.of(result));
     });
   }
 }
