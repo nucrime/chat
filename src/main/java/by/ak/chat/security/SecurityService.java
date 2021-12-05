@@ -48,10 +48,8 @@ public class SecurityService {
   }
 
   public void logout() {
-    String user = username;
-    username = null;
     UI.getCurrent().getPage().setLocation(LOGOUT_SUCCESS_URL);
-    logoutHandler.logout(user);
+    logoutAndInvalidate();
   }
 
   public Authentication getAuthentication() {
@@ -72,7 +70,17 @@ public class SecurityService {
   }
 
   @PreDestroy
-  public void destroy() {
-    logoutHandler.logout(username);
+  public void logoutOnTimeout() {
+    logoutAndInvalidate();
+  }
+
+  private void logoutAndInvalidate() {
+    logoutHandler.logout(invalidateUser());
+  }
+
+  private String invalidateUser() {
+    String user = username;
+    username = null;
+    return user;
   }
 }
