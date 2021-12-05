@@ -15,6 +15,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.page.ExtendedClientDetails;
 import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
@@ -33,8 +34,10 @@ public class ChatView extends VerticalLayout {
   public static final String PATH = "/";
   public static final String TITLE = "FUAGRA";
   public static final String LOG_OUT = "Log out";
+  public static final int NOT_INITIALIZED_OFFSET = 0;
   private final Grid<ChatMessage> grid;
   private final Storage storage;
+  private int timeOffset;
   private Registration registration;
   //todo show only last 200 messages
   private VerticalLayout chat;
@@ -123,10 +126,24 @@ public class ChatView extends VerticalLayout {
   private String renderRow(ChatMessage message) {
     if (Objects.isNull(message.getUser())) {
       return Processor.process(message.getText());
-    } else return Processor.process(String.format(CHAT_MESSAGE_TEMPLATE, formatTime(message.getCreated()), message.getUser(), message.getText()));
+    } else
+      return Processor.process(String.format(CHAT_MESSAGE_TEMPLATE, formatTime(message.getCreated()), message.getUser(), message.getText()));
   }
 
   private String formatTime(LocalDateTime dateTime) {
-    return DateTimeProvider.stringFromLocalDateTimeBrowserOffset(getUI(), dateTime);
+    if (timeOffset == NOT_INITIALIZED_OFFSET) {
+      initializeTimeOffset();
+    }
+    // why in the world this being called after logout?
+    return DateTimeProvider.stringFromLocalDateTimeBrowserOffset(timeOffset, dateTime);
+  }
+
+  private void initializeTimeOffset() {
+    getUI().ifPresent(uiElement -> {
+      uiElement.getPage().retrieveExtendedClientDetails(extendedClientDetails -> {
+        timeOffset = extendedClientDetails.getTimezoneOffset();
+      });
+    });
   }
 }
+
