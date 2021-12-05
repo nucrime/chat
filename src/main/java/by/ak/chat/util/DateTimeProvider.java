@@ -71,6 +71,8 @@ public class DateTimeProvider {
     }
 
     DateTimeFormatter simpleDateFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
-    return ZonedDateTime.of(dateTime, zoneId).format(simpleDateFormat);
+    simpleDateFormat.withZone(zoneId);
+
+    return dateTime.atZone(ZoneId.systemDefault()).withZoneSameInstant(zoneId).format(simpleDateFormat);
   }
 }
