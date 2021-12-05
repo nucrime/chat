@@ -1,5 +1,6 @@
 package by.ak.chat.view;
 
+import by.ak.chat.util.DateTimeProvider;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -12,7 +13,8 @@ import com.vaadin.flow.router.Route;
 @PageTitle("Forgot Password")
 public class ForgotPasswordView extends LoginView { // do we need it? extend from Login view
   public static final String PATH = "/forgotPassword";
-    public ForgotPasswordView() {
+    public ForgotPasswordView(DateTimeProvider dateTimeProvider) {
+      super(dateTimeProvider);
       addClassName("forgot-password-view");
       setSizeFull();
 

@@ -1,5 +1,7 @@
 package by.ak.chat.view;
 
+import by.ak.chat.util.DateTimeProvider;
+import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.login.LoginForm;
@@ -17,8 +19,11 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
   public static final String PATH = "/login";
   protected LoginForm login = new LoginForm();
+  private final DateTimeProvider dateTimeProvider;
 
-  public LoginView() {
+  public LoginView(DateTimeProvider dateTimeProvider) {
+    this.dateTimeProvider = dateTimeProvider;
+
     addClassName("login-view");
     setSizeFull();
 
@@ -41,5 +46,18 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
       .containsKey("error")) {
       login.setError(true);
     }
+  }
+
+  @Override
+  protected void onAttach(AttachEvent attachEvent) {
+    initializeTimeOffset();
+  }
+
+  private void initializeTimeOffset() {
+    getUI().ifPresent(uiElement -> {
+      uiElement.getPage().retrieveExtendedClientDetails(extendedClientDetails -> {
+        dateTimeProvider.timeOffset = extendedClientDetails.getTimezoneOffset();
+      });
+    });
   }
 }

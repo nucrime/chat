@@ -21,12 +21,14 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 import static org.springframework.util.StringUtils.hasText;
 
+@Slf4j
 @Route(ChatView.PATH)
 @Push
 public class ChatView extends VerticalLayout {
@@ -37,13 +39,15 @@ public class ChatView extends VerticalLayout {
   public static final int NOT_INITIALIZED_OFFSET = 0;
   private final Grid<ChatMessage> grid;
   private final Storage storage;
+  private final DateTimeProvider dateTimeProvider;
   private int timeOffset;
   private Registration registration;
   //todo show only last 200 messages
   private VerticalLayout chat;
   private final SecurityService securityService;
 
-  public ChatView(Storage storage, SecurityService securityService) {
+  public ChatView(Storage storage, SecurityService securityService, DateTimeProvider dateTimeProvider) {
+    this.dateTimeProvider = dateTimeProvider;
     this.storage = storage;
     this.securityService = securityService;
 
@@ -55,6 +59,7 @@ public class ChatView extends VerticalLayout {
     chat = new VerticalLayout();
     chat.setVisible(true);
     add(chat);
+    log.info("ChatGrid init");
     final Grid<ChatMessage> grid;
     grid = new Grid<>();
     grid.setItems(storage.getMessages());
@@ -70,14 +75,17 @@ public class ChatView extends VerticalLayout {
   }
 
   private Button logoutButton() {
+    log.info("logoutButton init");
     return new Button(LOG_OUT, e -> securityService.logout());
   }
 
   private H3 title() {
+    log.info("title init");
     return new H3(TITLE);
   }
 
   private HorizontalLayout inputAndSendButton() {
+    log.info("inputAndSendButton init");
     TextField textField = new TextField();
     textField.setAutofocus(true);
     textField.setWidthFull();
@@ -131,19 +139,16 @@ public class ChatView extends VerticalLayout {
   }
 
   private String formatTime(LocalDateTime dateTime) {
-    if (timeOffset == NOT_INITIALIZED_OFFSET) {
-      initializeTimeOffset();
-    }
     // why in the world this being called after logout?
-    return DateTimeProvider.stringFromLocalDateTimeBrowserOffset(timeOffset, dateTime);
+    return dateTimeProvider.stringFromLocalDateTimeBrowserOffset(dateTime);
   }
 
-  private void initializeTimeOffset() {
-    getUI().ifPresent(uiElement -> {
-      uiElement.getPage().retrieveExtendedClientDetails(extendedClientDetails -> {
-        timeOffset = extendedClientDetails.getTimezoneOffset();
-      });
-    });
-  }
+//  private void initializeTimeOffset() {
+//    getUI().ifPresent(uiElement -> {
+//      uiElement.getPage().retrieveExtendedClientDetails(extendedClientDetails -> {
+//        timeOffset = extendedClientDetails.getTimezoneOffset();
+//      });
+//    });
+//  }
 }
 
