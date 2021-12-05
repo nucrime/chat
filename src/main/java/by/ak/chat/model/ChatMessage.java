@@ -12,12 +12,15 @@ import java.time.format.DateTimeFormatter;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 @Document
 public class ChatMessage {
   private LocalDateTime created;
   private String user;
   private String text;
+
+  public ChatMessage() {
+    this.created = LocalDateTime.now();
+  }
 
   public ChatMessage(String user, String text) {
     this.created = LocalDateTime.now();

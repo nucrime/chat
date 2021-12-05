@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
 
+import javax.annotation.PreDestroy;
+
 @Component
 @SessionScope
 @RequiredArgsConstructor
@@ -46,8 +48,10 @@ public class SecurityService {
   }
 
   public void logout() {
+    String user = username;
+    username = null;
     UI.getCurrent().getPage().setLocation(LOGOUT_SUCCESS_URL);
-    logoutHandler.logout(username);
+    logoutHandler.logout(user);
   }
 
   public Authentication getAuthentication() {
@@ -65,5 +69,10 @@ public class SecurityService {
     }
     // Anonymous or no authentication.
     return null;
+  }
+
+  @PreDestroy
+  public void destroy() {
+    logoutHandler.logout(username);
   }
 }

@@ -64,7 +64,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       .and().logout();
   }
 
-  @Profile("dev")
+  @Profile("dev-govno")
   @SuppressWarnings("deprecation")
   @Order(1)
   @Bean

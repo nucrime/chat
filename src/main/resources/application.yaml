@@ -6,6 +6,9 @@ server:
   http2:
     enabled: true
   port: 8080
+  servlet:
+    session:
+      timeout: 60s
 spring:
   profiles:
     active: production

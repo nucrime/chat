@@ -15,7 +15,6 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.page.ExtendedClientDetails;
 import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
@@ -36,7 +35,6 @@ public class ChatView extends VerticalLayout {
   public static final String PATH = "/";
   public static final String TITLE = "FUAGRA";
   public static final String LOG_OUT = "Log out";
-  public static final int NOT_INITIALIZED_OFFSET = 0;
   private final Grid<ChatMessage> grid;
   private final Storage storage;
   private final DateTimeProvider dateTimeProvider;
@@ -142,13 +140,5 @@ public class ChatView extends VerticalLayout {
     // why in the world this being called after logout?
     return dateTimeProvider.stringFromLocalDateTimeBrowserOffset(dateTime);
   }
-
-//  private void initializeTimeOffset() {
-//    getUI().ifPresent(uiElement -> {
-//      uiElement.getPage().retrieveExtendedClientDetails(extendedClientDetails -> {
-//        timeOffset = extendedClientDetails.getTimezoneOffset();
-//      });
-//    });
-//  }
 }
 
