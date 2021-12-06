@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Slf4j
@@ -73,6 +72,9 @@ public class DateTimeProvider {
     DateTimeFormatter simpleDateFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
     simpleDateFormat.withZone(zoneId);
 
-    return dateTime.atZone(ZoneId.systemDefault()).withZoneSameInstant(zoneId).format(simpleDateFormat);
+    return dateTime
+      .atZone(ZoneId.systemDefault())
+      .withZoneSameInstant(zoneId)
+      .format(simpleDateFormat);
   }
 }
