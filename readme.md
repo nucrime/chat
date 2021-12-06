@@ -20,6 +20,11 @@ For connection to MongoDB locally just install it.
 brew install mongodb-community
 brew services start mongodb-community
 ```
+Environment variables should be like:
+```bash
+MONGODB_URL_DEV mongodb://localhost:27017/?readPreference=primary&directConnection=true&ssl=false
+MONGODB_URL mongodb://localhost:27017/?readPreference=primary&directConnection=true&ssl=false
+```
 
 **Note:** The application is running on port 8080. And could be accessed by http://localhost:8080/
 

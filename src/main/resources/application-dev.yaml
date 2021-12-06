@@ -5,3 +5,8 @@ spring:
 #      port: 27017 || default
       uri: ${MONGODB_URL_DEV}
       uuid-representation: standard
+      database: dev
+  devtools:
+    restart:
+      poll-interval: 2s
+      quiet-period: 1s
