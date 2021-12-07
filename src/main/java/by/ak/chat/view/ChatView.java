@@ -10,6 +10,7 @@ import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
@@ -73,25 +74,24 @@ public class ChatView extends VerticalLayout {
   }
 
   private VerticalLayout header() {
-    log.info("logoutButton init");
     Button logoutButton = new Button(LOG_OUT, e -> securityService.logout());
     VerticalLayout header = new VerticalLayout();
     header.add(logoutButton);
+    header.setHeight(10, Unit.PERCENTAGE);
     header.setAlignItems(Alignment.END);
     return header;
   }
 
-  private HorizontalLayout title() {
-    log.info("title init");
+  private VerticalLayout title() {
     H3 title = new H3(TITLE);
-    HorizontalLayout titleLayout = new HorizontalLayout();
-    titleLayout.addAndExpand(title);
+    VerticalLayout titleLayout = new VerticalLayout();
+    titleLayout.add(title);
+    titleLayout.setHeight(10, Unit.PERCENTAGE);
     titleLayout.setAlignItems(Alignment.CENTER);
     return titleLayout;
   }
 
   private HorizontalLayout inputAndSendButton() {
-    log.info("inputAndSendButton init");
     TextField textField = textField();
     return new HorizontalLayout() {
       {
@@ -100,17 +100,6 @@ public class ChatView extends VerticalLayout {
           sendButton(textField));
       }
     };
-  }
-
-  private MessageInput messageInput() {
-    MessageInput input = new MessageInput();
-    input.addSubmitListener(e -> {
-      if (hasText(e.getValue())) {
-        storage.addMessage(securityService.getLoggedInUserName(), e.getValue());
-      }
-    });
-    input.setWidthFull();
-    return input;
   }
 
   private TextField textField() {
@@ -129,6 +118,17 @@ public class ChatView extends VerticalLayout {
     });
     sendButton.addClickShortcut(Key.ENTER);
     return sendButton;
+  }
+
+  private MessageInput messageInput() {
+    MessageInput input = new MessageInput();
+    input.addSubmitListener(e -> {
+      if (hasText(e.getValue())) {
+        storage.addMessage(securityService.getLoggedInUserName(), e.getValue());
+      }
+    });
+    input.setWidthFull();
+    return input;
   }
 
   public void onMessage(Storage.ChatEvent event) {
