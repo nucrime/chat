@@ -5,6 +5,8 @@ import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventBus;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.messages.MessageList;
+import com.vaadin.flow.component.messages.MessageListItem;
 import com.vaadin.flow.shared.Registration;
 import lombok.Getter;
 import org.atmosphere.inject.annotation.ApplicationScoped;
@@ -13,11 +15,16 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.Queue;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Component
 @ApplicationScoped
 public class Storage {
+  public static final int ONE = 1;
   @Getter
   private final Queue<ChatMessage> messages = new ConcurrentLinkedQueue<>();
   // todo change to private final ConcurrentLinkedDeque<ChatMessage> messages = new ConcurrentLinkedDeque<>();
@@ -33,11 +40,17 @@ public class Storage {
     chatService.save(newMessage).subscribe();
   }
 
+  public void addMessage(MessageListItem message) {
+    addMessage(message.getUserName(), message.getText());
+  }
+
   public void addMessageUserJoined(String message) {
     ChatMessage userJoined = new ChatMessage();
     userJoined.setText(message);
     messages.add(userJoined);
-    eventBus.fireEvent(new ChatEvent());
+    ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+    executorService.schedule(() -> eventBus.fireEvent(new ChatEvent()), ONE, TimeUnit.SECONDS); // I want to ride my bicycle...
+    // above schedule is a tough kostyl to refresh chat view after user joined. // todo fix it
     chatService.save(userJoined).subscribe();
   }
 

@@ -2,6 +2,7 @@ package by.ak.chat.security;
 
 import by.ak.chat.model.Storage;
 import by.ak.chat.view.ChatView;
+import by.ak.chat.view.ChatViewV2;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -29,6 +30,7 @@ public class ChatRedirectingAuthenticationSuccessHandler implements Authenticati
   public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
     String user = securityService.getLoggedInUserName();
     storage.addMessageUserJoined(String.format(USER_JOINED_MSG, user));
-    httpServletResponse.sendRedirect(ChatView.PATH);
+    httpServletResponse.sendRedirect(ChatView.PATH); // todo migrate to v2
+//    httpServletResponse.sendRedirect(ChatViewV2.PATH);
   }
 }

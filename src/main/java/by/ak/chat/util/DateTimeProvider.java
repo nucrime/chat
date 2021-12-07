@@ -4,10 +4,12 @@ import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
 @Slf4j
@@ -76,5 +78,18 @@ public class DateTimeProvider {
       .atZone(ZoneId.systemDefault())
       .withZoneSameInstant(zoneId)
       .format(simpleDateFormat);
+  }
+
+  public String formatTime(LocalDateTime dateTime) {
+    // why in the world this being called after logout?
+    return stringFromLocalDateTimeBrowserOffset(dateTime);
+  }
+
+  public Instant format(LocalDateTime dateTime) {
+    // why in the world this being called after logout?
+    return dateTime
+      .atZone(ZoneId.systemDefault())
+      .withZoneSameInstant(zoneId)
+      .toInstant();
   }
 }

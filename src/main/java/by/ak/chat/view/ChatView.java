@@ -10,10 +10,11 @@ import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.messages.MessageInput;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.Push;
@@ -23,7 +24,6 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
 import lombok.extern.slf4j.Slf4j;
 
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 import static org.springframework.util.StringUtils.hasText;
@@ -61,26 +61,24 @@ public class ChatView extends VerticalLayout {
     final Grid<ChatMessage> grid;
     grid = new Grid<>();
     grid.setItems(storage.getMessages());
-    grid.addColumn(new ComponentRenderer<>(message -> new Html(renderRow(message))))
-      .setAutoWidth(true);
+    grid.addColumn(new ComponentRenderer<>(message -> new Html(renderRow(message))));
+    grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT); // wrap cell content, so that the text wraps
     chat.add(
-      logoutButton(),
+      header(),
       title());
     chat.addAndExpand(
-      grid,
-      inputAndSendButton());
-    //todo scroll to last message. does not work yet
+      grid);
+    add(messageInput());
     return grid;
   }
 
-  private Button logoutButton() {
+  private VerticalLayout header() {
     log.info("logoutButton init");
     Button logoutButton = new Button(LOG_OUT, e -> securityService.logout());
-    logoutButton.setHeight(3, Unit.PERCENTAGE);
-    HorizontalLayout header = new HorizontalLayout();
-    header.setJustifyContentMode(JustifyContentMode.END);
+    VerticalLayout header = new VerticalLayout();
     header.add(logoutButton);
-    return logoutButton;
+    header.setAlignItems(Alignment.END);
+    return header;
   }
 
   private HorizontalLayout title() {
@@ -102,6 +100,17 @@ public class ChatView extends VerticalLayout {
           sendButton(textField));
       }
     };
+  }
+
+  private MessageInput messageInput() {
+    MessageInput input = new MessageInput();
+    input.addSubmitListener(e -> {
+      if (hasText(e.getValue())) {
+        storage.addMessage(securityService.getLoggedInUserName(), e.getValue());
+      }
+    });
+    input.setWidthFull();
+    return input;
   }
 
   private TextField textField() {
@@ -141,7 +150,6 @@ public class ChatView extends VerticalLayout {
   @Override
   protected void onAttach(AttachEvent attachEvent) {
     registration = storage.attachListener(this::onMessage);
-    refreshGridContent();
   }
 
   @Override
@@ -153,12 +161,12 @@ public class ChatView extends VerticalLayout {
     if (Objects.isNull(message.getUser())) {
       return Processor.process(message.getText());
     } else
-      return Processor.process(String.format(CHAT_MESSAGE_TEMPLATE, formatTime(message.getCreated()), message.getUser(), message.getText()));
-  }
-
-  private String formatTime(LocalDateTime dateTime) {
-    // why in the world this being called after logout?
-    return dateTimeProvider.stringFromLocalDateTimeBrowserOffset(dateTime);
+      return Processor.process(
+        String.format(
+          CHAT_MESSAGE_TEMPLATE,
+          dateTimeProvider.formatTime(message.getCreated()),
+          message.getUser(),
+          message.getText()));
   }
 }
 
