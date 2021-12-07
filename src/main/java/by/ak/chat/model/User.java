@@ -34,6 +34,8 @@ public class User {
     @Email
     private String email;
 
+    private byte[] avatar;
+
     private Role role = Role.USER;
 
     private LocalDateTime created = LocalDateTime.now();

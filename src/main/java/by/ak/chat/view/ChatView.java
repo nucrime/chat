@@ -10,6 +10,7 @@ import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H3;
@@ -38,7 +39,6 @@ public class ChatView extends VerticalLayout {
   private final Grid<ChatMessage> grid;
   private final Storage storage;
   private final DateTimeProvider dateTimeProvider;
-  private int timeOffset;
   private Registration registration;
   //todo show only last 200 messages
   private VerticalLayout chat;
@@ -56,7 +56,7 @@ public class ChatView extends VerticalLayout {
   private Grid<ChatMessage> buildChatGrid(Storage storage) {
     chat = new VerticalLayout();
     chat.setVisible(true);
-    add(chat);
+    addAndExpand(chat);
     log.info("ChatGrid init");
     final Grid<ChatMessage> grid;
     grid = new Grid<>();
@@ -65,7 +65,8 @@ public class ChatView extends VerticalLayout {
       .setAutoWidth(true);
     chat.add(
       logoutButton(),
-      title(),
+      title());
+    chat.addAndExpand(
       grid,
       inputAndSendButton());
     //todo scroll to last message. does not work yet
@@ -74,40 +75,58 @@ public class ChatView extends VerticalLayout {
 
   private Button logoutButton() {
     log.info("logoutButton init");
-    return new Button(LOG_OUT, e -> securityService.logout());
+    Button logoutButton = new Button(LOG_OUT, e -> securityService.logout());
+    logoutButton.setHeight(3, Unit.PERCENTAGE);
+    HorizontalLayout header = new HorizontalLayout();
+    header.setJustifyContentMode(JustifyContentMode.END);
+    header.add(logoutButton);
+    return logoutButton;
   }
 
-  private H3 title() {
+  private HorizontalLayout title() {
     log.info("title init");
-    return new H3(TITLE);
+    H3 title = new H3(TITLE);
+    HorizontalLayout titleLayout = new HorizontalLayout();
+    titleLayout.addAndExpand(title);
+    titleLayout.setAlignItems(Alignment.CENTER);
+    return titleLayout;
   }
 
   private HorizontalLayout inputAndSendButton() {
     log.info("inputAndSendButton init");
-    TextField textField = new TextField();
-    textField.setAutofocus(true);
-    textField.setWidthFull();
+    TextField textField = textField();
     return new HorizontalLayout() {
       {
-        add(
+        addAndExpand(
           textField,
-          new Button("➤") {
-            {
-              addClickListener(
-                click -> {
-                  if (hasText(textField.getValue())) {
-                    storage.addMessage(securityService.getLoggedInUserName(), textField.getValue());
-                    textField.clear();
-                  }
-                });
-              addClickShortcut(Key.ENTER);
-            }
-          });
+          sendButton(textField));
       }
     };
   }
 
+  private TextField textField() {
+    TextField textField = new TextField();
+    textField.setAutofocus(true);
+    textField.setWidthFull();
+    return textField;
+  }
+
+  private Button sendButton(TextField textField) {
+    Button sendButton = new Button("➤", e -> {
+      if (hasText(textField.getValue())) {
+        storage.addMessage(securityService.getLoggedInUserName(), textField.getValue());
+        textField.clear();
+      }
+    });
+    sendButton.addClickShortcut(Key.ENTER);
+    return sendButton;
+  }
+
   public void onMessage(Storage.ChatEvent event) {
+    refreshGridContent();
+  }
+
+  private void refreshGridContent() {
     getUI()
       .ifPresent(
         ui ->
@@ -122,6 +141,7 @@ public class ChatView extends VerticalLayout {
   @Override
   protected void onAttach(AttachEvent attachEvent) {
     registration = storage.attachListener(this::onMessage);
+    refreshGridContent();
   }
 
   @Override
