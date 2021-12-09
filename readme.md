@@ -26,11 +26,17 @@ MONGODB_URL_DEV mongodb://localhost:27017/?readPreference=primary&directConnecti
 MONGODB_URL mongodb://localhost:27017/?readPreference=primary&directConnection=true&ssl=false
 ```
 
+If you use IDE like IntelliJ IDEA you can configure run like this:
+![img.png](img.png)
+
 **Note:** The application is running on port 8080. And could be accessed by http://localhost:8080/
 
 It takes time to start the application as Vaadin initializes frontend and downloads necessary libs.
 
 Links:
+
 [Markdown support](https://github.com/rjeschke/txtmark)
+
 [Vaadin](https://vaadin.com/)
+
 [Heroku build pack](https://github.com/heroku/heroku-buildpack-java#customize-maven)
