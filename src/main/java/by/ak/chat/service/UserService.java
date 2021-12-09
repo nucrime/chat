@@ -19,16 +19,16 @@ public class UserService {
   public void save(User user) {
     log.info("[FUAGRA] Saving user: {}", user);
     user.setPassword(passwordEncoder.encode(user.getPassword()));
-    repository.save(user).subscribe(); //todo subscribe instead of block
+    repository.save(user).subscribe();
   }
 
   public Optional<User> find(String username) {
     log.info("[FUAGRA] Searching user by username: {}", username);
-    return repository.findByUsername(username).blockOptional(); //todo subscribe instead of block
+    return repository.findByUsername(username).blockOptional(); //todo subscribe instead of block?
   }
 
   public void delete(User user) {
     log.info("[FUAGRA] Deleting user {}", user);
-    repository.delete(user).subscribe(); //todo reconsider unused publisher
+    repository.delete(user).subscribe();
   }
 }
