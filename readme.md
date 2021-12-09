@@ -1,7 +1,11 @@
 # Prerequisites
 [JDK 17](https://jdk.java.net/17/)
 
-node 16.13.0 (LTS): [Win](https://nodejs.org/dist/v16.13.0/node-v16.13.0-x86.msi)
+For Heroku deployment **current target version set to 8**:
+
+[Java 8](https://jdk.java.net/java-se-ri/8-MR3)
+
+node **16.13.0** (LTS): [Win](https://nodejs.org/dist/v16.13.0/node-v16.13.0-x86.msi)
 [Linux](https://nodejs.org/dist/v16.13.0/node-v16.13.0.tar.gz)
 [Macos](https://nodejs.org/dist/v16.13.0/node-v16.13.0.pkg)
 
