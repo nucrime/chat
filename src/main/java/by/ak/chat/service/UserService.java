@@ -6,8 +6,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -20,6 +23,10 @@ public class UserService {
     log.info("[FUAGRA] Saving user: {}", user);
     user.setPassword(passwordEncoder.encode(user.getPassword()));
     repository.save(user).subscribe();
+  }
+
+  public List<User> findAll() {
+    return repository.findAll().toStream().collect(Collectors.toList());
   }
 
   public Optional<User> find(String username) {

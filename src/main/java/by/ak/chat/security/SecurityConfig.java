@@ -1,8 +1,10 @@
 package by.ak.chat.security;
 
+import by.ak.chat.model.Role;
 import by.ak.chat.view.ForgotPasswordView;
 import by.ak.chat.view.LoginView;
 import by.ak.chat.view.RegistrationView;
+import by.ak.chat.view.UserView;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +13,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -21,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -46,6 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       .and().authorizeRequests()
       .antMatchers(RegistrationView.PATH).permitAll()
       .antMatchers(ForgotPasswordView.PATH).permitAll()
+      .antMatchers(UserView.PATH).hasAuthority(Role.ADMINISTRATOR.name())
 
       // Allow all Vaadin internal requests.
       .requestMatchers(SecurityUtils::isFrameworkInternalRequest).permitAll()

@@ -3,6 +3,7 @@ package by.ak.chat.view;
 import by.ak.chat.model.ChatMessage;
 import by.ak.chat.model.Storage;
 import by.ak.chat.security.SecurityService;
+import by.ak.chat.component.Header;
 import by.ak.chat.util.DateTimeProvider;
 import com.github.rjeschke.txtmark.Processor;
 import com.vaadin.flow.component.AttachEvent;
@@ -44,11 +45,13 @@ public class ChatView extends VerticalLayout {
   //todo show only last 200 messages
   private VerticalLayout chat;
   private final SecurityService securityService;
+  private final Header header;
 
-  public ChatView(Storage storage, SecurityService securityService, DateTimeProvider dateTimeProvider) {
+  public ChatView(Storage storage, SecurityService securityService, DateTimeProvider dateTimeProvider, Header header) {
     this.dateTimeProvider = dateTimeProvider;
     this.storage = storage;
     this.securityService = securityService;
+    this.header = header;
 
     grid = buildChatGrid(storage);
   }
@@ -58,28 +61,18 @@ public class ChatView extends VerticalLayout {
     chat = new VerticalLayout();
     chat.setVisible(true);
     addAndExpand(chat);
-    log.info("ChatGrid init");
     final Grid<ChatMessage> grid;
     grid = new Grid<>();
     grid.setItems(storage.getMessages());
     grid.addColumn(new ComponentRenderer<>(message -> new Html(renderRow(message))));
     grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT); // wrap cell content, so that the text wraps
     chat.add(
-      header(),
+      header.init(),
       title());
     chat.addAndExpand(
       grid);
     add(messageInput());
     return grid;
-  }
-
-  private VerticalLayout header() {
-    Button logoutButton = new Button(LOG_OUT, e -> securityService.logout());
-    VerticalLayout header = new VerticalLayout();
-    header.add(logoutButton);
-    header.setHeight(10, Unit.PERCENTAGE);
-    header.setAlignItems(Alignment.END);
-    return header;
   }
 
   private VerticalLayout title() {
