@@ -1,9 +1,11 @@
 package by.ak.chat.security;
 
+import by.ak.chat.model.Role;
 import com.vaadin.flow.component.UI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
 
 import javax.annotation.PreDestroy;
+import java.util.List;
+import java.util.Objects;
 
 @Component
 @SessionScope
@@ -45,6 +49,21 @@ public class SecurityService {
       }
     }
     return username;
+  }
+
+  public String getRole() {
+    Authentication authentication = context.getAuthentication();
+    if (authentication == null) {
+      return null;
+    }
+    return authentication.getAuthorities().stream()
+      .findFirst()
+      .map(GrantedAuthority::getAuthority)
+      .orElse(Role.USER.name());
+  }
+
+  public boolean isAdmin() {
+    return getRole().equals(Role.ADMINISTRATOR.name());
   }
 
   public void logout() {

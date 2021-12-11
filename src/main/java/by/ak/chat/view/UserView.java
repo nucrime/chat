@@ -5,12 +5,15 @@ import by.ak.chat.service.UserService;
 import by.ak.chat.component.Header;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
+@PageTitle(UserView.TITLE)
 @Route(UserView.PATH)
 public class UserView extends VerticalLayout {
 
   public static final String PATH = "/users";
+  public static final String TITLE = "Users Management";
   private final UserService userService;
   private final Header header;
   final Grid<User> grid;
