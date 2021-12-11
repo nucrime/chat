@@ -2,14 +2,13 @@ package by.ak.chat.component;
 
 import by.ak.chat.service.UserService;
 import com.vaadin.flow.component.KeyNotifier;
-import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.PasswordField;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import lombok.RequiredArgsConstructor;
 
-import java.awt.*;
 
 @SpringComponent
 @UIScope
@@ -24,5 +23,7 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
   TextField role = new TextField("Role");
 
   private Button save = new Button("Save");
+  private Button update = new Button("Update");
+  private Button delete = new Button("Delete");
 
 }
