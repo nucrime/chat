@@ -4,6 +4,7 @@ import by.ak.chat.model.ChatMessage;
 import by.ak.chat.repository.ChatRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.mongodb.repository.Tailable;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -24,6 +25,7 @@ public class ChatService {
     return repository.findByUser(user);
   }
 
+  @Tailable
   public Flux<ChatMessage> findAll() {
     log.info("[FUAGRA] Searching all chat messages");
     return repository.findAll();

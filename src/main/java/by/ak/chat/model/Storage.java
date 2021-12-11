@@ -5,26 +5,24 @@ import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventBus;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.messages.MessageList;
 import com.vaadin.flow.component.messages.MessageListItem;
 import com.vaadin.flow.shared.Registration;
 import lombok.Getter;
 import org.atmosphere.inject.annotation.ApplicationScoped;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 import javax.annotation.PostConstruct;
+import java.time.Duration;
 import java.util.Queue;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 @Component
 @ApplicationScoped
 public class Storage {
   public static final int ONE = 1;
+  public static final int TWO = 2;
   @Getter
   private final Queue<ChatMessage> messages = new ConcurrentLinkedQueue<>();
   // todo change to private final ConcurrentLinkedDeque<ChatMessage> messages = new ConcurrentLinkedDeque<>();
@@ -35,31 +33,29 @@ public class Storage {
 
   public void addMessage(String user, String message) {
     ChatMessage newMessage = new ChatMessage(user, message);
-    messages.add(newMessage);
-    eventBus.fireEvent(new ChatEvent());
-    chatService.save(newMessage).subscribe();
+//    messages.add(newMessage);
+//    eventBus.fireEvent(new ChatEvent());
+    addAndSave(newMessage);
+    fireEvent();
+//    chatService.save(newMessage).subscribe();
   }
 
+  // chat V2
   public void addMessage(MessageListItem message) {
     addMessage(message.getUserName(), message.getText());
   }
 
-  public void addMessageUserJoined(String message) {
-    ChatMessage userJoined = new ChatMessage();
-    userJoined.setText(message);
-    messages.add(userJoined);
-    ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-    executorService.schedule(() -> eventBus.fireEvent(new ChatEvent()), ONE, TimeUnit.SECONDS); // I want to ride my bicycle...
-    // above schedule is a tough kostyl to refresh chat view after user joined. // todo fix it
-    chatService.save(userJoined).subscribe();
-  }
-
-  public void addMessageUserLeft(String message) {
-    ChatMessage userLeft = new ChatMessage();
-    userLeft.setText(message);
-    messages.add(userLeft);
-    eventBus.fireEvent(new ChatEvent());
-    chatService.save(userLeft).subscribe();
+  public void addMessageUserPresence(String message) {
+    ChatMessage presence = new ChatMessage();
+    presence.setText(message);
+    addAndSave(presence);
+    delayFireEvent();
+//    Mono.delay(Duration.ofSeconds(TWO)).subscribe(e -> eventBus.fireEvent(new ChatEvent()));
+//    addAndSave(userJoined);
+//    delayFireEvent();
+//    ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+//    executorService.schedule(() -> eventBus.fireEvent(new ChatEvent()), ONE, TimeUnit.SECONDS); // I want to ride my bicycle...
+//    chatService.save(userJoined).subscribe();
   }
 
   //todo google: vaadin events, component events
@@ -75,12 +71,33 @@ public class Storage {
     return eventBus.addListener(ChatEvent.class, listener);
   }
 
+  private void addAndSave(ChatMessage message) {
+    messages.add(message);
+    chatService.save(message).subscribe();
+  }
+
+  private void fireEvent() {
+    eventBus.fireEvent(new ChatEvent());
+  }
+
+  /*
+-------- __@      __@       __@       __@      __~@
+----- _`\>,_    _`\>,_    _`\>,_    _`\>,_    _`\>,_     <--- reactive bicycle
+---- (*)/ (*)  (*)/ (*)  (*)/ (*)  (*)/ (*)  (*)/ (*)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+  private void delayFireEvent() {
+    Mono.delay(Duration.ofSeconds(TWO)).subscribe(e -> fireEvent());
+  }
 
   /*
   * Fetch messages from DB before app is started to show to user previous messages
   * */
   @PostConstruct
   public void init() {
+/*    chatService.findAll()
+      .subscribeOn(Schedulers.boundedElastic())
+      .subscribe(messages::add); // migration to tailable cursor*/
     chatService.findAll().subscribe(messages::add);
   }
 }

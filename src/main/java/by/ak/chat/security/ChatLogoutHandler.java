@@ -33,7 +33,7 @@ public class ChatLogoutHandler extends SecurityContextLogoutHandler {
    */
   public void logout(String user) {
     if (StringUtils.hasText(user)) {
-      storage.addMessageUserLeft(String.format(USER_LEFT_MSG, user));
+      storage.addMessageUserPresence(String.format(USER_LEFT_MSG, user));
       HttpServletRequest request = VaadinServletRequest.getCurrent();
       if (request != null) {
         request = VaadinServletRequest.getCurrent().getHttpServletRequest();
