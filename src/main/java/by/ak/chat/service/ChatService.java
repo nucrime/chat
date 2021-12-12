@@ -4,10 +4,11 @@ import by.ak.chat.model.ChatMessage;
 import by.ak.chat.repository.ChatRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.mongodb.repository.Tailable;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -25,17 +26,18 @@ public class ChatService {
     return repository.findByUser(user);
   }
 
-  @Tailable
+//  @Tailable
   public Flux<ChatMessage> findAll() {
     log.info("[FUAGRA] Searching all chat messages");
     return repository.findAll();
   }
 
-  // todo add update message
-
-  /*  todo decide if it is needed at all.
-  public void delete(ChatMessage chatMessage) {
-    repository.delete(chatMessage);
+  public Optional<ChatMessage> findById(String id) {
+    log.info("[FUAGRA] Searching chat message by id: {}", id);
+    return repository.findById(id).blockOptional();
   }
-  */
+
+  public void delete(ChatMessage chatMessage) {
+    repository.delete(chatMessage).subscribe();
+  }
 }

@@ -1,6 +1,7 @@
 package by.ak.chat.view;
 
 import by.ak.chat.component.Header;
+import by.ak.chat.component.MessageEditor;
 import by.ak.chat.model.ChatMessage;
 import by.ak.chat.model.Storage;
 import by.ak.chat.security.SecurityService;
@@ -46,6 +47,7 @@ public class ChatView extends VerticalLayout {
   public static final String MSG_EMPTY = "Message is empty";
   public static final String REDUNDANT_WHITESPACES = "\\s+";
   public static final String SINGLE_WHITESPACE = " ";
+
   private final Grid<ChatMessage> grid;
   private final Storage storage;
   private final DateTimeProvider dateTimeProvider;
@@ -54,15 +56,35 @@ public class ChatView extends VerticalLayout {
   private VerticalLayout chat;
   private final SecurityService securityService;
   private final Header header;
+  private final MessageEditor editor;
 
-  public ChatView(Storage storage, SecurityService securityService, DateTimeProvider dateTimeProvider, Header header) {
+  public ChatView(Storage storage, SecurityService securityService, DateTimeProvider dateTimeProvider, Header header, MessageEditor editor) {
     this.dateTimeProvider = dateTimeProvider;
     this.storage = storage;
     this.securityService = securityService;
     this.header = header;
+    this.editor = editor;
 
     add(header.init(), title());
     grid = buildChatGrid(storage);
+    add(editor);
+
+    // Connect selected ChatMessage to editor or hide if none is selected
+    grid.asSingleSelect().addValueChangeListener(e -> {
+      if (securityService.getLoggedInUserName().equals(e.getValue().getUser())) { // only author can edit
+        editor.editMessage(e.getValue());
+      } else {
+        if (editor.isVisible()) { // if editor is visible and user is not the author of message, hide it
+          editor.cancel();
+        }
+      }
+    });
+
+    // Listen changes made by the editor, refresh data from backend
+    editor.setChangeHandler(() -> {
+      editor.setVisible(false);
+      storage.fireEvent();
+    });
   }
 
   // todo add edit messages??

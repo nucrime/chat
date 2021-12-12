@@ -58,6 +58,16 @@ public class Storage {
 //    chatService.save(userJoined).subscribe();
   }
 
+  public void updateMessage(ChatMessage message) {
+    messages.stream()
+      .filter(m -> message.getId().equals(m.getId()))
+      .forEach(chatMessage -> chatMessage.setText(message.getText()));
+  }
+
+  public void removeMessage(ChatMessage message) {
+    messages.remove(message);
+  }
+
   //todo google: vaadin events, component events
   public static class ChatEvent extends ComponentEvent<Div> {
     public ChatEvent() {
@@ -76,7 +86,7 @@ public class Storage {
     chatService.save(message).subscribe();
   }
 
-  private void fireEvent() {
+  public void fireEvent() {
     eventBus.fireEvent(new ChatEvent());
   }
 

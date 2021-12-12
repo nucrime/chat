@@ -1,12 +1,11 @@
 package by.ak.chat.component;
 
-import by.ak.chat.model.Role;
-import by.ak.chat.model.User;
-import by.ak.chat.service.UserService;
+import by.ak.chat.model.ChatMessage;
+import by.ak.chat.model.Storage;
+import by.ak.chat.service.ChatService;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.KeyNotifier;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -15,66 +14,63 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.spring.annotation.UIScope;
 import org.springframework.stereotype.Component;
 
-
 @Component
 @UIScope
-public class UserEditor extends VerticalLayout implements KeyNotifier {
-  private final UserService userService;
-  private User user;
+public class MessageEditor extends VerticalLayout implements KeyNotifier {
+  private final ChatService chatService;
+  private ChatMessage message;
+  private final Storage storage;
 
-  TextField username = new TextField("Username");
-  TextField email = new TextField("Email");
-  TextField firstName = new TextField("First name");
-  TextField lastName = new TextField("Last name");
-  ComboBox<Role> role = new ComboBox<>("Role");
-  TextField password = new TextField("Password");
+  private TextField text = new TextField("Edit message");
 
   private Button save = new Button("Save", VaadinIcon.CHECK.create());
+  private Button undo = new Button("Undo", VaadinIcon.BACKSPACE.create());
   private Button cancel = new Button("Cancel", VaadinIcon.CLOSE_SMALL.create());
   private Button delete = new Button("Delete", VaadinIcon.TRASH.create());
-  private HorizontalLayout actions = new HorizontalLayout(save, cancel, delete);
+  private HorizontalLayout actions = new HorizontalLayout(save, undo, cancel, delete);
 
-  private Binder<User> binder = new Binder<>(User.class);
+  private Binder<ChatMessage> binder = new Binder<>(ChatMessage.class);
   private ChangeHandler changeHandler;
 
-  public UserEditor(UserService userService) {
-    this.userService = userService;
-    HorizontalLayout firstRow = new HorizontalLayout();
-    firstRow.add(firstName, lastName, username);
-    HorizontalLayout secondRow = new HorizontalLayout();
-    role.setItems(Role.values());
-    secondRow.add(email, role, password);
-    HorizontalLayout thirdRow = new HorizontalLayout();
-    thirdRow.add(actions);
-    add(firstRow, secondRow, thirdRow);
+  public MessageEditor(ChatService chatService, Storage storage) {
+    this.chatService = chatService;
+    this.storage = storage;
 
-    // bind using naming convention
+    HorizontalLayout textContainer = new HorizontalLayout();
+    text.setWidthFull();
+    textContainer.addAndExpand(text);
+    add(textContainer, actions);
+
     binder.bindInstanceFields(this);
 
-    // Configure and style components
     setSpacing(true);
-
-    // todo password.setVisible(false); ?consider
 
     save.getElement().getThemeList().add("primary");
     delete.getElement().getThemeList().add("error");
 
     addKeyPressListener(Key.ENTER, e -> save());
 
-    // wire action buttons to save, delete and reset
     save.addClickListener(e -> save());
     delete.addClickListener(e -> delete());
-    cancel.addClickListener(e -> editCustomer(user));
+    undo.addClickListener(e -> editMessage(message));
+    cancel.addClickListener(e -> cancel());
+    setVisible(false);
+  }
+
+  public void cancel() {
+    editMessage(message); // set the original value before changing visibility of form
     setVisible(false);
   }
 
   void delete() {
-    userService.delete(user);
+    chatService.delete(message);
+    storage.removeMessage(message);
     changeHandler.onChange();
   }
 
   void save() {
-    userService.save(user);
+    chatService.save(message).subscribe();
+    storage.updateMessage(message);
     changeHandler.onChange();
   }
 
@@ -82,30 +78,30 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
     void onChange();
   }
 
-  public final void editCustomer(User u) {
-    // if user is null, don't show form and actions
-    if (u == null) {
+  public final void editMessage(ChatMessage m) {
+    // if msg is null, don't show form and actions
+    if (m == null) {
       setVisible(false);
       return;
     }
-    final boolean persisted = u.getId() != null;
+    final boolean persisted = m.getId() != null;
     if (persisted) {
-      // Find fresh entity for editing
-      user = userService.findById(u.getId()).get();
+      // Find entity for editing
+      message = chatService.findById(m.getId()).get();
     } else {
-      user = u;
+      message = m;
     }
-    cancel.setVisible(persisted);
+    undo.setVisible(persisted);
 
     // Bind customer properties to similarly named fields
     // Could also use annotation or "manual binding" or programmatically
     // moving values from fields to entities before saving
-    binder.setBean(user);
+    binder.setBean(message);
 
     setVisible(true);
 
     // Focus first name initially
-    firstName.focus();
+    text.focus();
   }
 
   public void setChangeHandler(ChangeHandler h) {
@@ -113,5 +109,4 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
     // is clicked
     changeHandler = h;
   }
-
 }
