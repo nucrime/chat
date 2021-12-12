@@ -1,10 +1,12 @@
 package by.ak.chat.component;
 
+import by.ak.chat.model.Role;
 import by.ak.chat.model.User;
 import by.ak.chat.service.UserService;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.KeyNotifier;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -24,7 +26,7 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
   TextField email = new TextField("Email");
   TextField firstName = new TextField("First name");
   TextField lastName = new TextField("Last name");
-  TextField role = new TextField("Role");
+  ComboBox<Role> role = new ComboBox<>("Role");
   TextField password = new TextField("Password");
 
   private Button save = new Button("Save", VaadinIcon.CHECK.create());
@@ -40,6 +42,7 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
     HorizontalLayout firstRow = new HorizontalLayout();
     firstRow.add(firstName, lastName, username);
     HorizontalLayout secondRow = new HorizontalLayout();
+    role.setItems(Role.values());
     secondRow.add(email, role, password);
     HorizontalLayout thirdRow = new HorizontalLayout();
     thirdRow.add(actions);
@@ -95,8 +98,6 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
     // Bind customer properties to similarly named fields
     // Could also use annotation or "manual binding" or programmatically
     // moving values from fields to entities before saving
-    user.setPassword(null); // it's bcrypt, so we don't need to show it
-
     binder.setBean(user);
 
     setVisible(true);
