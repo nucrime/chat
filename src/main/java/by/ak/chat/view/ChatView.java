@@ -17,6 +17,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.messages.MessageInput;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.Push;
@@ -40,6 +41,11 @@ public class ChatView extends VerticalLayout {
   public static final String PATH = "/";
   public static final String TITLE = "FUAGRA";
   public static final String LOG_OUT = "Log out";
+  public static final int MESSAGE_LENGTH_LIMIT = 255;
+  public static final String MSG_LONG = "Message is too long";
+  public static final String MSG_EMPTY = "Message is empty";
+  public static final String REDUNDANT_WHITESPACES = "\\s+";
+  public static final String SINGLE_WHITESPACE = " ";
   private final Grid<ChatMessage> grid;
   private final Storage storage;
   private final DateTimeProvider dateTimeProvider;
@@ -55,6 +61,7 @@ public class ChatView extends VerticalLayout {
     this.securityService = securityService;
     this.header = header;
 
+    add(header.init(), title());
     grid = buildChatGrid(storage);
   }
 
@@ -62,18 +69,14 @@ public class ChatView extends VerticalLayout {
   private Grid<ChatMessage> buildChatGrid(Storage storage) {
     chat = new VerticalLayout();
     chat.setVisible(true);
-    addAndExpand(chat);
+    add(chat);
     final Grid<ChatMessage> grid;
     grid = new Grid<>();
     grid.setItems(storage.getMessages());
     grid.addColumn(new ComponentRenderer<>(message -> new Html(renderRow(message))));
     grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT); // wrap cell content, so that the text wraps
-    chat.add(
-      header.init(),
-      title());
     chat.addAndExpand(
-      grid);
-    add(messageInput());
+      grid, messageInput());
     return grid;
   }
 
@@ -117,9 +120,17 @@ public class ChatView extends VerticalLayout {
 
   private MessageInput messageInput() {
     MessageInput input = new MessageInput();
+
     input.addSubmitListener(e -> {
-      if (hasText(e.getValue())) {
-        storage.addMessage(securityService.getLoggedInUserName(), e.getValue());
+      String sanitizedText = e.getValue()
+        .trim()
+        .replaceAll(REDUNDANT_WHITESPACES, SINGLE_WHITESPACE);
+      if (!hasText(sanitizedText)) {
+        Notification.show(MSG_EMPTY);
+      } else if (sanitizedText.length() > MESSAGE_LENGTH_LIMIT) {
+        Notification.show(MSG_LONG);
+      } else {
+        storage.addMessage(securityService.getLoggedInUserName(), sanitizedText);
       }
     });
     input.setWidthFull();
