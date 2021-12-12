@@ -13,8 +13,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
 
 import javax.annotation.PreDestroy;
-import java.util.List;
-import java.util.Objects;
 
 @Component
 @SessionScope
