@@ -22,6 +22,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +33,7 @@ import static org.springframework.util.StringUtils.hasText;
 
 @Slf4j
 @Route(ChatView.PATH)
+@PageTitle(ChatView.TITLE)
 @Push
 public class ChatView extends VerticalLayout {
   public static final String CHAT_MESSAGE_TEMPLATE = "%s   **%s**: %s";
