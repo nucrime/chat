@@ -14,6 +14,7 @@ import java.time.format.DateTimeFormatter;
 public class ChatMessage {
   @Id
   private String id;
+  private String chat;
   private LocalDateTime created;
   private String user;
   private String text;

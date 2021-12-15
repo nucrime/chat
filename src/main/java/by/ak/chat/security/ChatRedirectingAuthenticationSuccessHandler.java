@@ -1,7 +1,6 @@
 package by.ak.chat.security;
 
 import by.ak.chat.model.Storage;
-import by.ak.chat.view.ChatView;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -12,6 +11,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+
+import static by.ak.chat.view.ChatSelectView.PATH;
 
 @Component
 @RequiredArgsConstructor
@@ -28,8 +29,8 @@ public class ChatRedirectingAuthenticationSuccessHandler implements Authenticati
   @Override
   public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
     String user = securityService.getLoggedInUserName();
-    storage.addMessageUserPresence(String.format(USER_JOINED_MSG, user));
-    httpServletResponse.sendRedirect(ChatView.PATH); // todo migrate to v2
+    storage.addMessageUserPresence(String.format(USER_JOINED_MSG, user)); // move to chat view
+    httpServletResponse.sendRedirect(PATH); // todo migrate to v2
 //    httpServletResponse.sendRedirect(ChatViewV2.PATH);
   }
 }

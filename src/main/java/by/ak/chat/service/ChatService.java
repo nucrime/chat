@@ -2,6 +2,7 @@ package by.ak.chat.service;
 
 import by.ak.chat.model.ChatMessage;
 import by.ak.chat.repository.ChatRepository;
+import by.ak.chat.util.ChatSelector;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,9 +16,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ChatService {
   private final ChatRepository repository;
+  private final ChatSelector selector;
 
   public Mono<ChatMessage> save(ChatMessage chatMessage) {
     log.info("[FUAGRA] Saving chat message: {}", chatMessage);
+    chatMessage.setChat(selector.getCurrent());
     return repository.save(chatMessage);
   }
 

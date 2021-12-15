@@ -5,6 +5,7 @@ import by.ak.chat.component.MessageEditor;
 import by.ak.chat.model.ChatMessage;
 import by.ak.chat.model.Storage;
 import by.ak.chat.security.SecurityService;
+import by.ak.chat.util.ChatSelector;
 import by.ak.chat.util.DateTimeProvider;
 import com.github.rjeschke.txtmark.Processor;
 import com.vaadin.flow.component.AttachEvent;
@@ -57,16 +58,18 @@ public class ChatView extends VerticalLayout {
   private final SecurityService securityService;
   private final Header header;
   private final MessageEditor editor;
+  private final ChatSelector selector;
 
-  public ChatView(Storage storage, SecurityService securityService, DateTimeProvider dateTimeProvider, Header header, MessageEditor editor) {
+  public ChatView(Storage storage, SecurityService securityService, DateTimeProvider dateTimeProvider, Header header, MessageEditor editor, ChatSelector selector) {
     this.dateTimeProvider = dateTimeProvider;
     this.storage = storage;
     this.securityService = securityService;
     this.header = header;
     this.editor = editor;
+    this.selector = selector;
 
     add(header.init(), title());
-    grid = buildChatGrid(storage);
+    grid = buildChatGrid(storage, selector.getCurrent());
     add(editor);
 
     // Connect selected ChatMessage to editor or hide if none is selected
@@ -88,13 +91,13 @@ public class ChatView extends VerticalLayout {
   }
 
   // todo add edit messages??
-  private Grid<ChatMessage> buildChatGrid(Storage storage) {
+  private Grid<ChatMessage> buildChatGrid(Storage storage, String name) {
     chat = new VerticalLayout();
     chat.setVisible(true);
     add(chat);
     final Grid<ChatMessage> grid;
     grid = new Grid<>();
-    grid.setItems(storage.getMessages());
+    grid.setItems(storage.getChat(name));
     grid.addColumn(new ComponentRenderer<>(message -> new Html(renderRow(message))));
     grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT); // wrap cell content, so that the text wraps
     chat.addAndExpand(

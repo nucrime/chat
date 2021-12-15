@@ -7,7 +7,6 @@ import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.messages.MessageListItem;
 import com.vaadin.flow.shared.Registration;
-import lombok.Getter;
 import org.atmosphere.inject.annotation.ApplicationScoped;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,17 +15,20 @@ import reactor.core.publisher.Mono;
 import javax.annotation.PostConstruct;
 import java.time.Duration;
 import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.stream.Stream;
 
 @Component
 @ApplicationScoped
 public class Storage {
   public static final int ONE = 1;
   public static final int TWO = 2;
-  @Getter
-  private final Queue<ChatMessage> messages = new ConcurrentLinkedQueue<>();
+//  @Getter
+//  private final Queue<ChatMessage> messages = new ConcurrentLinkedQueue<>();
+  //map of queues
+  private final Chats chats = new Chats();
   // todo change to private final ConcurrentLinkedDeque<ChatMessage> messages = new ConcurrentLinkedDeque<>();
   //   use     messages.pollLast(); if messages.size() > 200
+
   private final ComponentEventBus eventBus = new ComponentEventBus(new Div());
   @Autowired
   private ChatService chatService;
@@ -38,6 +40,10 @@ public class Storage {
     addAndSave(newMessage);
     fireEvent();
 //    chatService.save(newMessage).subscribe();
+  }
+
+  public Stream<String> chats() {
+    return chats.all();
   }
 
   // chat V2
@@ -59,13 +65,13 @@ public class Storage {
   }
 
   public void updateMessage(ChatMessage message) {
-    messages.stream()
+    chats.stream(message)
       .filter(m -> message.getId().equals(m.getId()))
       .forEach(chatMessage -> chatMessage.setText(message.getText()));
   }
 
   public void removeMessage(ChatMessage message) {
-    messages.remove(message);
+    chats.remove(message);
   }
 
   //todo google: vaadin events, component events
@@ -82,8 +88,12 @@ public class Storage {
   }
 
   private void addAndSave(ChatMessage message) {
-    messages.add(message);
     chatService.save(message).subscribe();
+    chats.add(message);
+  }
+
+  public Queue<ChatMessage> getChat(String name) {
+    return chats.one(name);
   }
 
   public void fireEvent() {
@@ -108,6 +118,6 @@ public class Storage {
 /*    chatService.findAll()
       .subscribeOn(Schedulers.boundedElastic())
       .subscribe(messages::add); // migration to tailable cursor*/
-    chatService.findAll().subscribe(messages::add);
+    chatService.findAll().subscribe(chats::add);
   }
 }

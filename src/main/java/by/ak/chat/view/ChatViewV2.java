@@ -38,7 +38,7 @@ public class ChatViewV2 extends VerticalLayout {
     addAndExpand(getHeader());
 
     MessageList list = new MessageList();
-    initMessageList(list);
+//    initMessageList(list);
     MessageInput input = getMessageInput(list);
     VerticalLayout chatLayout = getChatLayout(list, input);
 
@@ -54,15 +54,15 @@ public class ChatViewV2 extends VerticalLayout {
     return header;
   }
 
-  private void initMessageList(MessageList messageList) {
-    List<MessageListItem> messageListItems = storage.getMessages().stream().map(message ->
-        new MessageListItem(
-          message.getText(),
-          dateTimeProvider.format(message.getCreated()),
-          message.getUser()))
-      .collect(Collectors.toList());
-    messageList.setItems(messageListItems);
-  }
+//  private void initMessageList(MessageList messageList) {
+//    List<MessageListItem> messageListItems = storage.getChats().stream().map(message ->
+//        new MessageListItem(
+//          message.getText(),
+//          dateTimeProvider.format(message.getCreated()),
+//          message.getUser()))
+//      .collect(Collectors.toList());
+//    messageList.setItems(messageListItems);
+//  }
 
   private MessageInput getMessageInput(MessageList list) {
     MessageInput input = new MessageInput();
