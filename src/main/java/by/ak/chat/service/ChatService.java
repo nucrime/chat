@@ -19,8 +19,8 @@ public class ChatService {
   private final ChatSelector selector;
 
   public Mono<ChatMessage> save(ChatMessage chatMessage) {
-    log.info("[FUAGRA] Saving chat message: {}", chatMessage);
     chatMessage.setChat(selector.getCurrent());
+    log.info("[FUAGRA] Saving chat message: {}", chatMessage);
     return repository.save(chatMessage);
   }
 
