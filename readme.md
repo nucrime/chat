@@ -1,3 +1,11 @@
+Chat application. 
+Features:
+* sign in/sign up
+* chat messaging
+* chat messages markdown support
+* inchat notifications about user presence (joined/left)
+* user management for administrators
+
 # Prerequisites
 [JDK 17](https://jdk.java.net/17/)
 
