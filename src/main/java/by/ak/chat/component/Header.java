@@ -1,6 +1,7 @@
 package by.ak.chat.component;
 
 import by.ak.chat.security.SecurityService;
+import by.ak.chat.view.ChatSelectView;
 import by.ak.chat.view.ChatView;
 import by.ak.chat.view.UserView;
 import com.vaadin.flow.component.UI;
@@ -26,6 +27,7 @@ import static by.ak.chat.view.ChatView.LOG_OUT;
 // todo extends AppLayout implements RouterLayout looks like bad practice it's not a main layout and should be placed somewhere else
 public class Header extends AppLayout implements RouterLayout {
   public static final String CHAT = "Chat";
+  public static final String CHATS = "Chat list";
   private final SecurityService securityService;
 
   public VerticalLayout init() {
@@ -39,7 +41,11 @@ public class Header extends AppLayout implements RouterLayout {
     }
 
     Button chatButton = new Button(CHAT, e -> current.navigate(ChatView.PATH));
+    Button chatList = new Button(CHATS, e -> {
+      current.navigate(ChatSelectView.PATH);
+    });
     header.add(chatButton);
+    header.add(chatList);
 
     Button darkTheme = new Button(VaadinIcon.MOON_O.create(), click -> {
       ThemeList themeList = UI.getCurrent().getElement().getThemeList();
