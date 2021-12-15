@@ -106,7 +106,7 @@ public class ChatView extends VerticalLayout {
   }
 
   private VerticalLayout title() {
-    H3 title = new H3(TITLE);
+    H3 title = new H3(TITLE + " | " + selector.getCurrent());
     VerticalLayout titleLayout = new VerticalLayout();
     titleLayout.add(title);
     titleLayout.setHeight(10, Unit.PERCENTAGE);
