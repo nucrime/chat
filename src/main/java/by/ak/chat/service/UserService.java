@@ -35,7 +35,7 @@ public class UserService {
   }
 
   public Optional<User> findById(String id) {
-    log.info("[FUAGRA] Searching user by id: {}", id);
+//    log.info("[FUAGRA] Searching user by id: {}", id); // caused too many logs
     return repository.findById(id).blockOptional();
   }
 
