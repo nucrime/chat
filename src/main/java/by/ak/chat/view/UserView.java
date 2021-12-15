@@ -35,6 +35,7 @@ public class UserView extends VerticalLayout {
     add(header.init());
     grid = new Grid<>(User.class);
     grid.setColumns("id", "username", "email", "firstName", "lastName", "role", "created");
+    // todo fix rendering of created date. time always changes unexpectedly, render as in chatview
 
     Button addNewBtn = new Button("Add new user", VaadinIcon.PLUS.create(), event -> editor.editCustomer(new User()));
 

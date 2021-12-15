@@ -1,10 +1,15 @@
-Chat application. 
+Chat application.
+
 Features:
 * sign in/sign up
 * chat messaging
+* message wrapping if it exceeds the width of the screen
+* date/time view in accordance with the time zone of the user
+* chat history automatic backup to cloud db
 * chat messages markdown support
-* inchat notifications about user presence (joined/left)
-* user management for administrators
+* in chat notifications about user presence (joined/left. latter alse depends on user being logged out by timeout)
+* user management for administrators (filtering)
+* toggle for dark / light theme
 
 # Prerequisites
 [JDK 17](https://jdk.java.net/17/)
