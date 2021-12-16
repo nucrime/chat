@@ -8,6 +8,8 @@ Features:
 * chat history automatic backup to cloud db
 * chat messages markdown support
 * in chat notifications about user presence (joined/left. latter alse depends on user being logged out by timeout)
+* chat rooms
+* chat rooms creation
 * user management for administrators (filtering)
 * toggle for dark / light theme
 
