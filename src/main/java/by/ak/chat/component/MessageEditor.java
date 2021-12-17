@@ -87,9 +87,7 @@ public class MessageEditor extends VerticalLayout implements KeyNotifier {
     final boolean persisted = m.getId() != null;
     if (persisted) {
       // Find entity for editing
-      message = chatService.findById(m.getId()).get();
-    } else {
-      message = m;
+      message = storage.getMessage(m).orElse(m);
     }
     undo.setVisible(persisted);
 

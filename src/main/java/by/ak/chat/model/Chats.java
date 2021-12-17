@@ -2,21 +2,22 @@ package by.ak.chat.model;
 
 import lombok.Data;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Stream;
 
 @Data
 public class Chats {
-  private final Map<String, Queue<ChatMessage>> messages = new ConcurrentHashMap<>();
+  // todo limit to 200 for each chat
+  private final Map<String, List<ChatMessage>> messages = new ConcurrentHashMap<>();
 
   public Stream<ChatMessage> stream(ChatMessage message) {
     return messages.get(message.getChat()).stream();
   }
 
-  public Queue<ChatMessage> one(String chat) {
+  public List<ChatMessage> one(String chat) {
     return messages.get(chat);
   }
 
@@ -25,7 +26,7 @@ public class Chats {
   }
 
   public void add(ChatMessage message) {
-    messages.computeIfAbsent(message.getChat(), k -> new ConcurrentLinkedQueue<>());
+    messages.computeIfAbsent(message.getChat(), k -> new LinkedList<>());
     messages.get(message.getChat()).add(message);
   }
 

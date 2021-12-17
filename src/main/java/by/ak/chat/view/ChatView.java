@@ -77,8 +77,8 @@ public class ChatView extends VerticalLayout {
       if (securityService.getLoggedInUserName().equals(e.getValue().getUser())) { // only author can edit
         editor.editMessage(e.getValue());
       } else {
-        if (editor.isVisible()) { // if editor is visible and user is not the author of message, hide it
-          editor.cancel();
+        if (editor.isVisible()) { // if editor is visible or user is not the author of message, hide it
+          editor.setVisible(false);
         }
       }
     });
@@ -86,7 +86,14 @@ public class ChatView extends VerticalLayout {
     // Listen changes made by the editor, refresh data from backend
     editor.setChangeHandler(() -> {
       editor.setVisible(false);
-      storage.fireEvent();
+      getUI()
+        .ifPresent(
+          ui ->
+            ui.access(
+              () -> {
+                grid.getDataProvider().refreshAll();
+                getUI().ifPresent(UI::push);
+              }));
     });
   }
 

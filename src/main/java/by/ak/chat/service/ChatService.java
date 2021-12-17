@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.Optional;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -19,7 +17,6 @@ public class ChatService {
   private final ChatSelector selector;
 
   public Mono<ChatMessage> save(ChatMessage chatMessage) {
-    chatMessage.setChat(selector.getCurrent());
     log.info("[FUAGRA] Saving chat message: {}", chatMessage);
     return repository.save(chatMessage);
   }
@@ -35,9 +32,13 @@ public class ChatService {
     return repository.findAll();
   }
 
-  public Optional<ChatMessage> findById(String id) {
+  public Mono<ChatMessage> findById(String id) {
     log.info("[FUAGRA] Searching chat message by id: {}", id);
-    return repository.findById(id).blockOptional();
+    return repository.findById(id);
+  }
+
+  public String current() {
+    return selector.getCurrent();
   }
 
   public void delete(ChatMessage chatMessage) {
