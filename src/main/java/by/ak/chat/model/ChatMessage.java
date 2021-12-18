@@ -5,6 +5,8 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -14,6 +16,8 @@ import java.time.format.DateTimeFormatter;
 public class ChatMessage {
   @Id
   private String id;
+  @NotBlank
+  @Size(min = 5, max = 20)
   private String chat;
   private LocalDateTime created;
   private String user;
