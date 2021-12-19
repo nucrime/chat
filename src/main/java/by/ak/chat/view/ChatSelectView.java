@@ -20,7 +20,6 @@ import static by.ak.chat.view.ChatSelectView.TITLE;
 public class ChatSelectView extends VerticalLayout {
   public static final String PATH = "/select";
   public static final String TITLE = "FUAGRA";
-  private static final String USER_JOINED_MSG = "**%s** joined";
 
   private final ChatSelector chatSelector;
   private final Header header;

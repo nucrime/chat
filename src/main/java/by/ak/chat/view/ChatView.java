@@ -11,25 +11,22 @@ import com.github.rjeschke.txtmark.Processor;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.Html;
-import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
-import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.messages.MessageInput;
 import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.Push;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
 import java.util.Objects;
 
 import static org.springframework.util.StringUtils.hasText;
@@ -69,42 +66,32 @@ public class ChatView extends VerticalLayout {
     this.selector = selector;
 
     add(header.init(), title());
-    grid = buildChatGrid(storage, selector.getCurrent());
+    grid = buildChatGrid();
     add(editor);
 
     // Connect selected ChatMessage to editor or hide if none is selected
     grid.asSingleSelect().addValueChangeListener(e -> {
-      if (securityService.getLoggedInUserName().equals(e.getValue().getUser())) { // only author can edit
+      if (e.getValue() != null && securityService.getLoggedInUserName().equals(e.getValue().getUser())) { // only author can edit
         editor.editMessage(e.getValue());
       } else {
         if (editor.isVisible()) { // if editor is visible or user is not the author of message, hide it
           editor.setVisible(false);
+          grid.deselect(e.getValue());
         }
       }
     });
 
     // Listen changes made by the editor, refresh data from backend
-    editor.setChangeHandler(() -> {
-      editor.setVisible(false);
-      getUI()
-        .ifPresent(
-          ui ->
-            ui.access(
-              () -> {
-                grid.getDataProvider().refreshAll();
-                getUI().ifPresent(UI::push);
-              }));
-    });
+    editor.setChangeHandler(this::refreshAfterEdit);
   }
 
-  // todo add edit messages??
-  private Grid<ChatMessage> buildChatGrid(Storage storage, String name) {
+  private Grid<ChatMessage> buildChatGrid() {
     chat = new VerticalLayout();
     chat.setVisible(true);
     add(chat);
     final Grid<ChatMessage> grid;
     grid = new Grid<>();
-    grid.setItems(storage.getChat(name));
+    grid.setItems(currentChat());
     grid.addColumn(new ComponentRenderer<>(message -> new Html(renderRow(message))));
     grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT); // wrap cell content, so that the text wraps
     chat.addAndExpand(
@@ -119,35 +106,6 @@ public class ChatView extends VerticalLayout {
     titleLayout.setHeight(10, Unit.PERCENTAGE);
     titleLayout.setAlignItems(Alignment.CENTER);
     return titleLayout;
-  }
-
-  private HorizontalLayout inputAndSendButton() {
-    TextField textField = textField();
-    return new HorizontalLayout() {
-      {
-        addAndExpand(
-          textField,
-          sendButton(textField));
-      }
-    };
-  }
-
-  private TextField textField() {
-    TextField textField = new TextField();
-    textField.setAutofocus(true);
-    textField.setWidthFull();
-    return textField;
-  }
-
-  private Button sendButton(TextField textField) {
-    Button sendButton = new Button("➤", e -> {
-      if (hasText(textField.getValue())) {
-        storage.addMessage(securityService.getLoggedInUserName(), textField.getValue());
-        textField.clear();
-      }
-    });
-    sendButton.addClickShortcut(Key.ENTER);
-    return sendButton;
   }
 
   private MessageInput messageInput() {
@@ -185,6 +143,20 @@ public class ChatView extends VerticalLayout {
             }));
   }
 
+  private void refreshAfterEdit() {
+    editor.setVisible(false);
+    getUI()
+      .ifPresent(
+        ui ->
+          ui.access(
+            () -> {
+              getUI().ifPresent(UI::push);
+              ui.beforeClientResponse(grid, ctx -> {
+                grid.setItems(currentChat());
+              });
+            }));
+  }
+
   @Override
   protected void onAttach(AttachEvent attachEvent) {
     registration = storage.attachListener(this::onMessage);
@@ -205,6 +177,10 @@ public class ChatView extends VerticalLayout {
           dateTimeProvider.formatTime(message.getCreated()),
           message.getUser(),
           message.getText()));
+  }
+
+  private List<ChatMessage> currentChat() {
+    return storage.getChat(selector.getCurrent());
   }
 }
 

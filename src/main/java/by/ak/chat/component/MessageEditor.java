@@ -87,7 +87,9 @@ public class MessageEditor extends VerticalLayout implements KeyNotifier {
     final boolean persisted = m.getId() != null;
     if (persisted) {
       // Find entity for editing
-      message = storage.getMessage(m).orElse(m);
+      message = storage.getMessage(m).get();
+    } else {
+      message = m;
     }
     undo.setVisible(persisted);
 
