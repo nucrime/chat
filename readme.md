@@ -2,7 +2,9 @@ Chat application.
 
 Features:
 * sign in/sign up
+* sign up fields validation
 * chat messaging
+* chat message editing
 * message wrapping if it exceeds the width of the screen
 * date/time view in accordance with the time zone of the user
 * chat history automatic backup to cloud db
@@ -10,7 +12,8 @@ Features:
 * in chat notifications about user presence (joined/left. latter alse depends on user being logged out by timeout)
 * chat rooms
 * chat rooms creation
-* user management for administrators (filtering)
+* chat name validation
+* user management for administrators (with filtering)
 * toggle for dark / light theme
 
 # Prerequisites
