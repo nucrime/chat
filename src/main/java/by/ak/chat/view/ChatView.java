@@ -8,6 +8,7 @@ import by.ak.chat.security.SecurityService;
 import by.ak.chat.util.ChatSelector;
 import by.ak.chat.util.DateTimeProvider;
 import com.github.rjeschke.txtmark.Processor;
+import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.Html;
@@ -71,7 +72,7 @@ public class ChatView extends VerticalLayout {
 
     // Connect selected ChatMessage to editor or hide if none is selected
     grid.asSingleSelect().addValueChangeListener(e -> {
-      if (e.getValue() != null && securityService.getLoggedInUserName().equals(e.getValue().getUser())) { // only author can edit
+      if (e.getValue() != null && evaluatePermission(securityService, e)) { // only author or admin can edit
         editor.editMessage(e.getValue());
       } else {
         if (editor.isVisible()) { // if editor is visible or user is not the author of message, hide it
@@ -83,6 +84,10 @@ public class ChatView extends VerticalLayout {
 
     // Listen changes made by the editor, refresh data from backend
     editor.setChangeHandler(this::refreshAfterEdit);
+  }
+
+  private boolean evaluatePermission(SecurityService securityService, AbstractField.ComponentValueChangeEvent<Grid<ChatMessage>, ChatMessage> e) {
+    return securityService.getLoggedInUserName().equals(e.getValue().getUser()) || securityService.isAdmin();
   }
 
   private Grid<ChatMessage> buildChatGrid() {
