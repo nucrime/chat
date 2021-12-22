@@ -17,6 +17,8 @@ import org.springframework.stereotype.Component;
 @Component
 @UIScope
 public class MessageEditor extends VerticalLayout implements KeyNotifier {
+  public static final String BLUE = "primary";
+  public static final String ERROR = "error";
   private final ChatService chatService;
   private ChatMessage message;
   private final Storage storage;
@@ -45,8 +47,8 @@ public class MessageEditor extends VerticalLayout implements KeyNotifier {
 
     setSpacing(true);
 
-    save.getElement().getThemeList().add("primary");
-    delete.getElement().getThemeList().add("error");
+    save.getElement().getThemeList().add(BLUE);
+    delete.getElement().getThemeList().add(ERROR);
 
     addKeyPressListener(Key.ENTER, e -> save());
 

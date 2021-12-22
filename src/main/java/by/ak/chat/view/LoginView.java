@@ -17,37 +17,44 @@ import java.time.ZoneId;
 import static by.ak.chat.view.ChatView.TITLE;
 
 @Route(LoginView.PATH)
-@PageTitle("Login")
+@PageTitle(LoginView.TITLE)
 public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
   public static final String PATH = "/login";
+  public static final String LOGIN = "login";
+  public static final String REGISTER = "Register";
+  public static final String ERROR = "error";
+  public static final String RETRIEVE_USER_TIMEZONE = "return Intl.DateTimeFormat().resolvedOptions().timeZone";
+  public static final String LOGIN_VIEW = "login-view";
+  public static final String TITLE = "Login";
+
   protected LoginForm login = new LoginForm();
   private final DateTimeProvider dateTimeProvider;
 
   public LoginView(DateTimeProvider dateTimeProvider) {
     this.dateTimeProvider = dateTimeProvider;
 
-    addClassName("login-view");
+    addClassName(LOGIN_VIEW);
     setSizeFull();
 
     setJustifyContentMode(JustifyContentMode.CENTER);
     setAlignItems(Alignment.CENTER);
 
-    login.setAction("login");
+    login.setAction(LOGIN);
     login.addForgotPasswordListener(event -> {
       getUI().ifPresent(ui -> ui.navigate(ForgotPasswordView.PATH));
-      });
+    });
     login.setForgotPasswordButtonVisible(false); //todo create forgot password view
-    add(new H1(TITLE), login);
-    add(new Button("Register", e -> getUI().ifPresent(ui -> ui.navigate(RegistrationView.PATH))));
+    add(new H1(ChatView.TITLE), login);
+    add(new Button(REGISTER, e -> getUI().ifPresent(ui -> ui.navigate(RegistrationView.PATH))));
   }
 
   @Override
   public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
-    if(beforeEnterEvent.getLocation()
+    if (beforeEnterEvent.getLocation()
       .getQueryParameters()
       .getParameters()
-      .containsKey("error")) {
+      .containsKey(ERROR)) {
       login.setError(true);
     }
   }
@@ -63,7 +70,7 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
       page.retrieveExtendedClientDetails(extendedClientDetails -> {
         dateTimeProvider.timeOffset = extendedClientDetails.getTimezoneOffset();
       });
-      page.executeJs("return Intl.DateTimeFormat().resolvedOptions().timeZone")
+      page.executeJs(RETRIEVE_USER_TIMEZONE)
         .then(String.class, result -> dateTimeProvider.zoneId = ZoneId.of(result));
     });
   }

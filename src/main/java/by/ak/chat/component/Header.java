@@ -28,6 +28,7 @@ import static by.ak.chat.view.ChatView.LOG_OUT;
 public class Header extends AppLayout implements RouterLayout {
   public static final String CHAT = "Chat";
   public static final String CHATS = "Chat list";
+  public static final String USERS_MANAGEMENT = "Users management";
   private final SecurityService securityService;
 
   public VerticalLayout init() {
@@ -36,7 +37,7 @@ public class Header extends AppLayout implements RouterLayout {
     UI current = UI.getCurrent();
 
     if (securityService.isAdmin()) {
-      Button management = new Button("Users management", e -> current.navigate(UserView.PATH));
+      Button management = new Button(USERS_MANAGEMENT, e -> current.navigate(UserView.PATH));
       header.add(management);
     }
 

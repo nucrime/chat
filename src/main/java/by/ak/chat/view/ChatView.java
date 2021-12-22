@@ -72,7 +72,7 @@ public class ChatView extends VerticalLayout {
 
     // Connect selected ChatMessage to editor or hide if none is selected
     grid.asSingleSelect().addValueChangeListener(e -> {
-      if (e.getValue() != null && evaluatePermission(securityService, e)) { // only author or admin can edit
+      if (e.getValue() != null && isAuthorOrAdmin(securityService, e)) { // only author or admin can edit
         editor.editMessage(e.getValue());
       } else {
         if (editor.isVisible()) { // if editor is visible or user is not the author of message, hide it
@@ -86,7 +86,7 @@ public class ChatView extends VerticalLayout {
     editor.setChangeHandler(this::refreshAfterEdit);
   }
 
-  private boolean evaluatePermission(SecurityService securityService, AbstractField.ComponentValueChangeEvent<Grid<ChatMessage>, ChatMessage> e) {
+  private boolean isAuthorOrAdmin(SecurityService securityService, AbstractField.ComponentValueChangeEvent<Grid<ChatMessage>, ChatMessage> e) {
     return securityService.getLoggedInUserName().equals(e.getValue().getUser()) || securityService.isAdmin();
   }
 
