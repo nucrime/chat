@@ -14,8 +14,6 @@ import com.vaadin.flow.router.Route;
 
 import java.time.ZoneId;
 
-import static by.ak.chat.view.ChatView.TITLE;
-
 @Route(LoginView.PATH)
 @PageTitle(LoginView.TITLE)
 public class LoginView extends VerticalLayout implements BeforeEnterObserver {
