@@ -46,6 +46,8 @@ public class ChatView extends VerticalLayout {
   public static final String MSG_EMPTY = "Message is empty";
   public static final String REDUNDANT_WHITESPACES = "\\s+";
   public static final String SINGLE_WHITESPACE = " ";
+  public static final int DEFAULT_HEIGHT = 10;
+  public static final String DELIMITER = " | ";
 
   private final Grid<ChatMessage> grid;
   private final Storage storage;
@@ -105,10 +107,10 @@ public class ChatView extends VerticalLayout {
   }
 
   private VerticalLayout title() {
-    H3 title = new H3(TITLE + " | " + selector.getCurrent());
+    H3 title = new H3(TITLE + DELIMITER + selector.getCurrent());
     VerticalLayout titleLayout = new VerticalLayout();
     titleLayout.add(title);
-    titleLayout.setHeight(10, Unit.PERCENTAGE);
+    titleLayout.setHeight(DEFAULT_HEIGHT, Unit.PERCENTAGE);
     titleLayout.setAlignItems(Alignment.CENTER);
     return titleLayout;
   }

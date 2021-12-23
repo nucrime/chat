@@ -50,7 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       .and().authorizeRequests()
       .antMatchers(RegistrationView.PATH).permitAll()
       .antMatchers(ForgotPasswordView.PATH).permitAll()
-      .antMatchers(UserView.PATH).hasAuthority(Role.ADMINISTRATOR.name())
+//      .antMatchers(UserView.PATH).hasAuthority(Role.ADMINISTRATOR.name())
 
       // Allow all Vaadin internal requests.
       .requestMatchers(SecurityUtils::isFrameworkInternalRequest).permitAll()

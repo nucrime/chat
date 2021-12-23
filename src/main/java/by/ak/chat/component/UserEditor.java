@@ -1,5 +1,6 @@
 package by.ak.chat.component;
 
+import by.ak.chat.exception.UserExists;
 import by.ak.chat.model.Role;
 import by.ak.chat.model.User;
 import by.ak.chat.service.UserService;
@@ -8,6 +9,7 @@ import com.vaadin.flow.component.KeyNotifier;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -74,8 +76,12 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
   }
 
   void save() {
-    userService.save(user);
-    changeHandler.onChange();
+    try {
+      userService.save(user);
+      changeHandler.onChange();
+    } catch (UserExists e) {
+      Notification.show("User with this username already exists");
+    }
   }
 
   public interface ChangeHandler {

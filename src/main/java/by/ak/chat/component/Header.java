@@ -36,10 +36,10 @@ public class Header extends AppLayout implements RouterLayout {
     HorizontalLayout header = new HorizontalLayout();
     UI current = UI.getCurrent();
 
-    if (securityService.isAdmin()) {
+//    if (securityService.isAdmin()) {
       Button management = new Button(USER_MANAGEMENT, e -> current.navigate(UserView.PATH));
       header.add(management);
-    }
+//    }
 
     Button chatButton = new Button(CHAT, e -> current.navigate(ChatView.PATH));
     Button chatList = new Button(CHATS, e -> {
