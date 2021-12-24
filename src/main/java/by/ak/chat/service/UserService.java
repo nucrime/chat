@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -26,11 +27,14 @@ public class UserService {
     log.info("[FUAGRA] Saving user: {}", user);
     find(user.getUsername())
       .ifPresent(u -> {
-        if (!(securityService.isAdmin() ||
+        if (!(securityService.isAdmin() || // fix logic. user can delete himself and can't login after any changes to username
           securityService.getLoggedInUserName().equals(u.getUsername())))
           throw new UserExists();
+        String newPassword = user.getPassword();
+        if (!(passwordEncoder.matches(newPassword, u.getPassword()) || Objects.equals(newPassword,  u.getPassword()))) {
+          user.setPassword(passwordEncoder.encode(user.getPassword())); // set new password if it's changed
+        }
       });
-    user.setPassword(passwordEncoder.encode(user.getPassword()));
     repository.save(user).subscribe();
   }
 
