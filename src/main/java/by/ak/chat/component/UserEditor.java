@@ -1,6 +1,6 @@
 package by.ak.chat.component;
 
-import by.ak.chat.exception.UserExists;
+import by.ak.chat.exception.AnotherUserWithUsernameExists;
 import by.ak.chat.model.Role;
 import by.ak.chat.model.User;
 import by.ak.chat.service.UserService;
@@ -79,7 +79,7 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
     try {
       userService.save(user);
       changeHandler.onChange();
-    } catch (UserExists e) {
+    } catch (AnotherUserWithUsernameExists e) {
       Notification.show("User with this username already exists");
     }
   }

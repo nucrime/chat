@@ -2,7 +2,6 @@ package by.ak.chat.model;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.Email;
@@ -17,7 +16,6 @@ public class User {
   private String id;
   @NotBlank
   @Size(min = 3, max = 30)
-  @Indexed(unique = true)
   private String username;
 
   @NotBlank
