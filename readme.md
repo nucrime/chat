@@ -14,7 +14,7 @@ Features:
 * chat rooms creation
 * chat name validation
 * user management for administrators (with filtering)
-* user management for users
+* user management for users. Available fields: First name, Last name, Username, email, role
 * toggle for dark / light theme
 
 # Prerequisites
