@@ -2,7 +2,7 @@ Chat application.
 
 Features:
 * sign in/sign up
-* sign up fields validation
+* sign up fields validation 
 * chat messaging
 * chat message editing
 * message wrapping if it exceeds the width of the screen
