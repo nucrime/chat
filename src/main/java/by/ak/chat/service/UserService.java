@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -23,20 +25,12 @@ public class UserService {
   private final SecurityService securityService;
 
   public void save(User user) {
-    find(user.getUsername())
-      .ifPresent(u -> {
-        if (securityService.isAdmin() ||
-          securityService.getLoggedInUserName().equals(u.getUsername())) {
-          if (!u.getId().equals(user.getId())) throw new AnotherUserWithUsernameExists();
-
-          String newPassword = user.getPassword();
-          if (!(passwordEncoder.matches(newPassword, u.getPassword()) || Objects.equals(newPassword, u.getPassword()))) {
-            user.setPassword(passwordEncoder.encode(user.getPassword())); // set new password if it's changed
-          }
-        }
-      });
     log.info("[FUAGRA] Saving user: {}", user);
-    repository.save(user).subscribe();
+    repository.save(
+      find(user.getUsername())
+        .map(updateUserWithEncodedPassword(user))
+        .orElseGet(newUserWithEncodedPassword(user))
+    ).subscribe();
   }
 
   public List<User> findAll() {
@@ -62,5 +56,40 @@ public class UserService {
   public void delete(User user) {// todo fix logic. user can delete himself. may be show flag deleted instead of deleting them. and add https://vaadin.com/docs/v14/ds/components/confirm-dialog
     log.info("[FUAGRA] Deleting user {}", user);
     repository.delete(user).subscribe();
+  }
+
+  private Function<User, User> updateUserWithEncodedPassword(User user) {
+    return foundUser -> {
+      if (adminOrAuthorOfUserRecord(foundUser)) {
+        if (anotherUserWithSameUsernameFound(user, foundUser)) throw new AnotherUserWithUsernameExists();
+
+        String oldPassword = foundUser.getPassword();
+        String newPassword = user.getPassword();
+        if (passwordChanged(oldPassword, newPassword)) {
+          newUserWithEncodedPassword(user);
+        }
+      }
+      return user;
+    };
+  }
+
+  private boolean passwordChanged(String oldPassword, String newPassword) {
+    return !(passwordEncoder.matches(newPassword, oldPassword) || Objects.equals(newPassword, oldPassword));
+  }
+
+  private boolean anotherUserWithSameUsernameFound(User user, User foundUser) {
+    return !foundUser.getId().equals(user.getId());
+  }
+
+  private boolean adminOrAuthorOfUserRecord(User u) {
+    return securityService.isAdmin() ||
+      securityService.getLoggedInUserName().equals(u.getUsername());
+  }
+
+  private Supplier<User> newUserWithEncodedPassword(User user) {
+    return () -> {
+      user.setPassword(passwordEncoder.encode(user.getPassword()));
+      return user;
+    };
   }
 }
