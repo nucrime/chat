@@ -25,7 +25,7 @@ public class UserService {
   public void save(User user) {
     find(user.getUsername())
       .ifPresent(u -> {
-        if (securityService.isAdmin() || // fix logic. user can delete himself
+        if (securityService.isAdmin() ||
           securityService.getLoggedInUserName().equals(u.getUsername())) {
           if (!u.getId().equals(user.getId())) throw new AnotherUserWithUsernameExists();
 
@@ -59,7 +59,7 @@ public class UserService {
     return repository.findByUsername(username).blockOptional();
   }
 
-  public void delete(User user) {
+  public void delete(User user) {// todo fix logic. user can delete himself. may be show flag deleted instead of deleting them. and add https://vaadin.com/docs/v14/ds/components/confirm-dialog
     log.info("[FUAGRA] Deleting user {}", user);
     repository.delete(user).subscribe();
   }

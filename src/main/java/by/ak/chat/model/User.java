@@ -10,8 +10,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Data
 @Document
@@ -36,7 +36,7 @@ public class User {
 
   @Past
   @NotNull
-  private Date dob;
+  private LocalDate dob;
 
   @NotBlank
   @Email

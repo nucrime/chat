@@ -1,10 +1,8 @@
 package by.ak.chat.security;
 
-import by.ak.chat.model.Role;
 import by.ak.chat.view.ForgotPasswordView;
 import by.ak.chat.view.LoginView;
 import by.ak.chat.view.RegistrationView;
-import by.ak.chat.view.UserView;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
