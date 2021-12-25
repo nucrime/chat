@@ -66,7 +66,7 @@ public class UserService {
         String oldPassword = foundUser.getPassword();
         String newPassword = user.getPassword();
         if (passwordChanged(oldPassword, newPassword)) {
-          newUserWithEncodedPassword(user);
+          newUserWithEncodedPassword(user).get();
         }
       }
       return user;
