@@ -8,6 +8,7 @@ import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.KeyNotifier;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -30,6 +31,7 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
   TextField lastName = new TextField("Last name");
   ComboBox<Role> role = new ComboBox<>("Role");
   TextField password = new TextField("Password");
+  DatePicker dob = new DatePicker("Date of birth");
 
   private Button save = new Button("Save", VaadinIcon.CHECK.create());
   private Button cancel = new Button("Cancel", VaadinIcon.CLOSE_SMALL.create());
@@ -47,8 +49,10 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
     role.setItems(Role.values());
     secondRow.add(email, role, password);
     HorizontalLayout thirdRow = new HorizontalLayout();
-    thirdRow.add(actions);
-    add(firstRow, secondRow, thirdRow);
+    thirdRow.add(dob);
+    HorizontalLayout fourthRow = new HorizontalLayout();
+    fourthRow.add(actions);
+    add(firstRow, secondRow, thirdRow, fourthRow);
 
     // bind using naming convention
     binder.bindInstanceFields(this);
