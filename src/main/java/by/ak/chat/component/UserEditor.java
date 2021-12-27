@@ -49,10 +49,10 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
     role.setItems(Role.values());
     secondRow.add(email, role, password);
     HorizontalLayout thirdRow = new HorizontalLayout();
-    thirdRow.add(dob);
-    HorizontalLayout fourthRow = new HorizontalLayout();
-    fourthRow.add(actions);
-    add(firstRow, secondRow, thirdRow, fourthRow);
+    thirdRow.add(dob, actions);
+    thirdRow.setAlignItems(Alignment.END); // Place items at the bottom
+    add(firstRow, secondRow, thirdRow);
+    this.setAlignItems(Alignment.CENTER);
 
     // bind using naming convention
     binder.bindInstanceFields(this);
