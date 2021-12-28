@@ -42,6 +42,8 @@ public class User {
   @Email
   private String email;
 
+  private Boolean enabled = true;
+
   private byte[] avatar;
 
   private Role role = Role.USER;

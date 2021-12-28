@@ -18,10 +18,11 @@ public class UserDetailsImpl implements UserDetails {
   private String username;
   private String password;
   private Collection<GrantedAuthority> authorities;
+  private boolean enabled;
 
   public static UserDetailsImpl build(User user) {
     List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(user.getRole().name()));
-    return new UserDetailsImpl(user.getId(), user.getUsername(), user.getPassword(), authorities);
+    return new UserDetailsImpl(user.getId(), user.getUsername(), user.getPassword(), authorities, user.getEnabled());
   }
 
   @Override
@@ -56,6 +57,6 @@ public class UserDetailsImpl implements UserDetails {
 
   @Override
   public boolean isEnabled() {
-    return true;
+    return enabled;
   }
 }

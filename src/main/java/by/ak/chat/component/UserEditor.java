@@ -65,11 +65,12 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
     save.getElement().getThemeList().add("primary");
     delete.getElement().getThemeList().add("error");
 
-    addKeyPressListener(Key.ENTER, e -> save());
-
     // wire action buttons to save, delete and reset
     save.addClickListener(e -> save());
+    addKeyPressListener(Key.ENTER, e -> save());
     delete.addClickListener(e -> delete());
+    addKeyPressListener(Key.BACKSPACE, e -> delete());
+    addKeyPressListener(Key.DELETE, e -> delete());
     cancel.addClickListener(e -> editCustomer(user));
     setVisible(false);
   }
