@@ -38,9 +38,9 @@ public class UserService {
     return repository.findAll().toStream().collect(Collectors.toList());
   }
 
-  public List<User> findByLastName(String lastName) {
-    log.info("[FUAGRA] Searching user by lastname: {}", lastName);
-    return repository.findByLastNameLike(lastName).toStream().collect(Collectors.toList());
+  public List<User> findByAnyField(String query) {
+    log.info("[FUAGRA] Searching user by any field: {}", query);
+    return repository.findByAnyField(query).toStream().collect(Collectors.toList());
   }
 
   public Optional<User> findById(String id) {
