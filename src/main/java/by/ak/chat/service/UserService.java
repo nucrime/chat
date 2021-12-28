@@ -53,6 +53,12 @@ public class UserService {
     return repository.findByUsername(username).blockOptional();
   }
 
+  public void banOrUnban(User user) {
+    user.setEnabled(!user.getEnabled());
+    log.info("[FUAGRA] Setting user enabled: {}", user.getEnabled());
+    repository.save(user).subscribe();
+  }
+
   public void delete(User user) {// todo fix logic. user can delete himself. may be show flag deleted instead of deleting them. and add https://vaadin.com/docs/v14/ds/components/confirm-dialog
     log.info("[FUAGRA] Deleting user {}", user);
     repository.delete(user).subscribe();

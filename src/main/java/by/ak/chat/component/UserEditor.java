@@ -36,7 +36,8 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
   private Button save = new Button("Save", VaadinIcon.CHECK.create());
   private Button cancel = new Button("Cancel", VaadinIcon.CLOSE_SMALL.create());
   private Button delete = new Button("Delete", VaadinIcon.TRASH.create());
-  private HorizontalLayout actions = new HorizontalLayout(save, cancel, delete);
+  private Button ban = new Button("Ban/Unban", VaadinIcon.CLOSE_CIRCLE.create());
+  private HorizontalLayout actions = new HorizontalLayout(save, cancel, delete, ban);
 
   private Binder<User> binder = new Binder<>(User.class);
   private ChangeHandler changeHandler;
@@ -64,13 +65,20 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
 
     save.getElement().getThemeList().add("primary");
     delete.getElement().getThemeList().add("error");
+    ban.getElement().getThemeList().add("error");
 
     // wire action buttons to save, delete and reset
     save.addClickListener(e -> save());
     addKeyPressListener(Key.ENTER, e -> save());
     delete.addClickListener(e -> delete());
+    ban.addClickListener(e -> ban());
     cancel.addClickListener(e -> editCustomer(user));
     setVisible(false);
+  }
+
+  private void ban() {
+    userService.banOrUnban(user);
+    changeHandler.onChange();
   }
 
   void delete() {
