@@ -39,7 +39,7 @@ public class UserService {
   }
 
   public List<User> findByAnyField(String query) {
-    log.info("[FUAGRA] Searching user by any field: {}", query);
+//    log.info("[FUAGRA] Searching user by any field: {}", query); // causes too many logs. consider if it's needed
     return repository.findByAnyField(query).toStream().collect(Collectors.toList());
   }
 

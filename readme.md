@@ -13,8 +13,8 @@ Features:
 * chat rooms
 * chat rooms creation
 * chat name validation
-* user management for administrators (with filtering)
-* user management for users. Available fields: First name, Last name, Username, email, role, dob
+* user management for administrators (with filtering by any occurrence)
+* user management for users. Available fields: First name, Last name, Username, email, role, dob, ban feature
 * toggle for dark / light theme
 
 # Prerequisites
