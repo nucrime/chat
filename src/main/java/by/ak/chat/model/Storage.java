@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static java.util.stream.Collectors.toList;
+
 @Component
 @ApplicationScoped
 public class Storage {
@@ -87,6 +89,10 @@ public class Storage {
 
   public List<ChatMessage> getChat(String name) {
     return chats.one(name);
+  }
+
+  public List<ChatMessage> searchMessages(List<ChatMessage> messages, String text) {
+    return messages.stream().filter(m -> m.getText().contains(text)).collect(toList());
   }
 
   public void fireEvent() {

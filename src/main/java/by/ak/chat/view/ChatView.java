@@ -19,9 +19,12 @@ import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.messages.MessageInput;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.Push;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
@@ -29,7 +32,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
+import static java.util.Collections.emptyList;
 import static org.springframework.util.StringUtils.hasText;
 
 @Slf4j
@@ -69,6 +74,18 @@ public class ChatView extends VerticalLayout {
     this.selector = selector;
 
     add(header.init(), title());
+
+    TextField filter = new TextField();
+    filter.setPlaceholder("search...");
+    // Hook logic to components
+    // Replace listing with filtered content when user changes filter
+    filter.setValueChangeMode(ValueChangeMode.EAGER);
+    filter.addValueChangeListener(e -> listMessages(e.getValue()));
+
+    HorizontalLayout filterLayout = new HorizontalLayout(filter);
+    // todo maybe move to the right?
+    add(filterLayout);
+
     grid = buildChatGrid();
     add(editor);
 
@@ -98,7 +115,7 @@ public class ChatView extends VerticalLayout {
     add(chat);
     final Grid<ChatMessage> grid;
     grid = new Grid<>();
-    grid.setItems(currentChat());
+    grid.setItems(Optional.ofNullable(currentChat()).orElse(emptyList()));
     grid.addColumn(new ComponentRenderer<>(message -> new Html(renderRow(message))));
     grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT); // wrap cell content, so that the text wraps
     chat.addAndExpand(
@@ -159,7 +176,7 @@ public class ChatView extends VerticalLayout {
             () -> {
               getUI().ifPresent(UI::push);
               ui.beforeClientResponse(grid, ctx -> {
-                grid.setItems(currentChat());
+                listMessages();
               });
             }));
   }
@@ -188,6 +205,18 @@ public class ChatView extends VerticalLayout {
 
   private List<ChatMessage> currentChat() {
     return storage.getChat(selector.getCurrent());
+  }
+
+  private void listMessages(String textFilter) {
+    if (hasText(textFilter)) {
+      grid.setItems(storage.searchMessages(currentChat(), textFilter));
+    } else {
+      grid.setItems(currentChat());
+    }
+  }
+
+  private void listMessages() {
+    listMessages(null);
   }
 }
 
