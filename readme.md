@@ -5,6 +5,7 @@ Features:
 * sign up fields validation 
 * chat messaging
 * chat message editing
+* chat message search
 * message wrapping if it exceeds the width of the screen
 * date/time view in accordance with the time zone of the user
 * chat history automatic backup to cloud db
