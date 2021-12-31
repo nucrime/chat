@@ -1,27 +1,35 @@
 package by.ak.chat.security;
 
 import by.ak.chat.model.Role;
+import by.ak.chat.model.User;
 import com.vaadin.flow.component.UI;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
 
 import javax.annotation.PreDestroy;
+import java.util.List;
 
 @Component
 @SessionScope
 @RequiredArgsConstructor
+@AutoConfigureAfter(SessionRegistryImpl.class)
 public class SecurityService {
 
   private static final String LOGOUT_SUCCESS_URL = "/";
   private SecurityContext context = SecurityContextHolder.getContext();
   private final ChatLogoutHandler logoutHandler;
+  private final SessionRegistry sessionRegistry;
   private String username;
 
   public boolean isUserLoggedIn() {
@@ -99,5 +107,13 @@ public class SecurityService {
     String user = username;
     username = null;
     return user;
+  }
+
+  public void expireUserSessions(User user) {
+//    org.springframework.security.core.userdetails.User springUser = new org.springframework.security.core.userdetails.User.builder()
+//      .username(user.getUsername())
+    sessionRegistry.getAllSessions(user, false)
+      .forEach(session ->
+        sessionRegistry.getSessionInformation(session.getSessionId()).expireNow());
   }
 }

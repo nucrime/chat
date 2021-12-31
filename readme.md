@@ -10,7 +10,7 @@ Features:
 * date/time view in accordance with the time zone of the user
 * chat history automatic backup to cloud db
 * chat messages markdown support
-* in chat notifications about user presence (joined/left. latter alse depends on user being logged out by timeout)
+* in chat notifications about user presence (joined/left. latter also depends on user being logged out by timeout)
 * chat rooms
 * chat rooms creation
 * chat name validation

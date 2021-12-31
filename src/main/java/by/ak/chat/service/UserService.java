@@ -6,6 +6,7 @@ import by.ak.chat.repository.UserRepository;
 import by.ak.chat.security.SecurityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -55,6 +56,8 @@ public class UserService {
 
   public void banOrUnban(User user) {
     user.setEnabled(!user.getEnabled());
+    // to end a session of a user if he is banned
+//    securityService.expireUserSessions(user);
     log.info("[FUAGRA] Setting user enabled: {}", user.getEnabled());
     repository.save(user).subscribe();
   }
