@@ -1,7 +1,7 @@
 Chat application.
 
 Features:
-* sign in/sign up
+* sign in/sign up (max sign in attempts = 3, after exceeding attempts, user is blocked for 15 minutes by default)
 * sign up fields validation 
 * chat messaging
 * chat message editing
@@ -15,7 +15,7 @@ Features:
 * chat rooms creation
 * chat name validation
 * user management for administrators (with filtering by any occurrence)
-* user management for users. Available fields: First name, Last name, Username, email, role, dob, ban feature
+* user management for users. Available fields: First name, Last name, Username, email, role, dob, ban feature (user is being kicked as well from the chat, so he is able to view only login page)
 * toggle for dark / light theme
 
 # Prerequisites
