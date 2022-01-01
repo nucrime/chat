@@ -66,7 +66,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
       .failureUrl(LOGIN_FAILURE_URL)
 
       // Configure logout
-      .and().logout();
+      .and().logout()
+
+      // add explicit session management to be able to use the sessionRegistry for control over users sessions
+      .and().sessionManagement().maximumSessions(1).sessionRegistry(sessionRegistry()).expiredUrl(LoginView.PATH);
   }
 
   @Profile("dev-govno")
@@ -77,6 +80,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
   }
 
+  // Explicit session registry bean, so we can wire it where we want it
   @Bean
   public SessionRegistry sessionRegistry() {
     return new SessionRegistryImpl();

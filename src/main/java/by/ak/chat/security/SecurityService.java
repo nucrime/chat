@@ -19,6 +19,7 @@ import org.springframework.web.context.annotation.SessionScope;
 
 import javax.annotation.PreDestroy;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @SessionScope
@@ -109,11 +110,22 @@ public class SecurityService {
     return user;
   }
 
+  private List<UserDetailsImpl> getAllActiveUsers() {
+    return sessionRegistry.getAllPrincipals().stream()
+      .filter(principal -> principal instanceof UserDetailsImpl)
+      .map(principal -> (UserDetailsImpl) principal).collect(Collectors.toList());
+  }
+
   public void expireUserSessions(User user) {
-//    org.springframework.security.core.userdetails.User springUser = new org.springframework.security.core.userdetails.User.builder()
-//      .username(user.getUsername())
-    sessionRegistry.getAllSessions(user, false)
-      .forEach(session ->
-        sessionRegistry.getSessionInformation(session.getSessionId()).expireNow());
+    getAllActiveUsers().stream()
+      .filter(principal -> principal.getUsername().equals(user.getUsername())).forEach(principal -> {
+        List<SessionInformation> sessions = sessionRegistry.getAllSessions(principal, false);
+        sessions.forEach(SessionInformation::expireNow);
+      });
+  }
+
+  private boolean isActive(User user) {
+    return getAllActiveUsers().stream()
+      .anyMatch(principal -> principal.getUsername().equals(user.getUsername()));
   }
 }

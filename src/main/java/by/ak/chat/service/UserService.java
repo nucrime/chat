@@ -57,7 +57,7 @@ public class UserService {
   public void banOrUnban(User user) {
     user.setEnabled(!user.getEnabled());
     // to end a session of a user if he is banned
-//    securityService.expireUserSessions(user);
+    securityService.expireUserSessions(user);
     log.info("[FUAGRA] Setting user enabled: {}", user.getEnabled());
     repository.save(user).subscribe();
   }
