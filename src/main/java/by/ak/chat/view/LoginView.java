@@ -5,13 +5,19 @@ import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.login.LoginForm;
+import com.vaadin.flow.component.login.LoginI18n;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.Page;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.VaadinServletRequest;
+import lombok.val;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.WebAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.ZoneId;
 
 @Route(LoginView.PATH)
@@ -49,12 +55,31 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
   @Override
   public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
-    if (beforeEnterEvent.getLocation()
+    val error = beforeEnterEvent.getLocation()
       .getQueryParameters()
       .getParameters()
-      .containsKey(ERROR)) {
-      login.setError(true);
+      .containsKey(ERROR);
+    if (error) {
+      VaadinServletRequest vsr = VaadinServletRequest.getCurrent();
+      HttpServletRequest req = vsr.getHttpServletRequest();
+      javax.servlet.http.HttpSession sess = req.getSession();
+      AuthenticationException ex = (AuthenticationException) sess.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+      if (ex == null) {
+        login.setError(false);
+      } else {
+        setError(ex.getMessage());
+        sess.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+      }
     }
+  }
+
+  private void setError(String msg) {
+    LoginI18n i18n = LoginI18n.createDefault();
+    LoginI18n.ErrorMessage em = new LoginI18n.ErrorMessage();
+    em.setMessage(msg);
+    i18n.setErrorMessage(em);
+    login.setI18n(i18n);
+    login.setError(true);
   }
 
   @Override

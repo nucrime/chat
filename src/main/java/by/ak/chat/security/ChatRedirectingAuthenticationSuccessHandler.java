@@ -18,7 +18,7 @@ import static by.ak.chat.view.ChatSelectView.PATH;
 @RequiredArgsConstructor
 public class ChatRedirectingAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 //  private static final String USER_JOINED_MSG = "**%s** joined";
-  private final SecurityService securityService;
+//  private final SecurityService securityService;
 //  private final Storage storage;
 
   @Override
@@ -28,7 +28,7 @@ public class ChatRedirectingAuthenticationSuccessHandler implements Authenticati
 
   @Override
   public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
-    String user = securityService.getLoggedInUserName();
+//    String user = securityService.getLoggedInUserName();
     //storage.addMessageUserPresence(String.format(USER_JOINED_MSG, user)); // moved to chat selector view
     httpServletResponse.sendRedirect(PATH); // todo migrate to v2
 //    httpServletResponse.sendRedirect(ChatViewV2.PATH);
