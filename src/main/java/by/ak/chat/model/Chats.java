@@ -11,6 +11,10 @@ import java.util.stream.Stream;
 @Data
 public class Chats {
   // todo limit to 200 for each chat
+  //  limit chat entries to 200 for each chat
+  //  ?? ConcurrentLruCache
+  //  https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/util/ConcurrentLruCache.html
+  //  https://algorithms.tutorialhorizon.com/least-recently-used-lru-cache-using-linkedhashset-and-deque-set-2/
   private final Map<String, List<ChatMessage>> messages = new ConcurrentHashMap<>();
 
   public Stream<ChatMessage> stream(ChatMessage message) {
