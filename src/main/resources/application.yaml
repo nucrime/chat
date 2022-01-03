@@ -26,3 +26,6 @@ security:
   authentication:
     maxLoginAttempts: 3
     failedAttemptsExpiration: 15 # minutes, by default
+chat:
+  message:
+    limit: 200

@@ -12,3 +12,6 @@ spring:
       quiet-period: 1s
 server:
   port: 8081
+chat:
+  message:
+    limit: 10

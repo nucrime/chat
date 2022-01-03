@@ -1,5 +1,6 @@
 package by.ak.chat.model;
 
+import by.ak.chat.config.ChatProperties;
 import by.ak.chat.service.ChatService;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventBus;
@@ -8,7 +9,6 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.messages.MessageListItem;
 import com.vaadin.flow.shared.Registration;
 import org.atmosphere.inject.annotation.ApplicationScoped;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
@@ -26,11 +26,17 @@ public class Storage {
   public static final int ONE_SECOND = 1;
   public static final int HUNDRED_MILLISECONDS = 100;
 
-  private final Chats chats = new Chats();
-
+  private final Chats chats;
+  private final ChatProperties chatProperties;
   private final ComponentEventBus eventBus = new ComponentEventBus(new Div());
-  @Autowired
-  private ChatService chatService;
+
+  private final ChatService chatService;
+
+  public Storage(ChatProperties chatProperties, ChatService chatService) {
+    this.chatProperties = chatProperties;
+    this.chatService = chatService;
+    this.chats = Chats.withMessageLimitOf(chatProperties.getMessage().getLimit());
+  }
 
   public void addMessage(String user, String message) {
     ChatMessage newMessage = new ChatMessage(user, message);
@@ -87,11 +93,11 @@ public class Storage {
     chatService.save(message).subscribe();
   }
 
-  public List<ChatMessage> getChat(String name) {
+  public MessageQueue getChat(String name) {
     return chats.one(name);
   }
 
-  public List<ChatMessage> searchMessages(List<ChatMessage> messages, String text) {
+  public List<ChatMessage> searchMessages(MessageQueue messages, String text) {
     return messages.stream().filter(m -> m.getText().contains(text)).collect(toList());
   }
 
@@ -99,6 +105,7 @@ public class Storage {
     Mono.delay(Duration.ofMillis(HUNDRED_MILLISECONDS)).subscribe(e -> eventBus.fireEvent(new ChatEvent()));
     // default delay is 100ms. Enough for illusion of a real time, as well enough for frontend to render messages.
   }
+
   /*
 -------- __@      __@       __@       __@      __~@
 ----- _`\>,_    _`\>,_    _`\>,_    _`\>,_    _`\>,_     <--- reactive bicycle
@@ -110,8 +117,8 @@ public class Storage {
   }
 
   /*
-  * Fetch messages from DB before app is started to show to user previous messages
-  * */
+   * Fetch messages from DB before app is started to show to user previous messages
+   * */
   @PostConstruct
   public void init() {
     chatService.findAll().subscribe(chats::add);

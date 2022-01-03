@@ -3,6 +3,7 @@ package by.ak.chat.view;
 import by.ak.chat.component.Header;
 import by.ak.chat.component.MessageEditor;
 import by.ak.chat.model.ChatMessage;
+import by.ak.chat.model.MessageQueue;
 import by.ak.chat.model.Storage;
 import by.ak.chat.security.SecurityService;
 import by.ak.chat.util.ChatSelector;
@@ -30,11 +31,10 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static java.util.Collections.emptyList;
+import static by.ak.chat.model.MessageQueue.empty;
 import static org.springframework.util.StringUtils.hasText;
 
 @Slf4j
@@ -115,7 +115,7 @@ public class ChatView extends VerticalLayout {
     add(chat);
     final Grid<ChatMessage> grid;
     grid = new Grid<>();
-    grid.setItems(Optional.ofNullable(currentChat()).orElse(emptyList()));
+    grid.setItems(Optional.ofNullable(currentChat()).orElse(empty()));
     grid.addColumn(new ComponentRenderer<>(message -> new Html(renderRow(message))));
     grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT); // wrap cell content, so that the text wraps
     chat.addAndExpand(
@@ -203,7 +203,7 @@ public class ChatView extends VerticalLayout {
           message.getText()));
   }
 
-  private List<ChatMessage> currentChat() {
+  private MessageQueue currentChat() {
     return storage.getChat(selector.getCurrent());
   }
 
