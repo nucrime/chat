@@ -32,23 +32,21 @@ public class Header extends AppLayout implements RouterLayout {
   private final SecurityService securityService;
 
   public VerticalLayout init() {
-    VerticalLayout container = new VerticalLayout();
-    HorizontalLayout header = new HorizontalLayout();
-    UI current = UI.getCurrent();
+    var container = new VerticalLayout();
+    var header = new HorizontalLayout();
+    var current = UI.getCurrent();
 
-//    if (securityService.isAdmin()) {
       Button management = new Button(USER_MANAGEMENT, e -> current.navigate(UserView.PATH));
       header.add(management);
-//    }
 
-    Button chatButton = new Button(CHAT, e -> current.navigate(ChatView.PATH));
-    Button chatList = new Button(CHATS, e -> {
+    var chatButton = new Button(CHAT, e -> current.navigate(ChatView.PATH));
+    var chatList = new Button(CHATS, e -> {
       current.navigate(ChatSelectView.PATH);
     });
     header.add(chatButton);
     header.add(chatList);
 
-    Button darkTheme = new Button(VaadinIcon.MOON_O.create(), click -> {
+    var darkTheme = new Button(VaadinIcon.MOON_O.create(), click -> {
       ThemeList themeList = UI.getCurrent().getElement().getThemeList();
 
       if (themeList.contains(Lumo.DARK)) {
@@ -62,7 +60,7 @@ public class Header extends AppLayout implements RouterLayout {
 
     header.add(darkTheme);
 
-    Button logoutButton = new Button(LOG_OUT, e -> securityService.logout());
+    var logoutButton = new Button(LOG_OUT, e -> securityService.logout());
     header.add(logoutButton);
 
     container.setHeight(10, Unit.PERCENTAGE);
