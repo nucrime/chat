@@ -66,6 +66,10 @@ public class UserService {
     repository.delete(user).subscribe();
   }
 
+  public String currentUserRole() {
+    return securityService.getRole();
+  }
+
   private Function<User, User> updateUserWithEncodedPassword(User user) {
     return foundUser -> {
       if (adminOrAuthorOfUserRecord(foundUser)) {

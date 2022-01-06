@@ -18,6 +18,8 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.spring.annotation.UIScope;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 
 @Component
 @UIScope
@@ -112,6 +114,8 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
     } else {
       user = u;
     }
+    ban.setVisible(!Objects.equals(userService.currentUserRole(), Role.USER.name())); // user can not ban
+
     cancel.setVisible(persisted);
 
     // Bind customer properties to similarly named fields
