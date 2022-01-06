@@ -21,7 +21,7 @@ Features:
 # Prerequisites
 [JDK 17](https://jdk.java.net/17/)
 
-For Heroku deployment **current target version set to 8**:
+For Heroku deployment **current target version set to 17 in system.properties**:
 
 [Java 8](https://jdk.java.net/java-se-ri/8-MR3)
 
