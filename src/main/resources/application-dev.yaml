@@ -1,8 +1,8 @@
 spring:
   data:
     mongodb:
-#      host: localhost || default
-#      port: 27017 || default
+      #      host: localhost || default
+      #      port: 27017 || default
       uri: ${MONGODB_URL_DEV}
       uuid-representation: standard
       database: dev

@@ -70,6 +70,7 @@ public class ChatNameBinder {
 
   /**
    * We call this method when form submission has succeeded
+   *
    * @param chatMessage
    */
   private void showSuccess(ChatMessage chatMessage) {

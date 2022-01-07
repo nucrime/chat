@@ -21,8 +21,8 @@ public class WhereAmILayout extends VerticalLayout implements HasErrorParameter<
 
   public WhereAmILayout(Header header) {
     this.header = header;
-    HorizontalLayout container = new HorizontalLayout();
-    H1 h1 = new H1("Where am I?");
+    var container = new HorizontalLayout();
+    var h1 = new H1("Where am I?");
     explanation = new Span();
 
     container.add(h1);

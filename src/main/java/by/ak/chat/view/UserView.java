@@ -27,11 +27,11 @@ public class UserView extends VerticalLayout {
   public static final String PATH = "/users";
   public static final String TITLE = "Users Management";
   public static final String ERROR_MSG = "Error occurred. Please contact administrator";
+  final Grid<User> grid;
   private final UserService userService;
   private final SecurityService securityService;
   private final UserEditor editor;
   private final Header header;
-  final Grid<User> grid;
   private User currentUser;
 
   public UserView(UserService userService, SecurityService securityService, UserEditor editor, Header header) {
@@ -45,9 +45,9 @@ public class UserView extends VerticalLayout {
     grid.setColumns("id", "username", "enabled", "email", "dob", "firstName", "lastName", "role", "created");
     // todo fix rendering of created date. time always changes unexpectedly, render as in chatview
 
-    Button addNewBtn = new Button("Add new user", VaadinIcon.PLUS.create(), event -> editor.editCustomer(new User()));
+    var addNewBtn = new Button("Add new user", VaadinIcon.PLUS.create(), event -> editor.editCustomer(new User()));
 
-    TextField filter = new TextField();
+    var filter = new TextField();
     filter.setPlaceholder("Filter users...");
 
     // Hook logic to components
@@ -55,7 +55,7 @@ public class UserView extends VerticalLayout {
     filter.setValueChangeMode(ValueChangeMode.EAGER);
     filter.addValueChangeListener(e -> listCustomers(e.getValue()));
 
-    HorizontalLayout actions = new HorizontalLayout(filter, addNewBtn);
+    var actions = new HorizontalLayout(filter, addNewBtn);
 
     add(actions, grid, editor);
 

@@ -1,6 +1,7 @@
 package by.ak.chat.security;
 
 //import by.ak.chat.model.Storage;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;

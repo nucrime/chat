@@ -11,8 +11,14 @@ import java.util.stream.Stream;
 @Data
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Chats {
-  private int limit;
   private final Map<String, MessageQueue> messages = new ConcurrentHashMap<>();
+  private int limit;
+
+  public static Chats withMessageLimitOf(int limit) {
+    var chats = new Chats();
+    chats.limit = limit;
+    return chats;
+  }
 
   public Stream<ChatMessage> stream(ChatMessage message) {
     return messages.get(message.getChat()).stream();
@@ -33,12 +39,6 @@ public class Chats {
 
   public void remove(ChatMessage message) {
     messages.get(message.getChat()).remove(message);
-  }
-
-  public static Chats withMessageLimitOf(int limit) {
-    Chats chats = new Chats();
-    chats.limit = limit;
-    return chats;
   }
 
   public MessageQueue limitedQueue() {

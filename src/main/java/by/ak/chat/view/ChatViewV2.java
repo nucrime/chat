@@ -16,7 +16,6 @@ import com.vaadin.flow.router.Route;
 
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 @Route(ChatViewV2.PATH)
@@ -36,19 +35,19 @@ public class ChatViewV2 extends VerticalLayout {
 
     addAndExpand(getHeader());
 
-    MessageList list = new MessageList();
+    var list = new MessageList();
 //    initMessageList(list);
-    MessageInput input = getMessageInput(list);
-    VerticalLayout chatLayout = getChatLayout(list, input);
+    var input = getMessageInput(list);
+    var chatLayout = getChatLayout(list, input);
 
     add(chatLayout);
   }
 
   private Component getHeader() {
-    HorizontalLayout header = new HorizontalLayout();
+    var header = new HorizontalLayout();
     header.setWidthFull();
     header.setAlignItems(HorizontalLayout.Alignment.BASELINE);
-    H1 title = new H1(TITLE);
+    var title = new H1(TITLE);
     header.addAndExpand(title);
     return header;
   }
@@ -64,12 +63,12 @@ public class ChatViewV2 extends VerticalLayout {
 //  }
 
   private MessageInput getMessageInput(MessageList list) {
-    MessageInput input = new MessageInput();
+    var input = new MessageInput();
     input.addSubmitListener(submitEvent -> {
-      MessageListItem newMessage = new MessageListItem(
+      var newMessage = new MessageListItem(
         submitEvent.getValue(), Instant.now(), securityService.getLoggedInUserName());
       newMessage.setUserColorIndex(new Random().nextInt(3));
-      List<MessageListItem> items = new ArrayList<>(list.getItems());
+      var items = new ArrayList<>(list.getItems());
       items.add(newMessage);
       list.setItems(items);
       storage.addMessage(newMessage);
@@ -78,7 +77,7 @@ public class ChatViewV2 extends VerticalLayout {
   }
 
   private VerticalLayout getChatLayout(MessageList list, MessageInput input) {
-    VerticalLayout chatLayout = new VerticalLayout(list, input);
+    var chatLayout = new VerticalLayout(list, input);
     chatLayout.setHeight(60, Unit.PERCENTAGE);
     chatLayout.setWidth(70, Unit.PERCENTAGE);
     chatLayout.expand(list);

@@ -63,15 +63,15 @@ public class RegistrationForm extends FormLayout {
       submitButton);
 
     /*
-    * Max width of the Form
-    */
+     * Max width of the Form
+     */
     setMaxWidth("500px");
 
     /*
-    * Allow the form layout to be responsive.
-    * On device widths 0-490px we have one column.
-    * Otherwise, we have two columns.
-    */
+     * Allow the form layout to be responsive.
+     * On device widths 0-490px we have one column.
+     * Otherwise, we have two columns.
+     */
     setResponsiveSteps(
       new ResponsiveStep("0", 1, ResponsiveStep.LabelsPosition.TOP),
       new ResponsiveStep("490px", 2, ResponsiveStep.LabelsPosition.TOP));

@@ -31,19 +31,19 @@ public class ChatSelectView extends VerticalLayout {
     this.header = header;
     this.storage = storage;
     this.securityService = securityService;
-    ShowCreateChatForm showCreateChatForm = new ShowCreateChatForm(storage, chatSelector, securityService);
+    var showCreateChatForm = new ShowCreateChatForm(storage, chatSelector, securityService);
 
     add(header.init());
-    H3 title = new H3("Available chats");
+    var title = new H3("Available chats");
     add(title);
 
-    HorizontalLayout chatSelectLayout = new HorizontalLayout(showCreateChatForm);
+    var chatSelectLayout = new HorizontalLayout(showCreateChatForm);
 
     add(chatSelectLayout);
 
     this.setAlignItems(Alignment.CENTER);
 
-    ChatNameBinder chatNameBinder = new ChatNameBinder(showCreateChatForm, securityService);
+    var chatNameBinder = new ChatNameBinder(showCreateChatForm, securityService);
     chatNameBinder.addBindingAndValidation();
   }
 }

@@ -12,7 +12,6 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.dom.ThemeList;
 import com.vaadin.flow.router.RouterLayout;
 import com.vaadin.flow.theme.lumo.Lumo;
 import lombok.RequiredArgsConstructor;
@@ -36,8 +35,8 @@ public class Header extends AppLayout implements RouterLayout {
     var header = new HorizontalLayout();
     var current = UI.getCurrent();
 
-      Button management = new Button(USER_MANAGEMENT, e -> current.navigate(UserView.PATH));
-      header.add(management);
+    var management = new Button(USER_MANAGEMENT, e -> current.navigate(UserView.PATH));
+    header.add(management);
 
     var chatButton = new Button(CHAT, e -> current.navigate(ChatView.PATH));
     var chatList = new Button(CHATS, e -> {
@@ -47,7 +46,7 @@ public class Header extends AppLayout implements RouterLayout {
     header.add(chatList);
 
     var darkTheme = new Button(VaadinIcon.MOON_O.create(), click -> {
-      ThemeList themeList = UI.getCurrent().getElement().getThemeList();
+      var themeList = UI.getCurrent().getElement().getThemeList();
 
       if (themeList.contains(Lumo.DARK)) {
         themeList.remove(Lumo.DARK);

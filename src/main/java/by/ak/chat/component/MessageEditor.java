@@ -20,9 +20,8 @@ public class MessageEditor extends VerticalLayout implements KeyNotifier {
   public static final String BLUE = "primary";
   public static final String ERROR = "error";
   private final ChatService chatService;
-  private ChatMessage message;
   private final Storage storage;
-
+  private ChatMessage message;
   private TextField text = new TextField("Edit message");
 
   private Button save = new Button("Save", VaadinIcon.CHECK.create());
@@ -38,7 +37,7 @@ public class MessageEditor extends VerticalLayout implements KeyNotifier {
     this.chatService = chatService;
     this.storage = storage;
 
-    HorizontalLayout textContainer = new HorizontalLayout();
+    var textContainer = new HorizontalLayout();
     text.setWidthFull();
     textContainer.addAndExpand(text);
     add(textContainer, actions);
@@ -76,10 +75,6 @@ public class MessageEditor extends VerticalLayout implements KeyNotifier {
     changeHandler.onChange();
   }
 
-  public interface ChangeHandler {
-    void onChange();
-  }
-
   public final void editMessage(ChatMessage m) {
     // if msg is null, don't show form and actions
     if (m == null) {
@@ -110,5 +105,9 @@ public class MessageEditor extends VerticalLayout implements KeyNotifier {
     // ChangeHandler is notified when either save or delete
     // is clicked
     changeHandler = h;
+  }
+
+  public interface ChangeHandler {
+    void onChange();
   }
 }

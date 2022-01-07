@@ -7,17 +7,14 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.login.LoginI18n;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.page.Page;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinServletRequest;
-import lombok.val;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.WebAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.ZoneId;
 
 @Route(LoginView.PATH)
@@ -31,9 +28,8 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
   public static final String RETRIEVE_USER_TIMEZONE = "return Intl.DateTimeFormat().resolvedOptions().timeZone";
   public static final String LOGIN_VIEW = "login-view";
   public static final String TITLE = "Login";
-
-  protected LoginForm login = new LoginForm();
   private final DateTimeProvider dateTimeProvider;
+  protected LoginForm login = new LoginForm();
 
   public LoginView(DateTimeProvider dateTimeProvider) {
     this.dateTimeProvider = dateTimeProvider;
@@ -55,30 +51,30 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
   @Override
   public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
-    val error = beforeEnterEvent.getLocation()
+    var error = beforeEnterEvent.getLocation()
       .getQueryParameters()
       .getParameters()
       .containsKey(ERROR);
     if (error) {
-      VaadinServletRequest vsr = VaadinServletRequest.getCurrent();
-      HttpServletRequest req = vsr.getHttpServletRequest();
-      javax.servlet.http.HttpSession sess = req.getSession();
-      AuthenticationException ex = (AuthenticationException) sess.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+      var vaadinServletRequest = VaadinServletRequest.getCurrent();
+      var httpServletRequest = vaadinServletRequest.getHttpServletRequest();
+      var session = httpServletRequest.getSession();
+      var ex = (AuthenticationException) session.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
       if (ex == null) {
         login.setError(false);
       } else {
         setError(ex.getMessage());
-        sess.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+        session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
       }
     }
   }
 
   private void setError(String msg) {
-    LoginI18n i18n = LoginI18n.createDefault();
-    LoginI18n.ErrorMessage em = new LoginI18n.ErrorMessage();
-    em.setMessage(msg);
-    i18n.setErrorMessage(em);
-    login.setI18n(i18n);
+    var defaultLoginForm = LoginI18n.createDefault();
+    var errorMessage = new LoginI18n.ErrorMessage();
+    errorMessage.setMessage(msg);
+    defaultLoginForm.setErrorMessage(errorMessage);
+    login.setI18n(defaultLoginForm);
     login.setError(true);
   }
 
@@ -89,7 +85,7 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
   private void initializeTimeOffset() {
     getUI().ifPresent(uiElement -> {
-      Page page = uiElement.getPage();
+      var page = uiElement.getPage();
       page.retrieveExtendedClientDetails(extendedClientDetails -> {
         dateTimeProvider.timeOffset = extendedClientDetails.getTimezoneOffset();
       });

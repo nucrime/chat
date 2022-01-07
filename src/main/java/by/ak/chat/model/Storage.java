@@ -39,7 +39,7 @@ public class Storage {
   }
 
   public void addMessage(String user, String message) {
-    ChatMessage newMessage = new ChatMessage(user, message);
+    var newMessage = new ChatMessage(user, message);
     addAndSave(newMessage);
     fireEvent();
   }
@@ -54,7 +54,7 @@ public class Storage {
   }
 
   public void addMessageUserPresence(String message) {
-    ChatMessage presence = new ChatMessage();
+    var presence = new ChatMessage();
     presence.setText(message);
     addAndSave(presence);
     delayFireEvent(); // Delay fire event, so frontend can render message before user joined and scroll to bottom
@@ -74,13 +74,6 @@ public class Storage {
 
   public void removeMessage(ChatMessage message) {
     chats.remove(message);
-  }
-
-  //todo google: vaadin events, component events
-  public static class ChatEvent extends ComponentEvent<Div> {
-    public ChatEvent() {
-      super(new Div(), false);
-    }
   }
 
   public Registration attachListener(ComponentEventListener<ChatEvent> listener) {
@@ -122,5 +115,12 @@ public class Storage {
   @PostConstruct
   public void init() {
     chatService.findAll().subscribe(chats::add);
+  }
+
+  //todo google: vaadin events, component events
+  public static class ChatEvent extends ComponentEvent<Div> {
+    public ChatEvent() {
+      super(new Div(), false);
+    }
   }
 }

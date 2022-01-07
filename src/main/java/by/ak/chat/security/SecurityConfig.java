@@ -28,12 +28,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+  private static final String LOGIN_FAILURE_URL = LoginView.PATH + "?error";
   private final ChatRedirectingAuthenticationSuccessHandler authorisedHandler;
   private final UserDetailsService userDetailsService;
   private final AuthenticationProvider provider;
   private final PasswordEncoder passwordEncoder;
 
-  private static final String LOGIN_FAILURE_URL = LoginView.PATH + "?error";
+  @Profile("dev-govno")
+  @SuppressWarnings("deprecation")
+  @Order(1)
+  @Bean
+  public static NoOpPasswordEncoder passwordEncoder() {
+    return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
+  }
 
   /**
    * Require login to access internal pages and configure login form.
@@ -70,14 +77,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
       // add explicit session management to be able to use the sessionRegistry for control over users sessions
       .and().sessionManagement().maximumSessions(1).sessionRegistry(sessionRegistry()).expiredUrl(LoginView.PATH);
-  }
-
-  @Profile("dev-govno")
-  @SuppressWarnings("deprecation")
-  @Order(1)
-  @Bean
-  public static NoOpPasswordEncoder passwordEncoder() {
-    return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
   }
 
   // Explicit session registry bean, so we can wire it where we want it

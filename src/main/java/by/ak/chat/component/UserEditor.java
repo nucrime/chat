@@ -25,16 +25,14 @@ import java.util.Objects;
 @UIScope
 public class UserEditor extends VerticalLayout implements KeyNotifier {
   private final UserService userService;
+  private TextField username = new TextField("Username");
+  private TextField email = new TextField("Email");
+  private TextField firstName = new TextField("First name");
+  private TextField lastName = new TextField("Last name");
+  private ComboBox<Role> role = new ComboBox<>("Role");
+  private TextField password = new TextField("Password");
+  private DatePicker dob = new DatePicker("Date of birth");
   private User user;
-
-  TextField username = new TextField("Username");
-  TextField email = new TextField("Email");
-  TextField firstName = new TextField("First name");
-  TextField lastName = new TextField("Last name");
-  ComboBox<Role> role = new ComboBox<>("Role");
-  TextField password = new TextField("Password");
-  DatePicker dob = new DatePicker("Date of birth");
-
   private Button save = new Button("Save", VaadinIcon.CHECK.create());
   private Button cancel = new Button("Cancel", VaadinIcon.CLOSE_SMALL.create());
   private Button delete = new Button("Delete", VaadinIcon.TRASH.create());
@@ -46,14 +44,18 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
 
   public UserEditor(UserService userService) {
     this.userService = userService;
-    HorizontalLayout firstRow = new HorizontalLayout();
+
+    var firstRow = new HorizontalLayout();
     firstRow.add(firstName, lastName, username);
-    HorizontalLayout secondRow = new HorizontalLayout();
+
+    var secondRow = new HorizontalLayout();
     role.setItems(Role.values());
     secondRow.add(email, role, password);
-    HorizontalLayout thirdRow = new HorizontalLayout();
+
+    var thirdRow = new HorizontalLayout();
     thirdRow.add(dob, actions);
     thirdRow.setAlignItems(Alignment.END); // Place items at the bottom
+
     add(firstRow, secondRow, thirdRow);
     this.setAlignItems(Alignment.CENTER);
 
@@ -75,6 +77,7 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
     delete.addClickListener(e -> delete());
     ban.addClickListener(e -> ban());
     cancel.addClickListener(e -> editCustomer(user));
+
     setVisible(false);
   }
 
@@ -95,10 +98,6 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
     } catch (AnotherUserWithUsernameExists e) {
       Notification.show("User with this username already exists");
     }
-  }
-
-  public interface ChangeHandler {
-    void onChange();
   }
 
   public final void editCustomer(User u) {
@@ -135,4 +134,7 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
     changeHandler = h;
   }
 
+  public interface ChangeHandler {
+    void onChange();
+  }
 }

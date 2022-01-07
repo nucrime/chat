@@ -1,6 +1,5 @@
 package by.ak.chat.security;
 
-import by.ak.chat.model.User;
 import by.ak.chat.service.UserService;
 import by.ak.chat.util.IPUtil;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +21,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(String username) throws AuthenticationException {
-    User user = service.find(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    var user = service.find(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     log.info("User {} was found", user);
 
     if (!user.getEnabled()) {

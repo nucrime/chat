@@ -57,13 +57,13 @@ public class ChatView extends VerticalLayout {
   private final Grid<ChatMessage> grid;
   private final Storage storage;
   private final DateTimeProvider dateTimeProvider;
-  private Registration registration;
-  //todo show only last 200 messages
-  private VerticalLayout chat;
   private final SecurityService securityService;
   private final Header header;
   private final MessageEditor editor;
   private final ChatSelector selector;
+  private Registration registration;
+  //todo show only last 200 messages
+  private VerticalLayout chat;
 
   public ChatView(Storage storage, SecurityService securityService, DateTimeProvider dateTimeProvider, Header header, MessageEditor editor, ChatSelector selector) {
     this.dateTimeProvider = dateTimeProvider;
@@ -75,14 +75,14 @@ public class ChatView extends VerticalLayout {
 
     add(header.init(), title());
 
-    TextField filter = new TextField();
+    var filter = new TextField();
     filter.setPlaceholder("search...");
     // Hook logic to components
     // Replace listing with filtered content when user changes filter
     filter.setValueChangeMode(ValueChangeMode.EAGER);
     filter.addValueChangeListener(e -> listMessages(e.getValue()));
 
-    HorizontalLayout filterLayout = new HorizontalLayout(filter);
+    var filterLayout = new HorizontalLayout(filter);
     // todo maybe move to the right?
     add(filterLayout);
 
@@ -124,8 +124,8 @@ public class ChatView extends VerticalLayout {
   }
 
   private VerticalLayout title() {
-    H3 title = new H3(TITLE + DELIMITER + selector.getCurrent());
-    VerticalLayout titleLayout = new VerticalLayout();
+    var title = new H3(TITLE + DELIMITER + selector.getCurrent());
+    var titleLayout = new VerticalLayout();
     titleLayout.add(title);
     titleLayout.setHeight(DEFAULT_HEIGHT, Unit.PERCENTAGE);
     titleLayout.setAlignItems(Alignment.CENTER);
@@ -133,7 +133,7 @@ public class ChatView extends VerticalLayout {
   }
 
   private MessageInput messageInput() {
-    MessageInput input = new MessageInput();
+    var input = new MessageInput();
 
     input.addSubmitListener(e -> {
       String sanitizedText = e.getValue()

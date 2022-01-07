@@ -28,9 +28,9 @@ import java.util.stream.Collectors;
 public class SecurityService {
 
   private static final String LOGOUT_SUCCESS_URL = "/";
-  private SecurityContext context = SecurityContextHolder.getContext();
   private final ChatLogoutHandler logoutHandler;
   private final SessionRegistry sessionRegistry;
+  private SecurityContext context = SecurityContextHolder.getContext();
   private String username;
 
   public boolean isUserLoggedIn() {

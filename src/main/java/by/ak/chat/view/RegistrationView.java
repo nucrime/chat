@@ -16,21 +16,21 @@ public class RegistrationView extends VerticalLayout {
 
   public RegistrationView(UserService userService) {
     this.userService = userService;
-    RegistrationForm registrationForm = new RegistrationForm();
+    var registrationForm = new RegistrationForm();
     /*
-    * Center the RegistrationForm
-    */
+     * Center the RegistrationForm
+     */
     setHorizontalComponentAlignment(Alignment.CENTER, registrationForm);
 
     /*
-    * Add to vertical layout
-    */
+     * Add to vertical layout
+     */
     add(registrationForm);
 
     /*
-    * Bind and validate registration form fields
-    */
-    RegistrationFormBinder registrationFormBinder = new RegistrationFormBinder(registrationForm, userService);
+     * Bind and validate registration form fields
+     */
+    var registrationFormBinder = new RegistrationFormBinder(registrationForm, userService);
     registrationFormBinder.addBindingAndValidation();
   }
 }

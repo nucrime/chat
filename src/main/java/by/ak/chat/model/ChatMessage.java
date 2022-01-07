@@ -34,7 +34,7 @@ public class ChatMessage {
   }
 
   public String created() {
-    DateTimeFormatter simpleDateFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
+    var simpleDateFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
     return created.format(simpleDateFormat);
   }
 }

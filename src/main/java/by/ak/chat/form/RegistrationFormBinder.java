@@ -17,9 +17,8 @@ public class RegistrationFormBinder {
   private static final String PASSWORD_LENGTH_ERROR_MSG = "Password should be at least 8 characters long";
   private static final String PASSWORD_MATCH_ERROR_MSG = "Passwords do not match";
   private static final String PASSWORD_FIELD = "password";
-  private RegistrationForm registrationForm;
   private final UserService userService;
-
+  private RegistrationForm registrationForm;
   /**
    * Flag for disabling first run for password validation
    */
@@ -35,7 +34,7 @@ public class RegistrationFormBinder {
    * to the registration form
    */
   public void addBindingAndValidation() {
-    BeanValidationBinder<User> binder = new BeanValidationBinder<>(User.class);
+    var binder = new BeanValidationBinder<>(User.class);
     binder.bindInstanceFields(registrationForm);
 
     /*
@@ -71,7 +70,7 @@ public class RegistrationFormBinder {
         /*
         Create empty bean to store the details in it
         */
-        User userBean = new User();
+        var userBean = new User();
 
         /*
         Run validators and write the values to the bean

@@ -13,6 +13,16 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 public class MessageQueue extends ConcurrentLinkedDeque<ChatMessage> {
   private int sizeLimit;
 
+  public static MessageQueue of(int sizeLimit) {
+    var messageQueue = new MessageQueue();
+    messageQueue.setSizeLimit(sizeLimit);
+    return messageQueue;
+  }
+
+  public static MessageQueue empty() {
+    return new MessageQueue();
+  }
+
   @Override
   public boolean add(ChatMessage message) {
     if (limitExceeded()) {
@@ -23,16 +33,6 @@ public class MessageQueue extends ConcurrentLinkedDeque<ChatMessage> {
 
   private boolean limitExceeded() {
     return !this.isEmpty() && sizeLimit != 0 && size() >= sizeLimit;
-  }
-
-  public static MessageQueue of(int sizeLimit) {
-    MessageQueue messageQueue = new MessageQueue();
-    messageQueue.setSizeLimit(sizeLimit);
-    return messageQueue;
-  }
-
-  public static MessageQueue empty() {
-    return new MessageQueue();
   }
 }
 

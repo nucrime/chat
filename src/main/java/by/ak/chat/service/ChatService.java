@@ -26,7 +26,7 @@ public class ChatService {
     return repository.findByUser(user);
   }
 
-//  @Tailable
+  //  @Tailable
   public Flux<ChatMessage> findAll() {
     log.info("[FUAGRA] Searching all chat messages");
     return repository.findAll();

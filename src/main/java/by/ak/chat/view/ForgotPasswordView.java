@@ -13,19 +13,20 @@ import com.vaadin.flow.router.Route;
 @PageTitle("Forgot Password")
 public class ForgotPasswordView extends LoginView { // do we need it? extend from Login view
   public static final String PATH = "/forgotPassword";
-    public ForgotPasswordView(DateTimeProvider dateTimeProvider) {
-      super(dateTimeProvider);
-      addClassName("forgot-password-view");
-      setSizeFull();
 
-      setJustifyContentMode(JustifyContentMode.CENTER);
-      setAlignItems(Alignment.CENTER);
-      login.setForgotPasswordButtonVisible(false);
+  public ForgotPasswordView(DateTimeProvider dateTimeProvider) {
+    super(dateTimeProvider);
+    addClassName("forgot-password-view");
+    setSizeFull();
 
-      login.setAction("forgotPassword");
-      login.addForgotPasswordListener(event -> {
-        getUI().ifPresent(ui -> ui.navigate(ForgotPasswordView.PATH));
-      });
-      add(new H1("труляля"), login);
-    }
+    setJustifyContentMode(JustifyContentMode.CENTER);
+    setAlignItems(Alignment.CENTER);
+    login.setForgotPasswordButtonVisible(false);
+
+    login.setAction("forgotPassword");
+    login.addForgotPasswordListener(event -> {
+      getUI().ifPresent(ui -> ui.navigate(ForgotPasswordView.PATH));
+    });
+    add(new H1("труляля"), login);
+  }
 }
