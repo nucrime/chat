@@ -9,4 +9,5 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties("chat")
 public class ChatProperties {
   private MessageProperties message;
+  private String title;
 }

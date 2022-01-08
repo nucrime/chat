@@ -25,6 +25,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
+import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
@@ -37,9 +38,11 @@ import static by.ak.chat.model.MessageQueue.empty;
 import static org.springframework.util.StringUtils.hasText;
 
 @Slf4j
-@Route(ChatView.PATH)
+@Route(value = ChatView.PATH, layout = Header.class)
 @PageTitle(ChatView.TITLE)
-public class ChatView extends VerticalLayout {
+public class ChatView extends VerticalLayout
+//  implements HasDynamicTitle
+{
   public static final String CHAT_MESSAGE_TEMPLATE = "%s   **%s**: %s";
   public static final String PATH = "/";
   public static final String TITLE = "FUAGRA";
@@ -56,7 +59,7 @@ public class ChatView extends VerticalLayout {
   private final Storage storage;
   private final DateTimeProvider dateTimeProvider;
   private final SecurityService securityService;
-  private final Header header;
+//  private final Header header;
   private final MessageEditor editor;
   private final ChatSelector selector;
   private Registration registration;
@@ -67,11 +70,13 @@ public class ChatView extends VerticalLayout {
     this.dateTimeProvider = dateTimeProvider;
     this.storage = storage;
     this.securityService = securityService;
-    this.header = header;
+//    this.header = header;
     this.editor = editor;
     this.selector = selector;
 
-    add(header.init(), title());
+    add(
+//      header.init(),
+      title());
 
     var filter = new TextField();
     filter.setPlaceholder("search...");
@@ -216,5 +221,10 @@ public class ChatView extends VerticalLayout {
   private void listMessages() {
     listMessages(null);
   }
+//
+//  @Override
+//  public String getPageTitle() {
+//    return TITLE + DELIMITER + selector.getCurrent();
+//  }
 }
 

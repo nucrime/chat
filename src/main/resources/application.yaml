@@ -10,6 +10,8 @@ server:
     session:
       timeout: 15m
 spring:
+  application:
+    name: FUAGRA
   profiles:
     active: production
   servlet:
@@ -27,5 +29,6 @@ security:
     maxLoginAttempts: 3
     failedAttemptsExpiration: 15 # minutes, by default
 chat:
+  title: ${spring.application.name:FUAGRA}
   message:
     limit: 200

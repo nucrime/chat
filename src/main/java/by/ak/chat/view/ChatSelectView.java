@@ -15,27 +15,27 @@ import com.vaadin.flow.router.Route;
 import static by.ak.chat.view.ChatSelectView.PATH;
 import static by.ak.chat.view.ChatSelectView.TITLE;
 
-@Route(PATH)
-@PageTitle(TITLE)
+@Route(value = PATH, layout = Header.class)
+@PageTitle("Available chats")
 public class ChatSelectView extends VerticalLayout {
   public static final String PATH = "/select";
   public static final String TITLE = "FUAGRA";
 
   private final ChatSelector chatSelector;
-  private final Header header;
+//  private final Header header;
   private final Storage storage;
   private final SecurityService securityService;
 
   public ChatSelectView(ChatSelector chatSelector, Header header, Storage storage, SecurityService securityService) {
     this.chatSelector = chatSelector;
-    this.header = header;
+//    this.header = header;
     this.storage = storage;
     this.securityService = securityService;
     var showCreateChatForm = new ShowCreateChatForm(storage, chatSelector, securityService);
 
-    add(header.init());
-    var title = new H3("Available chats");
-    add(title);
+//    add(header.init());
+//    var title = new H3("Available chats");
+//    add(title);
 
     var chatSelectLayout = new HorizontalLayout(showCreateChatForm);
 

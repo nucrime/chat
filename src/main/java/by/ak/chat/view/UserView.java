@@ -21,7 +21,7 @@ import java.util.Objects;
 import static org.springframework.util.StringUtils.hasText;
 
 @PageTitle(UserView.TITLE)
-@Route(UserView.PATH)
+@Route(value = UserView.PATH, layout = Header.class)
 public class UserView extends VerticalLayout {
 
   public static final String PATH = "/users";
@@ -31,16 +31,16 @@ public class UserView extends VerticalLayout {
   private final UserService userService;
   private final SecurityService securityService;
   private final UserEditor editor;
-  private final Header header;
+//  private final Header header;
   private User currentUser;
 
   public UserView(UserService userService, SecurityService securityService, UserEditor editor, Header header) {
     this.userService = userService;
     this.securityService = securityService;
     this.editor = editor;
-    this.header = header;
+//    this.header = header;
 
-    add(header.init());
+//    add(header.init());
     grid = new Grid<>(User.class);
     grid.setColumns("id", "username", "enabled", "email", "dob", "firstName", "lastName", "role", "created");
     // todo fix rendering of created date. time always changes unexpectedly, render as in chatview
