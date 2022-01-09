@@ -25,22 +25,19 @@ import static org.springframework.util.StringUtils.hasText;
 public class UserView extends VerticalLayout {
 
   public static final String PATH = "/users";
-  public static final String TITLE = "Users Management";
+  public static final String TITLE = "User Management";
   public static final String ERROR_MSG = "Error occurred. Please contact administrator";
   final Grid<User> grid;
   private final UserService userService;
   private final SecurityService securityService;
   private final UserEditor editor;
-//  private final Header header;
   private User currentUser;
 
-  public UserView(UserService userService, SecurityService securityService, UserEditor editor, Header header) {
+  public UserView(UserService userService, SecurityService securityService, UserEditor editor) {
     this.userService = userService;
     this.securityService = securityService;
     this.editor = editor;
-//    this.header = header;
 
-//    add(header.init());
     grid = new Grid<>(User.class);
     grid.setColumns("id", "username", "enabled", "email", "dob", "firstName", "lastName", "role", "created");
     // todo fix rendering of created date. time always changes unexpectedly, render as in chatview

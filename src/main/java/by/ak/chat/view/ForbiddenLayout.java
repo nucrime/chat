@@ -17,14 +17,9 @@ import javax.servlet.http.HttpServletResponse;
 // todo rework, as spring security intercepts faster than vaadin
 @ParentLayout(Header.class)
 public class ForbiddenLayout extends VerticalLayout implements HasErrorParameter<AccessDeniedException> {
-//  private final Header header;
-
   private Span explanation;
 
-  public ForbiddenLayout(
-//    Header header
-  ) {
-//    this.header = header;
+  public ForbiddenLayout() {
     var container = new HorizontalLayout();
     var h1 = new H1("Where am I?");
     explanation = new Span();

@@ -25,9 +25,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
-import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasDynamicTitle;
-import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.shared.Registration;
 import lombok.extern.slf4j.Slf4j;
@@ -58,24 +56,17 @@ public class ChatView extends VerticalLayout
   private final Storage storage;
   private final DateTimeProvider dateTimeProvider;
   private final SecurityService securityService;
-  //  private final Header header;
   private final MessageEditor editor;
   private final ChatSelector selector;
   private Registration registration;
-  //todo show only last 200 messages
   private VerticalLayout chat;
 
-  public ChatView(Storage storage, SecurityService securityService, DateTimeProvider dateTimeProvider, Header header, MessageEditor editor, ChatSelector selector) {
+  public ChatView(Storage storage, SecurityService securityService, DateTimeProvider dateTimeProvider, MessageEditor editor, ChatSelector selector) {
     this.dateTimeProvider = dateTimeProvider;
     this.storage = storage;
     this.securityService = securityService;
-//    this.header = header;
     this.editor = editor;
     this.selector = selector;
-
-    add(
-//      header.init(),
-      title());
 
     var filter = new TextField();
     filter.setPlaceholder("search...");
@@ -86,10 +77,13 @@ public class ChatView extends VerticalLayout
 
     var filterLayout = new HorizontalLayout(filter);
     // todo maybe move to the right?
-    add(filterLayout);
 
+    filterLayout.setMargin(false);
+    filterLayout.setPadding(false);
+    filterLayout.setSpacing(false);
+    add(filterLayout);
     grid = buildChatGrid();
-    add(editor);
+    chat.add(editor);
 
     // Connect selected ChatMessage to editor or hide if none is selected
     grid.asSingleSelect().addValueChangeListener(e -> {

@@ -38,14 +38,15 @@ public class MessageEditor extends VerticalLayout implements KeyNotifier {
     this.storage = storage;
 
     var textContainer = new HorizontalLayout();
+    textContainer.setSpacing(false);
     text.setWidthFull();
     textContainer.addAndExpand(text);
     add(textContainer, actions);
+    this.setPadding(false);
+    this.setSpacing(false);
 
     binder.bindInstanceFields(this);
-
-    setSpacing(true);
-
+//    setSpacing(true); // TODO: check if it's needed. May cause lack of expanding of the input when text exceeds the width
     save.getElement().getThemeList().add(BLUE);
     delete.getElement().getThemeList().add(ERROR);
 

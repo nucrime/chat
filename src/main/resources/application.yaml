@@ -10,6 +10,11 @@ server:
     session:
       timeout: 15m
 spring:
+  mustache:
+    check-template-location: false
+  vaadin:
+    pnpm:
+      enable: true
   application:
     name: FUAGRA
   profiles:

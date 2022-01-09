@@ -15,19 +15,15 @@ import javax.servlet.http.HttpServletResponse;
 
 @ParentLayout(Header.class)
 public class WhereAmILayout extends VerticalLayout implements HasErrorParameter<NotFoundException> {
-//  private final Header header;
-
   private Span explanation;
 
-  public WhereAmILayout(Header header) {
-//    this.header = header;
+  public WhereAmILayout() {
     var container = new HorizontalLayout();
     var h1 = new H1("Where am I?");
     explanation = new Span();
 
     container.add(h1);
 
-//    add(header.init());
     add(container);
     add(explanation);
     setAlignItems(Alignment.CENTER);

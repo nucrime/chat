@@ -9,7 +9,6 @@ import by.ak.chat.view.UserView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.avatar.Avatar;
@@ -18,7 +17,6 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.ContextMenu;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Footer;
-import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.ListItem;
 import com.vaadin.flow.component.html.Nav;
@@ -33,16 +31,12 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLayout;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.theme.lumo.Lumo;
-import lombok.Data;
-import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.SessionScope;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static by.ak.chat.view.ChatView.LOG_OUT;
 
 @Service
 @SessionScope
@@ -51,91 +45,38 @@ public class Header extends AppLayout implements RouterLayout {
   public static final String CHAT = "Chat";
   public static final String CHATS = "Chat list";
   public static final String USER_MANAGEMENT = "User Management";
-  private H2 viewTitle;
+  public static final String DARK_MODE = "Dark mode";
   private final SecurityService securityService;
   private final UserService userService;
-
-  private record MenuItemInfo (
-    String text,
-    String iconClass,
-    Class<? extends Component> view){}
+  private H2 viewTitle;
 
   public Header(SecurityService securityService, UserService userService) {
     this.securityService = securityService;
     this.userService = userService;
 
-/*    var container = new VerticalLayout();
-    var header = new HorizontalLayout();*/
-
     setPrimarySection(Section.DRAWER);
-
     addToDrawer(createDrawerContent());
-
-/*    var darkTheme = new Button(VaadinIcon.MOON_O.create(), click -> {
-      var themeList = UI.getCurrent().getElement().getThemeList();
-
-      if (themeList.contains(Lumo.DARK)) {
-        themeList.remove(Lumo.DARK);
-        click.getSource().setIcon(VaadinIcon.MOON_O.create());
-      } else {
-        themeList.add(Lumo.DARK);
-        click.getSource().setIcon(VaadinIcon.MOON.create());
-      }
-    });
-
-    header.add(darkTheme);
-
-    var logoutButton = new Button(LOG_OUT, e -> securityService.logout());
-    header.add(logoutButton);
-
-    container.setHeight(10, Unit.PERCENTAGE);
-    container.setAlignItems(FlexComponent.Alignment.END);
-    container.add(header);*/
-
     addToNavbar(true, createHeaderContent());
-//    addToNavbar(container);
-
     this.setDrawerOpened(false);
   }
-/* Todo revise and remove. Old UI
-  public VerticalLayout init() {
-    var container = new VerticalLayout();
-    var header = new HorizontalLayout();
-    var current = UI.getCurrent();
 
-    var management = new Button(USER_MANAGEMENT, e -> current.navigate(UserView.PATH));
-    header.add(management);
+  private static RouterLink createLink(MenuItemInfo menuItemInfo) {
+    RouterLink link = new RouterLink();
+    link.addClassNames("flex", "mx-s", "p-s", "relative", "text-secondary");
+    link.setRoute(menuItemInfo.view());
 
-    var chatButton = new Button(CHAT, e -> current.navigate(ChatView.PATH));
-    var chatList = new Button(CHATS, e -> {
-      current.navigate(ChatSelectView.PATH);
-    });
-    header.add(chatButton);
-    header.add(chatList);
+    Span icon = new Span();
+    icon.addClassNames("me-s", "text-l");
+    if (!menuItemInfo.iconClass().isEmpty()) {
+      icon.addClassNames(menuItemInfo.iconClass());
+    }
 
-    var darkTheme = new Button(VaadinIcon.MOON_O.create(), click -> {
-      var themeList = UI.getCurrent().getElement().getThemeList();
+    Span text = new Span(menuItemInfo.text());
+    text.addClassNames("font-medium", "text-s");
 
-      if (themeList.contains(Lumo.DARK)) {
-        themeList.remove(Lumo.DARK);
-        click.getSource().setIcon(VaadinIcon.MOON_O.create());
-      } else {
-        themeList.add(Lumo.DARK);
-        click.getSource().setIcon(VaadinIcon.MOON.create());
-      }
-    });
-
-    header.add(darkTheme);
-
-    var logoutButton = new Button(LOG_OUT, e -> securityService.logout());
-    header.add(logoutButton);
-
-    container.setHeight(10, Unit.PERCENTAGE);
-    container.setAlignItems(FlexComponent.Alignment.END);
-    container.add(header);
-
-    return container;
-  }*/
+    link.add(icon, text);
+    return link;
+  }
 
   private Component createHeaderContent() {
     DrawerToggle toggle = new DrawerToggle();
@@ -144,45 +85,18 @@ public class Header extends AppLayout implements RouterLayout {
     toggle.getElement().setAttribute("aria-label", "Menu toggle");
 
     viewTitle = new H2();
-//    viewTitle.addClassNames("m-0", "text-l");
+    // position the title in the middle of the header
+    viewTitle.getStyle()
+      .set("font-size", "var(--lumo-font-size-l)")
+      .set("margin", "0");
 
-//    var container = new VerticalLayout();
     var header = new HorizontalLayout();
     header.setId("header");
     header.setWidthFull();
     header.setSpacing(false);
     header.setAlignItems(FlexComponent.Alignment.CENTER);
-
-    var darkTheme = new Button(VaadinIcon.MOON_O.create(), click -> {
-      var themeList = UI.getCurrent().getElement().getThemeList();
-
-      if (themeList.contains(Lumo.DARK)) {
-        themeList.remove(Lumo.DARK);
-        click.getSource().setIcon(VaadinIcon.MOON_O.create());
-      } else {
-        themeList.add(Lumo.DARK);
-        click.getSource().setIcon(VaadinIcon.MOON.create());
-      }
-    });
-
     header.add(toggle);
-
     header.add(viewTitle);
-
-    header.add(darkTheme);
-
-    var logoutButton = new Button(LOG_OUT, e -> securityService.logout());
-    header.add(logoutButton);
-
-//    container.setHeight(10, Unit.PERCENTAGE);
-//    container.setAlignItems(FlexComponent.Alignment.END);
-//    container.add(header);
-
-//    com.vaadin.flow.component.html.Header header = new com.vaadin.flow.component.html.Header(toggle, viewTitle);
-//    com.vaadin.flow.component.html.Header hd = new com.vaadin.flow.component.html.Header(container);
-//    com.vaadin.flow.component.html.Header hd = new com.vaadin.flow.component.html.Header(toggle, viewTitle, darkTheme, logoutButton);
-//    hd.addClassNames("bg-base", "border-b", "border-contrast-10", "box-border", "flex", "h-xl", "items-center",
-//      "w-full");
     return header;
   }
 
@@ -191,7 +105,7 @@ public class Header extends AppLayout implements RouterLayout {
     appName.addClassNames("flex", "items-center", "h-xl", "m-0", "px-m", "text-m");
 
     com.vaadin.flow.component.html.Section section = new com.vaadin.flow.component.html.Section(appName,
-      createNavigation(), createFooter());
+      createNavigation(), createThemeButton(), createFooter());
     section.addClassNames("flex", "flex-col", "items-stretch", "max-h-full", "min-h-full");
     return section;
   }
@@ -213,16 +127,24 @@ public class Header extends AppLayout implements RouterLayout {
     return nav;
   }
 
-  private List<RouterLink> createLinks() {
-    /*
-    *     var management = new Button(USER_MANAGEMENT, e -> current.navigate(UserView.PATH));
-    header.add(management);
+  private VerticalLayout createThemeButton() {
+    var layout = new VerticalLayout();
+    var darkTheme = new Button(DARK_MODE, VaadinIcon.MOON_O.create(), click -> {
+      var themeList = UI.getCurrent().getElement().getThemeList();
 
-    var chatButton = new Button(CHAT, e -> current.navigate(ChatView.PATH));
-    var chatList = new Button(CHATS, e -> {
-      current.navigate(ChatSelectView.PATH);
+      if (themeList.contains(Lumo.DARK)) {
+        themeList.remove(Lumo.DARK);
+        click.getSource().setIcon(VaadinIcon.MOON_O.create());
+      } else {
+        themeList.add(Lumo.DARK);
+        click.getSource().setIcon(VaadinIcon.MOON.create());
+      }
     });
-    * */
+    layout.add(darkTheme);
+    return layout;
+  }
+
+  private List<RouterLink> createLinks() {
     var menuItems = List.of(
       new MenuItemInfo(USER_MANAGEMENT, "la la-file", UserView.class),
       new MenuItemInfo(CHAT, "la la-columns", ChatView.class),
@@ -231,11 +153,6 @@ public class Header extends AppLayout implements RouterLayout {
     menuItems.forEach(menuItem -> {
       links.add(createLink(menuItem));
     });
-//    for (MenuItemInfo menuItemInfo : menuItems) {
-//      if (accessChecker.hasAccess(menuItemInfo.getView())) {
-//        links.add(createLink(menuItemInfo));
-//      }
-//    }
     return links;
   }
 
@@ -268,24 +185,6 @@ public class Header extends AppLayout implements RouterLayout {
     return layout;
   }
 
-  private static RouterLink createLink(MenuItemInfo menuItemInfo) {
-    RouterLink link = new RouterLink();
-    link.addClassNames("flex", "mx-s", "p-s", "relative", "text-secondary");
-    link.setRoute(menuItemInfo.view());
-
-    Span icon = new Span();
-    icon.addClassNames("me-s", "text-l");
-    if (!menuItemInfo.iconClass().isEmpty()) {
-      icon.addClassNames(menuItemInfo.iconClass());
-    }
-
-    Span text = new Span(menuItemInfo.text());
-    text.addClassNames("font-medium", "text-s");
-
-    link.add(icon, text);
-    return link;
-  }
-
   @Override
   protected void afterNavigation() {
     super.afterNavigation();
@@ -313,10 +212,9 @@ public class Header extends AppLayout implements RouterLayout {
     return pageTitle;
   }
 
-  private void setCurrentPageTitle() {
-//    PageTitle title = getContent().getClass().getAnnotation(PageTitle.class);
-//    return title == null ? "" : title.value();
-    UI.getCurrent().getPage().executeJs("return document.title;").then(String.class,
-      title -> viewTitle.setText(title));
+  private record MenuItemInfo(
+    String text,
+    String iconClass,
+    Class<? extends Component> view) {
   }
 }
