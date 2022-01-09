@@ -1,5 +1,6 @@
 package by.ak.chat;
 
+import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.server.PWA;
@@ -11,6 +12,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 @Push
 @PWA(name = "FUAGRA", shortName = "FUAGRA", offlineResources = {"/pages/offline.html"})
 @SpringBootApplication(exclude = ErrorMvcAutoConfiguration.class)
+@NpmPackage(value = "line-awesome", version = "1.3.0")
 public class ChatApplication extends SpringBootServletInitializer implements AppShellConfigurator {
 
   public static void main(String[] args) {

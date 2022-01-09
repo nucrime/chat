@@ -7,6 +7,7 @@ import by.ak.chat.view.ChatSelectView;
 import by.ak.chat.view.ChatView;
 import by.ak.chat.view.UserView;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -27,11 +28,13 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLayout;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.theme.lumo.Lumo;
 import lombok.Data;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.SessionScope;
 
@@ -48,7 +51,7 @@ public class Header extends AppLayout implements RouterLayout {
   public static final String CHAT = "Chat";
   public static final String CHATS = "Chat list";
   public static final String USER_MANAGEMENT = "User Management";
-  private H1 viewTitle;
+  private H2 viewTitle;
   private final SecurityService securityService;
   private final UserService userService;
 
@@ -61,14 +64,14 @@ public class Header extends AppLayout implements RouterLayout {
     this.securityService = securityService;
     this.userService = userService;
 
-    var container = new VerticalLayout();
-    var header = new HorizontalLayout();
+/*    var container = new VerticalLayout();
+    var header = new HorizontalLayout();*/
 
     setPrimarySection(Section.DRAWER);
 
     addToDrawer(createDrawerContent());
 
-    var darkTheme = new Button(VaadinIcon.MOON_O.create(), click -> {
+/*    var darkTheme = new Button(VaadinIcon.MOON_O.create(), click -> {
       var themeList = UI.getCurrent().getElement().getThemeList();
 
       if (themeList.contains(Lumo.DARK)) {
@@ -87,10 +90,10 @@ public class Header extends AppLayout implements RouterLayout {
 
     container.setHeight(10, Unit.PERCENTAGE);
     container.setAlignItems(FlexComponent.Alignment.END);
-    container.add(header);
+    container.add(header);*/
 
     addToNavbar(true, createHeaderContent());
-    addToNavbar(container);
+//    addToNavbar(container);
 
     this.setDrawerOpened(false);
   }
@@ -140,15 +143,46 @@ public class Header extends AppLayout implements RouterLayout {
     toggle.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
     toggle.getElement().setAttribute("aria-label", "Menu toggle");
 
-    // todo add dynamic title
-    viewTitle = new H1();
-    viewTitle.addClassNames("m-0", "text-l");
+    viewTitle = new H2();
+//    viewTitle.addClassNames("m-0", "text-l");
 
-    com.vaadin.flow.component.html.Header header = new com.vaadin.flow.component.html.Header(toggle
-//      , viewTitle
-    );
-    header.addClassNames("bg-base", "border-b", "border-contrast-10", "box-border", "flex", "h-xl", "items-center",
-      "w-full");
+//    var container = new VerticalLayout();
+    var header = new HorizontalLayout();
+    header.setId("header");
+    header.setWidthFull();
+    header.setSpacing(false);
+    header.setAlignItems(FlexComponent.Alignment.CENTER);
+
+    var darkTheme = new Button(VaadinIcon.MOON_O.create(), click -> {
+      var themeList = UI.getCurrent().getElement().getThemeList();
+
+      if (themeList.contains(Lumo.DARK)) {
+        themeList.remove(Lumo.DARK);
+        click.getSource().setIcon(VaadinIcon.MOON_O.create());
+      } else {
+        themeList.add(Lumo.DARK);
+        click.getSource().setIcon(VaadinIcon.MOON.create());
+      }
+    });
+
+    header.add(toggle);
+
+    header.add(viewTitle);
+
+    header.add(darkTheme);
+
+    var logoutButton = new Button(LOG_OUT, e -> securityService.logout());
+    header.add(logoutButton);
+
+//    container.setHeight(10, Unit.PERCENTAGE);
+//    container.setAlignItems(FlexComponent.Alignment.END);
+//    container.add(header);
+
+//    com.vaadin.flow.component.html.Header header = new com.vaadin.flow.component.html.Header(toggle, viewTitle);
+//    com.vaadin.flow.component.html.Header hd = new com.vaadin.flow.component.html.Header(container);
+//    com.vaadin.flow.component.html.Header hd = new com.vaadin.flow.component.html.Header(toggle, viewTitle, darkTheme, logoutButton);
+//    hd.addClassNames("bg-base", "border-b", "border-contrast-10", "box-border", "flex", "h-xl", "items-center",
+//      "w-full");
     return header;
   }
 
@@ -190,7 +224,7 @@ public class Header extends AppLayout implements RouterLayout {
     });
     * */
     var menuItems = List.of(
-      new MenuItemInfo(USER_MANAGEMENT, "la la-columns", UserView.class),
+      new MenuItemInfo(USER_MANAGEMENT, "la la-file", UserView.class),
       new MenuItemInfo(CHAT, "la la-columns", ChatView.class),
       new MenuItemInfo(CHATS, "la la-columns", ChatSelectView.class));
     List<RouterLink> links = new ArrayList<>();
@@ -259,7 +293,30 @@ public class Header extends AppLayout implements RouterLayout {
   }
 
   private String getCurrentPageTitle() {
-    PageTitle title = getContent().getClass().getAnnotation(PageTitle.class);
-    return title == null ? "" : title.value();
+    String pageTitle = "";
+
+    // Get list of current views, the first view is the top view.
+    List<HasElement> views = UI.getCurrent().getInternals().getActiveRouterTargetsChain();
+    if (views.size() > 0) {
+      HasElement view = views.get(0);
+
+      // If the view has a dynamic title we'll use that
+      if (view instanceof HasDynamicTitle) {
+        pageTitle = ((HasDynamicTitle) view).getPageTitle().toString();
+      } else {
+        // It does not have a dynamic title. Try to read title from
+        // annotations
+        PageTitle pt = getContent().getClass().getAnnotation(PageTitle.class);
+        pageTitle = pt == null ? "" : pt.value();
+      }
+    }
+    return pageTitle;
+  }
+
+  private void setCurrentPageTitle() {
+//    PageTitle title = getContent().getClass().getAnnotation(PageTitle.class);
+//    return title == null ? "" : title.value();
+    UI.getCurrent().getPage().executeJs("return document.title;").then(String.class,
+      title -> viewTitle.setText(title));
   }
 }

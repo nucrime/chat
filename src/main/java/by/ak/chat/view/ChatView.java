@@ -25,6 +25,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
+import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -39,10 +40,8 @@ import static org.springframework.util.StringUtils.hasText;
 
 @Slf4j
 @Route(value = ChatView.PATH, layout = Header.class)
-@PageTitle(ChatView.TITLE)
 public class ChatView extends VerticalLayout
-//  implements HasDynamicTitle
-{
+  implements HasDynamicTitle {
   public static final String CHAT_MESSAGE_TEMPLATE = "%s   **%s**: %s";
   public static final String PATH = "/";
   public static final String TITLE = "FUAGRA";
@@ -59,7 +58,7 @@ public class ChatView extends VerticalLayout
   private final Storage storage;
   private final DateTimeProvider dateTimeProvider;
   private final SecurityService securityService;
-//  private final Header header;
+  //  private final Header header;
   private final MessageEditor editor;
   private final ChatSelector selector;
   private Registration registration;
@@ -221,10 +220,10 @@ public class ChatView extends VerticalLayout
   private void listMessages() {
     listMessages(null);
   }
-//
-//  @Override
-//  public String getPageTitle() {
-//    return TITLE + DELIMITER + selector.getCurrent();
-//  }
+
+  @Override
+  public String getPageTitle() {
+    return TITLE + DELIMITER + selector.getCurrent();
+  }
 }
 
