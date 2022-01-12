@@ -38,12 +38,10 @@ import static org.springframework.util.StringUtils.hasText;
 
 @Slf4j
 @Route(value = ChatView.PATH, layout = Header.class)
-public class ChatView extends VerticalLayout
-  implements HasDynamicTitle {
+public class ChatView extends VerticalLayout implements HasDynamicTitle {
   public static final String CHAT_MESSAGE_TEMPLATE = "%s   **%s**: %s";
   public static final String PATH = "/";
   public static final String TITLE = "FUAGRA";
-  public static final String LOG_OUT = "Log out";
   public static final int MESSAGE_LENGTH_LIMIT = 255;
   public static final String MSG_LONG = "Message is too long";
   public static final String MSG_EMPTY = "Message is empty";
