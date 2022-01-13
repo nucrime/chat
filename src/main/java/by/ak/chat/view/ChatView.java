@@ -4,20 +4,21 @@ import by.ak.chat.component.Header;
 import by.ak.chat.component.MessageEditor;
 import by.ak.chat.model.ChatMessage;
 import by.ak.chat.model.MessageQueue;
-import by.ak.chat.model.Storage;
 import by.ak.chat.security.SecurityService;
+import by.ak.chat.service.StorageService;
 import by.ak.chat.util.ChatSelector;
 import by.ak.chat.util.DateTimeProvider;
+import by.ak.chat.util.EventBus;
 import com.github.rjeschke.txtmark.Processor;
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
-import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.messages.MessageInput;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -47,11 +48,10 @@ public class ChatView extends VerticalLayout implements HasDynamicTitle {
   public static final String MSG_EMPTY = "Message is empty";
   public static final String REDUNDANT_WHITESPACES = "\\s+";
   public static final String SINGLE_WHITESPACE = " ";
-  public static final int DEFAULT_HEIGHT = 10;
   public static final String DELIMITER = " | ";
 
   private final Grid<ChatMessage> grid;
-  private final Storage storage;
+  private final StorageService storage;
   private final DateTimeProvider dateTimeProvider;
   private final SecurityService securityService;
   private final MessageEditor editor;
@@ -59,7 +59,11 @@ public class ChatView extends VerticalLayout implements HasDynamicTitle {
   private Registration registration;
   private VerticalLayout chat;
 
-  public ChatView(Storage storage, SecurityService securityService, DateTimeProvider dateTimeProvider, MessageEditor editor, ChatSelector selector) {
+  public ChatView(StorageService storage,
+                  SecurityService securityService,
+                  DateTimeProvider dateTimeProvider,
+                  MessageEditor editor,
+                  ChatSelector selector) {
     this.dateTimeProvider = dateTimeProvider;
     this.storage = storage;
     this.securityService = securityService;
@@ -117,15 +121,6 @@ public class ChatView extends VerticalLayout implements HasDynamicTitle {
     return grid;
   }
 
-  private VerticalLayout title() {
-    var title = new H3(TITLE + DELIMITER + selector.getCurrent());
-    var titleLayout = new VerticalLayout();
-    titleLayout.add(title);
-    titleLayout.setHeight(DEFAULT_HEIGHT, Unit.PERCENTAGE);
-    titleLayout.setAlignItems(Alignment.CENTER);
-    return titleLayout;
-  }
-
   private MessageInput messageInput() {
     var input = new MessageInput();
 
@@ -143,10 +138,6 @@ public class ChatView extends VerticalLayout implements HasDynamicTitle {
     });
     input.setWidthFull();
     return input;
-  }
-
-  public void onMessage(Storage.ChatEvent event) {
-    refreshGridContent();
   }
 
   private void refreshGridContent() {
@@ -177,11 +168,15 @@ public class ChatView extends VerticalLayout implements HasDynamicTitle {
 
   @Override
   protected void onAttach(AttachEvent attachEvent) {
-    registration = storage.attachListener(this::onMessage);
+    super.onAttach(attachEvent);
+    refreshGridContent(); // refresh grid content after UI is loaded
+    registration =
+      EventBus.addListener(ChatEvent.class, e -> refreshGridContent());
   }
 
   @Override
   protected void onDetach(DetachEvent detachEvent) {
+    super.onDetach(detachEvent);
     registration.remove();
   }
 
@@ -216,6 +211,12 @@ public class ChatView extends VerticalLayout implements HasDynamicTitle {
   @Override
   public String getPageTitle() {
     return TITLE + DELIMITER + selector.getCurrent();
+  }
+
+  public static class ChatEvent extends ComponentEvent<Div> {
+    public ChatEvent() {
+      super(new Div(), false);
+    }
   }
 }
 

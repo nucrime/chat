@@ -1,7 +1,7 @@
 package by.ak.chat.view;
 
-import by.ak.chat.model.Storage;
 import by.ak.chat.security.SecurityService;
+import by.ak.chat.service.StorageService;
 import by.ak.chat.util.DateTimeProvider;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Unit;
@@ -25,10 +25,10 @@ public class ChatViewV2 extends VerticalLayout {
   public static final String PATH = "/chatV2";
   public static final String TITLE = "Chat";
   private final SecurityService securityService;
-  private final Storage storage;
+  private final StorageService storage;
   private final DateTimeProvider dateTimeProvider;
 
-  public ChatViewV2(SecurityService securityService, Storage storage, DateTimeProvider dateTimeProvider) {
+  public ChatViewV2(SecurityService securityService, StorageService storage, DateTimeProvider dateTimeProvider) {
     this.securityService = securityService;
     this.storage = storage;
     this.dateTimeProvider = dateTimeProvider;

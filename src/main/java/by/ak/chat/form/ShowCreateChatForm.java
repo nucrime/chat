@@ -1,7 +1,7 @@
 package by.ak.chat.form;
 
-import by.ak.chat.model.Storage;
 import by.ak.chat.security.SecurityService;
+import by.ak.chat.service.StorageService;
 import by.ak.chat.util.ChatSelector;
 import by.ak.chat.view.ChatView;
 import com.vaadin.flow.component.HasValueAndElement;
@@ -20,7 +20,7 @@ public class ShowCreateChatForm extends FormLayout {
 
   private static final String USER_JOINED_MSG = "**%s** joined";
 
-  private final Storage storage;
+  private final StorageService storage;
   private final ChatSelector chatSelector;
   private final SecurityService securityService;
 
@@ -30,7 +30,7 @@ public class ShowCreateChatForm extends FormLayout {
 
   private Button submitButton;
 
-  public ShowCreateChatForm(Storage storage, ChatSelector chatSelector, SecurityService securityService) {
+  public ShowCreateChatForm(StorageService storage, ChatSelector chatSelector, SecurityService securityService) {
     this.storage = storage;
     this.chatSelector = chatSelector;
     this.securityService = securityService;

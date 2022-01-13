@@ -3,8 +3,8 @@ package by.ak.chat.view;
 import by.ak.chat.component.Header;
 import by.ak.chat.form.ChatNameBinder;
 import by.ak.chat.form.ShowCreateChatForm;
-import by.ak.chat.model.Storage;
 import by.ak.chat.security.SecurityService;
+import by.ak.chat.service.StorageService;
 import by.ak.chat.util.ChatSelector;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -20,10 +20,10 @@ public class ChatSelectView extends VerticalLayout {
   public static final String TITLE = "FUAGRA";
 
   private final ChatSelector chatSelector;
-  private final Storage storage;
+  private final StorageService storage;
   private final SecurityService securityService;
 
-  public ChatSelectView(ChatSelector chatSelector, Storage storage, SecurityService securityService) {
+  public ChatSelectView(ChatSelector chatSelector, StorageService storage, SecurityService securityService) {
     this.chatSelector = chatSelector;
     this.storage = storage;
     this.securityService = securityService;

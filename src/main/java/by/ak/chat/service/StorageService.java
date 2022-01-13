@@ -1,13 +1,12 @@
-package by.ak.chat.model;
+package by.ak.chat.service;
 
 import by.ak.chat.config.ChatProperties;
-import by.ak.chat.service.ChatService;
-import com.vaadin.flow.component.ComponentEvent;
-import com.vaadin.flow.component.ComponentEventBus;
-import com.vaadin.flow.component.ComponentEventListener;
-import com.vaadin.flow.component.html.Div;
+import by.ak.chat.model.ChatMessage;
+import by.ak.chat.model.Chats;
+import by.ak.chat.model.MessageQueue;
+import by.ak.chat.util.EventBus;
+import by.ak.chat.view.ChatView;
 import com.vaadin.flow.component.messages.MessageListItem;
-import com.vaadin.flow.shared.Registration;
 import org.atmosphere.inject.annotation.ApplicationScoped;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
@@ -22,17 +21,17 @@ import static java.util.stream.Collectors.toList;
 
 @Component
 @ApplicationScoped
-public class Storage {
+public class StorageService {
   public static final int ONE_SECOND = 1;
   public static final int HUNDRED_MILLISECONDS = 100;
 
   private final Chats chats;
   private final ChatProperties chatProperties;
-  private final ComponentEventBus eventBus = new ComponentEventBus(new Div());
+//  private final ComponentEventBus eventBus = new ComponentEventBus(new Div());
 
   private final ChatService chatService;
 
-  public Storage(ChatProperties chatProperties, ChatService chatService) {
+  public StorageService(ChatProperties chatProperties, ChatService chatService) {
     this.chatProperties = chatProperties;
     this.chatService = chatService;
     this.chats = Chats.withMessageLimitOf(chatProperties.getMessage().getLimit());
@@ -57,7 +56,9 @@ public class Storage {
     var presence = new ChatMessage();
     presence.setText(message);
     addAndSave(presence);
-    delayFireEvent(); // Delay fire event, so frontend can render message before user joined and scroll to bottom
+    delayFireEvent(); // Delay fire event, so frontend can render messages
+    // before user joined and then scroll to bottom. Works as sure-fire if
+    // grid was not refreshed after user joined the chat.
   }
 
   public Optional<ChatMessage> getMessage(ChatMessage message) {
@@ -76,10 +77,6 @@ public class Storage {
     chats.remove(message);
   }
 
-  public Registration attachListener(ComponentEventListener<ChatEvent> listener) {
-    return eventBus.addListener(ChatEvent.class, listener);
-  }
-
   private void addAndSave(ChatMessage message) {
     message.setChat(chatService.current());
     chats.add(message);
@@ -95,8 +92,11 @@ public class Storage {
   }
 
   public void fireEvent() {
-    Mono.delay(Duration.ofMillis(HUNDRED_MILLISECONDS)).subscribe(e -> eventBus.fireEvent(new ChatEvent()));
-    // default delay is 100ms. Enough for illusion of a real time, as well enough for frontend to render messages.
+    Mono.delay(Duration.ofMillis(HUNDRED_MILLISECONDS))
+      .subscribe(e ->
+        EventBus.fireEvent(new ChatView.ChatEvent()));
+    // default delay is 100ms. Enough for illusion of a real time,
+    // as well enough for frontend to render messages.
   }
 
   /*
@@ -115,12 +115,5 @@ public class Storage {
   @PostConstruct
   public void init() {
     chatService.findAll().subscribe(chats::add);
-  }
-
-  //todo google: vaadin events, component events
-  public static class ChatEvent extends ComponentEvent<Div> {
-    public ChatEvent() {
-      super(new Div(), false);
-    }
   }
 }

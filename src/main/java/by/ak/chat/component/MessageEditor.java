@@ -1,8 +1,8 @@
 package by.ak.chat.component;
 
 import by.ak.chat.model.ChatMessage;
-import by.ak.chat.model.Storage;
 import by.ak.chat.service.ChatService;
+import by.ak.chat.service.StorageService;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.KeyNotifier;
 import com.vaadin.flow.component.button.Button;
@@ -20,7 +20,7 @@ public class MessageEditor extends VerticalLayout implements KeyNotifier {
   public static final String BLUE = "primary";
   public static final String ERROR = "error";
   private final ChatService chatService;
-  private final Storage storage;
+  private final StorageService storage;
   private ChatMessage message;
   private TextField text = new TextField("Edit message");
 
@@ -33,7 +33,7 @@ public class MessageEditor extends VerticalLayout implements KeyNotifier {
   private Binder<ChatMessage> binder = new Binder<>(ChatMessage.class);
   private ChangeHandler changeHandler;
 
-  public MessageEditor(ChatService chatService, Storage storage) {
+  public MessageEditor(ChatService chatService, StorageService storage) {
     this.chatService = chatService;
     this.storage = storage;
 

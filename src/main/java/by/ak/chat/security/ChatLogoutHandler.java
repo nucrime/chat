@@ -1,6 +1,6 @@
 package by.ak.chat.security;
 
-import by.ak.chat.model.Storage;
+import by.ak.chat.service.StorageService;
 import com.vaadin.flow.server.VaadinServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequiredArgsConstructor
 public class ChatLogoutHandler extends SecurityContextLogoutHandler {
   private static final String USER_LEFT_MSG = "**%s** left";
-  private final Storage storage;
+  private final StorageService storage;
 
   /**
    * If @param user String is empty then it indicates that user parameter has been set to null during logout,
