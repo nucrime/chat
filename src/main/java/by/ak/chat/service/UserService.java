@@ -4,7 +4,6 @@ import by.ak.chat.exception.AnotherUserWithUsernameExists;
 import by.ak.chat.model.User;
 import by.ak.chat.repository.UserRepository;
 import by.ak.chat.security.SecurityService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,12 +17,9 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
-public class UserService {
-  private final PasswordEncoder passwordEncoder;
-  private final UserRepository repository;
-  private final SecurityService securityService;
-
+public record UserService(PasswordEncoder passwordEncoder,
+                          UserRepository repository,
+                          SecurityService securityService) {
   public void save(User user) {
     log.info("[FUAGRA] Saving user: {}", user);
     repository.save(

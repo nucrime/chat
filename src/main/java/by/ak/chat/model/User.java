@@ -50,12 +50,4 @@ public class User {
 
   @PastOrPresent
   private LocalDateTime created = LocalDateTime.now();
-//
-//  public String getRole() {
-//    return role.name();
-//  }
-//
-//  public void setRole(String role) {
-//    this.role = Role.valueOf(role);
-//  }
 }

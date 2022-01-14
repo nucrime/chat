@@ -1,13 +1,11 @@
 package by.ak.chat.component;
 
-import by.ak.chat.model.User;
 import by.ak.chat.security.SecurityService;
 import by.ak.chat.service.UserService;
 import by.ak.chat.view.ChatSelectView;
 import by.ak.chat.view.ChatView;
 import by.ak.chat.view.UserView;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -36,7 +34,6 @@ import org.springframework.web.context.annotation.SessionScope;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @SessionScope
@@ -61,17 +58,17 @@ public class Header extends AppLayout implements RouterLayout {
   }
 
   private static RouterLink createLink(MenuItemInfo menuItemInfo) {
-    RouterLink link = new RouterLink();
+    var link = new RouterLink();
     link.addClassNames("flex", "mx-s", "p-s", "relative", "text-secondary");
     link.setRoute(menuItemInfo.view());
 
-    Span icon = new Span();
+    var icon = new Span();
     icon.addClassNames("me-s", "text-l");
     if (!menuItemInfo.iconClass().isEmpty()) {
       icon.addClassNames(menuItemInfo.iconClass());
     }
 
-    Span text = new Span(menuItemInfo.text());
+    var text = new Span(menuItemInfo.text());
     text.addClassNames("font-medium", "text-s");
 
     link.add(icon, text);
@@ -79,7 +76,7 @@ public class Header extends AppLayout implements RouterLayout {
   }
 
   private Component createHeaderContent() {
-    DrawerToggle toggle = new DrawerToggle();
+    var toggle = new DrawerToggle();
     toggle.addClassName("text-secondary");
     toggle.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
     toggle.getElement().setAttribute("aria-label", "Menu toggle");
@@ -101,7 +98,7 @@ public class Header extends AppLayout implements RouterLayout {
   }
 
   private Component createDrawerContent() {
-    H2 appName = new H2("FUARGA");
+    var appName = new H2("FUARGA");
     appName.addClassNames("flex", "items-center", "h-xl", "m-0", "px-m", "text-m");
 
     com.vaadin.flow.component.html.Section section = new com.vaadin.flow.component.html.Section(appName,
@@ -111,19 +108,17 @@ public class Header extends AppLayout implements RouterLayout {
   }
 
   private Nav createNavigation() {
-    Nav nav = new Nav();
+    var nav = new Nav();
     nav.addClassNames("border-b", "border-contrast-10", "flex-grow", "overflow-auto");
     nav.getElement().setAttribute("aria-labelledby", "views");
 
     // Wrap the links in a list; improves accessibility
-    UnorderedList list = new UnorderedList();
+    var list = new UnorderedList();
     list.addClassNames("list-none", "m-0", "p-0");
     nav.add(list);
 
-    for (RouterLink link : createLinks()) {
-      ListItem item = new ListItem(link);
-      list.add(item);
-    }
+    createLinks()
+      .forEach(link -> list.add(new ListItem(link)));
     return nav;
   }
 
@@ -149,7 +144,7 @@ public class Header extends AppLayout implements RouterLayout {
       new MenuItemInfo(USER_MANAGEMENT, "la la-file", UserView.class),
       new MenuItemInfo(CHAT, "la la-columns", ChatView.class),
       new MenuItemInfo(CHATS, "la la-columns", ChatSelectView.class));
-    List<RouterLink> links = new ArrayList<>();
+    var links = new ArrayList<RouterLink>();
     menuItems.forEach(menuItem -> {
       links.add(createLink(menuItem));
     });
@@ -157,23 +152,23 @@ public class Header extends AppLayout implements RouterLayout {
   }
 
   private Footer createFooter() {
-    Footer layout = new Footer();
+    var layout = new Footer();
     layout.addClassNames("flex", "items-center", "my-s", "px-m", "py-xs");
 
-    Optional<User> maybeUser = userService.find(securityService.getLoggedInUserName());
+    var maybeUser = userService.find(securityService.getLoggedInUserName());
     if (maybeUser.isPresent()) {
-      User user = maybeUser.get();
+      var user = maybeUser.get();
 
-      Avatar avatar = new Avatar(user.getUsername(), null); // avatar is currently not used
+      var avatar = new Avatar(user.getUsername(), null); // avatar is currently not used
       avatar.addClassNames("me-xs");
 
-      ContextMenu userMenu = new ContextMenu(avatar);
+      var userMenu = new ContextMenu(avatar);
       userMenu.setOpenOnClick(true);
       userMenu.addItem("Logout", e -> {
         securityService.logout();
       });
 
-      Span name = new Span(user.getUsername());
+      var name = new Span(user.getUsername());
       name.addClassNames("font-medium", "text-s", "text-secondary");
 
       layout.add(avatar, name);
@@ -192,20 +187,20 @@ public class Header extends AppLayout implements RouterLayout {
   }
 
   private String getCurrentPageTitle() {
-    String pageTitle = "";
+    var pageTitle = "";
 
     // Get list of current views, the first view is the top view.
-    List<HasElement> views = UI.getCurrent().getInternals().getActiveRouterTargetsChain();
+    var views = UI.getCurrent().getInternals().getActiveRouterTargetsChain();
     if (views.size() > 0) {
-      HasElement view = views.get(0);
+      var view = views.get(0);
 
       // If the view has a dynamic title we'll use that
-      if (view instanceof HasDynamicTitle) {
-        pageTitle = ((HasDynamicTitle) view).getPageTitle().toString();
+      if (view instanceof HasDynamicTitle v) {
+        pageTitle = v.getPageTitle();
       } else {
         // It does not have a dynamic title. Try to read title from
         // annotations
-        PageTitle pt = getContent().getClass().getAnnotation(PageTitle.class);
+        var pt = getContent().getClass().getAnnotation(PageTitle.class);
         pageTitle = pt == null ? "" : pt.value();
       }
     }

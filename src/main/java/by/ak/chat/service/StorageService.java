@@ -27,7 +27,6 @@ public class StorageService {
 
   private final Chats chats;
   private final ChatProperties chatProperties;
-//  private final ComponentEventBus eventBus = new ComponentEventBus(new Div());
 
   private final ChatService chatService;
 

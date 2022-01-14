@@ -3,7 +3,6 @@ package by.ak.chat.service;
 import by.ak.chat.model.ChatMessage;
 import by.ak.chat.repository.ChatRepository;
 import by.ak.chat.util.ChatSelector;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -11,11 +10,7 @@ import reactor.core.publisher.Mono;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
-public class ChatService {
-  private final ChatRepository repository;
-  private final ChatSelector selector;
-
+public record ChatService(ChatRepository repository, ChatSelector selector) {
   public Mono<ChatMessage> save(ChatMessage chatMessage) {
     log.info("[FUAGRA] Saving chat message: {}", chatMessage);
     return repository.save(chatMessage);
@@ -26,7 +21,6 @@ public class ChatService {
     return repository.findByUser(user);
   }
 
-  //  @Tailable
   public Flux<ChatMessage> findAll() {
     log.info("[FUAGRA] Searching all chat messages");
     return repository.findAll();

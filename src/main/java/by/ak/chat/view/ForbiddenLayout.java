@@ -26,7 +26,6 @@ public class ForbiddenLayout extends VerticalLayout implements HasErrorParameter
 
     container.add(h1);
 
-//    add(header.init());
     add(container);
     add(explanation);
     setAlignItems(Alignment.CENTER);
