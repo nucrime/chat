@@ -1,5 +1,6 @@
-package by.ak.chat.security;
+package by.ak.chat.security.handler;
 
+import by.ak.chat.security.service.LoginAttemptsService;
 import by.ak.chat.util.IPUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationListener;

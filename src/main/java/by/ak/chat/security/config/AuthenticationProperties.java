@@ -1,4 +1,4 @@
-package by.ak.chat.security;
+package by.ak.chat.security.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

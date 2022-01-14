@@ -1,4 +1,4 @@
-package by.ak.chat.view;
+package by.ak.chat.view.user;
 
 import by.ak.chat.util.DateTimeProvider;
 import com.vaadin.flow.component.html.H1;

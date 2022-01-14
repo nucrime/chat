@@ -116,7 +116,7 @@ public class RegistrationFormBinder {
       return ValidationResult.ok();
     }
 
-    String pass2 = registrationForm.getPasswordConfirmField().getValue();
+    var pass2 = registrationForm.getPasswordConfirmField().getValue();
 
     if (pass1 != null && pass1.equals(pass2)) {
       return ValidationResult.ok();
@@ -129,7 +129,7 @@ public class RegistrationFormBinder {
    * We call this method when form submission has succeeded
    */
   private void showSuccess(User userBean) {
-    Notification notification =
+    var notification =
       Notification.show(
         String.format(REGISTRATION_SUCCESS_MSG,
           userBean.getFirstName()));

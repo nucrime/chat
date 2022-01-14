@@ -1,5 +1,6 @@
-package by.ak.chat.security;
+package by.ak.chat.security.service;
 
+import by.ak.chat.security.config.AuthenticationProperties;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;

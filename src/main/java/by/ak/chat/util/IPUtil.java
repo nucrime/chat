@@ -9,11 +9,10 @@ import static com.google.common.net.HttpHeaders.X_FORWARDED_FOR;
 
 @Component
 @RequiredArgsConstructor
-public class IPUtil {
+public record IPUtil(HttpServletRequest request) {
 
   private static final int ORIGINATING_ADDRESS = 0;
   private static final String DELIMITER = ",";
-  private final HttpServletRequest request;
 
   public String getClientIP() {
     String xfHeader = request.getHeader(X_FORWARDED_FOR);

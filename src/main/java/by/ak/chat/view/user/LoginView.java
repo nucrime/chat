@@ -1,6 +1,7 @@
-package by.ak.chat.view;
+package by.ak.chat.view.user;
 
 import by.ak.chat.util.DateTimeProvider;
+import by.ak.chat.view.chat.ChatView;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;

@@ -3,7 +3,7 @@ package by.ak.chat.service;
 import by.ak.chat.exception.AnotherUserWithUsernameExists;
 import by.ak.chat.model.User;
 import by.ak.chat.repository.UserRepository;
-import by.ak.chat.security.SecurityService;
+import by.ak.chat.security.service.SecurityService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

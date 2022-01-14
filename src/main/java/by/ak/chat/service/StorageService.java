@@ -5,7 +5,7 @@ import by.ak.chat.model.ChatMessage;
 import by.ak.chat.model.Chats;
 import by.ak.chat.model.MessageQueue;
 import by.ak.chat.util.EventBus;
-import by.ak.chat.view.ChatView;
+import by.ak.chat.view.chat.ChatView;
 import com.vaadin.flow.component.messages.MessageListItem;
 import org.atmosphere.inject.annotation.ApplicationScoped;
 import org.springframework.stereotype.Component;

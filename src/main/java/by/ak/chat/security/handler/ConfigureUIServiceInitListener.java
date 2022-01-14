@@ -1,7 +1,8 @@
-package by.ak.chat.security;
+package by.ak.chat.security.handler;
 
-import by.ak.chat.view.LoginView;
-import by.ak.chat.view.RegistrationView;
+import by.ak.chat.security.config.SecurityUtils;
+import by.ak.chat.view.user.LoginView;
+import by.ak.chat.view.user.RegistrationView;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.server.ServiceInitEvent;

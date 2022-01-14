@@ -1,8 +1,9 @@
-package by.ak.chat.security;
+package by.ak.chat.security.config;
 
-import by.ak.chat.view.ForgotPasswordView;
-import by.ak.chat.view.LoginView;
-import by.ak.chat.view.RegistrationView;
+import by.ak.chat.security.handler.ChatRedirectingAuthenticationSuccessHandler;
+import by.ak.chat.view.user.ForgotPasswordView;
+import by.ak.chat.view.user.LoginView;
+import by.ak.chat.view.user.RegistrationView;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

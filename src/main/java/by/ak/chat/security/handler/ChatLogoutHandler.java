@@ -1,4 +1,4 @@
-package by.ak.chat.security;
+package by.ak.chat.security.handler;
 
 import by.ak.chat.service.StorageService;
 import com.vaadin.flow.server.VaadinServletRequest;

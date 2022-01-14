@@ -1,4 +1,4 @@
-package by.ak.chat.view;
+package by.ak.chat.view.user;
 
 import by.ak.chat.form.RegistrationForm;
 import by.ak.chat.form.RegistrationFormBinder;

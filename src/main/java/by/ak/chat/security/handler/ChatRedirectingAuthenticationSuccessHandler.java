@@ -1,4 +1,4 @@
-package by.ak.chat.security;
+package by.ak.chat.security.handler;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static by.ak.chat.view.ChatSelectView.PATH;
+import static by.ak.chat.view.chat.ChatSelectView.PATH;
 
 @Component
 @RequiredArgsConstructor

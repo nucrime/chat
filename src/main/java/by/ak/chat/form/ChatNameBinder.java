@@ -1,23 +1,17 @@
 package by.ak.chat.form;
 
 import by.ak.chat.model.ChatMessage;
-import by.ak.chat.security.SecurityService;
+import by.ak.chat.security.service.SecurityService;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.ValidationException;
 
-public class ChatNameBinder {
+public record ChatNameBinder(ShowCreateChatForm showCreateChatForm,
+                             SecurityService securityService) {
 
   private static final String CREATION_SUCCESS_MSG = "Chat %s created successfully, welcome %s";
   private static final String CHAT_NAME_FIELD = "chat";
-  private final ShowCreateChatForm showCreateChatForm;
-  private final SecurityService securityService;
-
-  public ChatNameBinder(ShowCreateChatForm showCreateChatForm, SecurityService securityService) {
-    this.showCreateChatForm = showCreateChatForm;
-    this.securityService = securityService;
-  }
 
   /**
    * Method to add the data binding and validation logics

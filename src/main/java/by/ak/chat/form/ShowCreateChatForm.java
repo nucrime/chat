@@ -1,9 +1,9 @@
 package by.ak.chat.form;
 
-import by.ak.chat.security.SecurityService;
+import by.ak.chat.security.service.SecurityService;
 import by.ak.chat.service.StorageService;
 import by.ak.chat.util.ChatSelector;
-import by.ak.chat.view.ChatView;
+import by.ak.chat.view.chat.ChatView;
 import com.vaadin.flow.component.HasValueAndElement;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
@@ -12,10 +12,12 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.textfield.TextField;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.stream.Stream;
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class ShowCreateChatForm extends FormLayout {
 
   private static final String USER_JOINED_MSG = "**%s** joined";
@@ -35,7 +37,7 @@ public class ShowCreateChatForm extends FormLayout {
     this.chatSelector = chatSelector;
     this.securityService = securityService;
 
-    String user = this.securityService.getLoggedInUserName();
+    var user = this.securityService.getLoggedInUserName();
 
     storage.chats().map(chat -> new Button(chat, e -> {
       selectAndNavigate(chat, user);

@@ -1,7 +1,9 @@
-package by.ak.chat.security;
+package by.ak.chat.security.service;
 
 import by.ak.chat.model.Role;
 import by.ak.chat.model.User;
+import by.ak.chat.security.config.UserDetailsImpl;
+import by.ak.chat.security.handler.ChatLogoutHandler;
 import com.vaadin.flow.component.UI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;

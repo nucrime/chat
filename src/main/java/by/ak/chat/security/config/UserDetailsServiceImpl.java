@@ -1,5 +1,6 @@
-package by.ak.chat.security;
+package by.ak.chat.security.config;
 
+import by.ak.chat.security.service.LoginAttemptsService;
 import by.ak.chat.service.UserService;
 import by.ak.chat.util.IPUtil;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package by.ak.chat.security;
+package by.ak.chat.security.config;
 
 import by.ak.chat.model.User;
 import lombok.AllArgsConstructor;

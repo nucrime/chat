@@ -41,7 +41,6 @@ public class RegistrationForm extends FormLayout {
     lastName = new TextField("Last name");
     email = new EmailField("Email");
     userName = new TextField("User name");
-//    dob = new DatePickerWithBeautifulIndividualSectionsForDaysMonthsAndYears(); // may be used as an alternative someday (e.g. for some locales)
     dob = new DatePicker("Date of birth");
     dob.setMin(MINIMUM_DOB_DATE);
     dob.setMax(LocalDate.now().minusYears(LESS_THAN_THIRTEEN_YO_MUST_NOT_USE_INTERNET_TO_AVOID_HARM_BULLIES_ETCETERA_TO_THEIR_TENDER_NATURE));

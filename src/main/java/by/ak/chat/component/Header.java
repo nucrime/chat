@@ -1,10 +1,10 @@
 package by.ak.chat.component;
 
-import by.ak.chat.security.SecurityService;
+import by.ak.chat.security.service.SecurityService;
 import by.ak.chat.service.UserService;
-import by.ak.chat.view.ChatSelectView;
-import by.ak.chat.view.ChatView;
-import by.ak.chat.view.UserView;
+import by.ak.chat.view.chat.ChatSelectView;
+import by.ak.chat.view.chat.ChatView;
+import by.ak.chat.view.user.UserManagementView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -141,7 +141,7 @@ public class Header extends AppLayout implements RouterLayout {
 
   private List<RouterLink> createLinks() {
     var menuItems = List.of(
-      new MenuItemInfo(USER_MANAGEMENT, "la la-file", UserView.class),
+      new MenuItemInfo(USER_MANAGEMENT, "la la-file", UserManagementView.class),
       new MenuItemInfo(CHAT, "la la-columns", ChatView.class),
       new MenuItemInfo(CHATS, "la la-columns", ChatSelectView.class));
     var links = new ArrayList<RouterLink>();

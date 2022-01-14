@@ -1,10 +1,11 @@
-package by.ak.chat.view;
+package by.ak.chat.view.user;
 
 import by.ak.chat.component.Header;
 import by.ak.chat.component.UserEditor;
 import by.ak.chat.model.User;
-import by.ak.chat.security.SecurityService;
+import by.ak.chat.security.service.SecurityService;
 import by.ak.chat.service.UserService;
+import by.ak.chat.view.chat.ChatView;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -20,9 +21,9 @@ import java.util.Objects;
 
 import static org.springframework.util.StringUtils.hasText;
 
-@PageTitle(UserView.TITLE)
-@Route(value = UserView.PATH, layout = Header.class)
-public class UserView extends VerticalLayout {
+@PageTitle(UserManagementView.TITLE)
+@Route(value = UserManagementView.PATH, layout = Header.class)
+public class UserManagementView extends VerticalLayout {
 
   public static final String PATH = "/users";
   public static final String TITLE = "User Management";
@@ -33,7 +34,7 @@ public class UserView extends VerticalLayout {
   private final UserEditor editor;
   private User currentUser;
 
-  public UserView(UserService userService, SecurityService securityService, UserEditor editor) {
+  public UserManagementView(UserService userService, SecurityService securityService, UserEditor editor) {
     this.userService = userService;
     this.securityService = securityService;
     this.editor = editor;

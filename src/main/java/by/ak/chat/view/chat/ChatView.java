@@ -1,10 +1,10 @@
-package by.ak.chat.view;
+package by.ak.chat.view.chat;
 
 import by.ak.chat.component.Header;
 import by.ak.chat.component.MessageEditor;
 import by.ak.chat.model.ChatMessage;
 import by.ak.chat.model.MessageQueue;
-import by.ak.chat.security.SecurityService;
+import by.ak.chat.security.service.SecurityService;
 import by.ak.chat.service.StorageService;
 import by.ak.chat.util.ChatSelector;
 import by.ak.chat.util.DateTimeProvider;
