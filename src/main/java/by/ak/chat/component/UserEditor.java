@@ -4,20 +4,39 @@ import by.ak.chat.exception.AnotherUserWithUsernameExists;
 import by.ak.chat.model.Role;
 import by.ak.chat.model.User;
 import by.ak.chat.service.UserService;
+import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.KeyNotifier;
+import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.upload.Upload;
+import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.server.AbstractStreamResource;
+import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.spring.annotation.UIScope;
+import lombok.Cleanup;
+import lombok.SneakyThrows;
+import net.coobird.thumbnailator.Thumbnails;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.time.Duration;
 import java.util.Objects;
 
 
@@ -32,6 +51,7 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
   private ComboBox<Role> role = new ComboBox<>("Role");
   private TextField password = new TextField("Password");
   private DatePicker dob = new DatePicker("Date of birth");
+  private Avatar avatar = new Avatar("Avatar");
   private User user;
   private Button save = new Button("Save", VaadinIcon.CHECK.create());
   private Button cancel = new Button("Cancel", VaadinIcon.CLOSE_SMALL.create());
@@ -52,11 +72,16 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
     role.setItems(Role.values());
     secondRow.add(email, role, password);
 
+    Upload upload = getUploadComponent();
+
     var thirdRow = new HorizontalLayout();
-    thirdRow.add(dob, actions);
+    thirdRow.add(dob, avatar, upload);
     thirdRow.setAlignItems(Alignment.END); // Place items at the bottom
 
-    add(firstRow, secondRow, thirdRow);
+    var fourthRow = new HorizontalLayout();
+    fourthRow.add(actions);
+
+    add(firstRow, secondRow, thirdRow, fourthRow);
     this.setAlignItems(Alignment.CENTER);
 
     // bind using naming convention
@@ -79,6 +104,77 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
     cancel.addClickListener(e -> editCustomer(user));
 
     setVisible(false);
+  }
+
+  @Override
+  protected void onAttach(AttachEvent attachEvent) {
+    super.onAttach(attachEvent);
+    avatar.setImageResource(streamResourseForBytes("nobodycares", user.getAvatar()));
+  }
+
+  private Upload getUploadComponent() {
+    MemoryBuffer buffer = new MemoryBuffer();
+    Upload upload = new Upload(buffer);
+    upload.setMaxFiles(1);
+    upload.setDropLabel(new Label("Drop avatar here"));
+    upload.setAcceptedFileTypes("image/jpeg", ".jpg", ".jpeg");
+
+    upload.addSucceededListener(event -> {
+      // Get information about the uploaded file
+      InputStream fileData = buffer.getInputStream();
+      String fileName = event.getFileName();
+      long contentLength = event.getContentLength();
+      String mimeType = event.getMIMEType();
+
+      // Do something with the file data
+      processFile(fileData, fileName, contentLength, mimeType);
+    });
+
+    upload.addFileRejectedListener(event -> {
+      String errorMessage = event.getErrorMessage();
+
+      Notification notification = Notification.show(
+        errorMessage,
+        Duration.ofSeconds(5).toMillisPart(),
+        Notification.Position.MIDDLE
+      );
+      notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+    });
+    return upload;
+  }
+
+  @SneakyThrows
+  private void processFile(InputStream fileData, String fileName, long contentLength, String mimeType) {
+    var resized  = resizeImage(ImageIO.read(fileData));
+    AbstractStreamResource resource = streamResourseForBytes(fileName, resized);
+    user.setAvatar(resized);
+
+    avatar.setImageResource(resource);
+  }
+
+  @SneakyThrows
+  private AbstractStreamResource streamResourseForBytes(String fileName, byte[] resized) {
+    @Cleanup var stream = new ByteArrayInputStream(resized);
+    return new StreamResource(fileName, () -> stream);
+  }
+
+  private byte[] resizeImage(BufferedImage originalImage) throws Exception {
+    @Cleanup ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    // Resize the image
+    Thumbnails.of(originalImage)
+      .size(100, 100)
+      .outputFormat("JPEG")
+      .outputQuality(1)
+      .toOutputStream(outputStream);
+    // Return the resized image as byte array
+    byte[] data = outputStream.toByteArray();
+    // May be Below double transformation is not needed. It's not the case when base 64 is required.
+    // so why add this information?
+    @Cleanup ByteArrayInputStream inputStream = new ByteArrayInputStream(data);
+    // ImageIO.read/write is automatically closed
+    BufferedImage read = ImageIO.read(inputStream);
+    ImageIO.write(read, "image/jpeg;base64", outputStream);
+    return outputStream.toByteArray();
   }
 
   private void ban() {

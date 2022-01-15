@@ -28,10 +28,15 @@ import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLayout;
 import com.vaadin.flow.router.RouterLink;
+import com.vaadin.flow.server.AbstractStreamResource;
+import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.theme.lumo.Lumo;
+import lombok.Cleanup;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.SessionScope;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -159,8 +164,9 @@ public class Header extends AppLayout implements RouterLayout {
     if (maybeUser.isPresent()) {
       var user = maybeUser.get();
 
-      var avatar = new Avatar(user.getUsername(), null); // avatar is currently not used
+      var avatar = new Avatar(user.getUsername(), null);
       avatar.addClassNames("me-xs");
+      avatar.setImageResource(streamResourseForBytes(user.getAvatar()));
 
       var userMenu = new ContextMenu(avatar);
       userMenu.setOpenOnClick(true);
@@ -178,6 +184,13 @@ public class Header extends AppLayout implements RouterLayout {
     }
 
     return layout;
+  }
+
+  // remove as this is a duplicate of the method in the UserEditor
+  @SneakyThrows
+  private AbstractStreamResource streamResourseForBytes(byte[] resized) {
+    @Cleanup var stream = new ByteArrayInputStream(resized);
+    return new StreamResource("nobodycares", () -> stream);
   }
 
   @Override

@@ -9,6 +9,7 @@ server:
   servlet:
     session:
       timeout: 15m
+  max-http-header-size: 40KB
 spring:
   mustache:
     check-template-location: false
@@ -24,6 +25,7 @@ spring:
       file-size-threshold: 2KB
       max-file-size: 5MB
       max-request-size: 7MB
+      enabled: true
   data:
     mongodb:
       # if explicit url is needed than it should be noted that %40 in the url stays for @
