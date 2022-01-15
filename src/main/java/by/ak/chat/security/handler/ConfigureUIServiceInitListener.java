@@ -23,6 +23,7 @@ public class ConfigureUIServiceInitListener implements VaadinServiceInitListener
   /*
   Adds redirect to login in case if user is not authenticated
   * */
+  // todo looks like a candidate to be refactored as switch java17
   private void authenticateNavigation(BeforeEnterEvent event) {
     // Enable login view for anonymous users
     if (!(LoginView.class.equals(event.getNavigationTarget())
