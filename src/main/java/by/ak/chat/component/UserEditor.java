@@ -109,7 +109,9 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
   @Override
   protected void onAttach(AttachEvent attachEvent) {
     super.onAttach(attachEvent);
-    avatar.setImageResource(streamResourseForBytes("nobodycares", user.getAvatar()));
+    if (Objects.nonNull(user.getAvatar())) {
+      avatar.setImageResource(streamResourceForBytes("nobodycares", user.getAvatar()));
+    }
   }
 
   private Upload getUploadComponent() {
@@ -146,15 +148,15 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
   @SneakyThrows
   private void processFile(InputStream fileData, String fileName, long contentLength, String mimeType) {
     var resized  = resizeImage(ImageIO.read(fileData));
-    AbstractStreamResource resource = streamResourseForBytes(fileName, resized);
+    AbstractStreamResource resource = streamResourceForBytes(fileName, resized);
     user.setAvatar(resized);
 
     avatar.setImageResource(resource);
   }
 
   @SneakyThrows
-  private AbstractStreamResource streamResourseForBytes(String fileName, byte[] resized) {
-    @Cleanup var stream = new ByteArrayInputStream(resized);
+  private AbstractStreamResource streamResourceForBytes(String fileName, byte[] bytes) {
+    @Cleanup var stream = new ByteArrayInputStream(bytes);
     return new StreamResource(fileName, () -> stream);
   }
 

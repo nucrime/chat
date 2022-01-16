@@ -14,8 +14,8 @@ Features:
 * chat rooms
 * chat rooms creation
 * chat room name validation
-* user management for administrators (with filtering by any occurrence)
-* user management for users. Available fields: First name, Last name, Username, email, role, dob, ban feature (user is being kicked as well from the chat, so he is able to view only login page)
+* user management for administrators (with filtering by any occurrence). ban feature (user is being kicked as well from the chat, so he is able to view only login page)
+* user management for users. Available fields: First name, Last name, Username, email, role, dob, avatar (resizing to 100x100)
 * toggle for dark / light theme
 * navigation drawer with access to user management, available chats, user avatar (TBD) with username, logout button (on click on avatar), navigate to the latest joined chat
 * dynamic chat view title, depends on chat room name

@@ -39,6 +39,7 @@ import org.springframework.web.context.annotation.SessionScope;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @SessionScope
@@ -166,7 +167,9 @@ public class Header extends AppLayout implements RouterLayout {
 
       var avatar = new Avatar(user.getUsername(), null);
       avatar.addClassNames("me-xs");
-      avatar.setImageResource(streamResourseForBytes(user.getAvatar()));
+      if (Objects.nonNull(user.getAvatar())) {
+        avatar.setImageResource(streamResourceForBytes(user.getAvatar()));
+      }
 
       var userMenu = new ContextMenu(avatar);
       userMenu.setOpenOnClick(true);
@@ -188,8 +191,8 @@ public class Header extends AppLayout implements RouterLayout {
 
   // remove as this is a duplicate of the method in the UserEditor
   @SneakyThrows
-  private AbstractStreamResource streamResourseForBytes(byte[] resized) {
-    @Cleanup var stream = new ByteArrayInputStream(resized);
+  private AbstractStreamResource streamResourceForBytes(byte[] bytes) {
+    @Cleanup var stream = new ByteArrayInputStream(bytes);
     return new StreamResource("nobodycares", () -> stream);
   }
 
