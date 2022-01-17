@@ -49,6 +49,11 @@ public class ChatView extends VerticalLayout implements HasDynamicTitle {
   public static final String REDUNDANT_WHITESPACES = "\\s+";
   public static final String SINGLE_WHITESPACE = " ";
   public static final String DELIMITER = " | ";
+  public static final String WEB_IMAGE_LINK = "(http(s)?://[^\\s]+\\.(?:jpg|png|jpeg|gif|bmp|svg))";
+  public static final String WEB_LINK = "http(s)?://[^\\s]+";
+  public static final String IMAGE_FORMAT = "<img src=\"$0\" width=\"25%\">";
+  public static final String LINK_FORMAT = "<$0>";
+  public static final String HTML_OPEN_TAG = "<";
 
   private final Grid<ChatMessage> grid;
   private final StorageService storage;
@@ -114,7 +119,7 @@ public class ChatView extends VerticalLayout implements HasDynamicTitle {
     final Grid<ChatMessage> grid;
     grid = new Grid<>();
     grid.setItems(Optional.ofNullable(currentChat()).orElse(empty()));
-    grid.addColumn(new ComponentRenderer<>(message -> new Html(renderRow(message))));
+    grid.addColumn(new ComponentRenderer<>(message -> new Html(renderRow(message)))); // renders after each message
     grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT); // wrap cell content, so that the text wraps
     chat.addAndExpand(
       grid, messageInput());
@@ -181,7 +186,9 @@ public class ChatView extends VerticalLayout implements HasDynamicTitle {
   }
 
   private String renderRow(ChatMessage message) {
-    if (Objects.isNull(message.getUser())) {
+    String text = message.getText();
+    text = processLinks(text);
+    if (Objects.isNull(message.getUser())) { // System message
       return Processor.process(message.getText());
     } else
       return Processor.process(
@@ -189,7 +196,22 @@ public class ChatView extends VerticalLayout implements HasDynamicTitle {
           CHAT_MESSAGE_TEMPLATE,
           dateTimeProvider.formatTime(message.getCreated()),
           message.getUser(),
-          message.getText()));
+          text));
+  }
+
+  private String processLinks(String text) {
+    if (!text.contains(HTML_OPEN_TAG)) {
+      text = text
+        // Match http or https url with image extension
+        .replaceAll(WEB_IMAGE_LINK, IMAGE_FORMAT);
+    }
+    if (!text.contains(HTML_OPEN_TAG)) { // if it's still there, then there's a web link to be processed
+      // if there were images links and web links, then we don't process web links. Temporary solution
+
+      // Match http or https url
+      text = text.replaceAll(WEB_LINK, LINK_FORMAT);
+    }
+    return text;
   }
 
   private MessageQueue currentChat() {

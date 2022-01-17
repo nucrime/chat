@@ -11,7 +11,6 @@ import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
-import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
@@ -28,7 +27,6 @@ import com.vaadin.flow.spring.annotation.UIScope;
 import lombok.Cleanup;
 import lombok.SneakyThrows;
 import net.coobird.thumbnailator.Thumbnails;
-import org.apache.commons.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 
 import javax.imageio.ImageIO;
@@ -147,7 +145,7 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
 
   @SneakyThrows
   private void processFile(InputStream fileData, String fileName, long contentLength, String mimeType) {
-    var resized  = resizeImage(ImageIO.read(fileData));
+    var resized = resizeImage(ImageIO.read(fileData));
     AbstractStreamResource resource = streamResourceForBytes(fileName, resized);
     user.setAvatar(resized);
 

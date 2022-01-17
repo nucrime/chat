@@ -66,7 +66,7 @@ public class ShowCreateChatForm extends FormLayout {
     storage.chats()
       .map(toButton(user))
       .forEach(button -> {
-        button.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        button.addThemeVariants(ButtonVariant.LUMO_TERTIARY); // makes it look like a link rather than a button
         list.add(button);
         list.add(new Hr());
       });
