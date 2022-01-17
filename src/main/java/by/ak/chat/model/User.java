@@ -1,6 +1,7 @@
 package by.ak.chat.model;
 
 import lombok.Data;
+import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -24,6 +25,7 @@ public class User {
 
   @NotBlank
   @Size(min = 6, max = 40)
+  @ToString.Exclude
   private String password;
 
   @NotBlank
@@ -44,6 +46,7 @@ public class User {
 
   private Boolean enabled = true;
 
+  @ToString.Exclude
   private byte[] avatar;
 
   private Role role = Role.USER;
