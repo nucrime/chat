@@ -8,12 +8,16 @@ import com.vaadin.flow.component.HasValueAndElement;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.listbox.ListBox;
 import com.vaadin.flow.component.textfield.TextField;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 @Data
@@ -39,10 +43,6 @@ public class ShowCreateChatForm extends FormLayout {
 
     var user = this.securityService.getLoggedInUserName();
 
-    storage.chats().map(chat -> new Button(chat, e -> {
-      selectAndNavigate(chat, user);
-    })).forEach(this::add);
-
     newChatName = new TextField("New chat name");
     newChatName.setWidthFull();
     newChatName.setRequired(true);
@@ -56,6 +56,26 @@ public class ShowCreateChatForm extends FormLayout {
     setRequiredIndicatorVisible(newChatName);
 
     add(submitButton);
+
+//    storage.chats().map(chat -> new Button(chat, e -> {
+//      selectAndNavigate(chat, user);
+//    })).forEach(this::add);
+
+    var list = new ListBox<>();
+    add(list);
+    storage.chats()
+      .map(toButton(user))
+      .forEach(button -> {
+        button.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        list.add(button);
+        list.add(new Hr());
+      });
+  }
+
+  private Function<String, Button> toButton(String user) {
+    return chat -> new Button(chat, e -> {
+      selectAndNavigate(chat, user);
+    });
   }
 
   public void selectAndNavigate(String chat, String user) {
