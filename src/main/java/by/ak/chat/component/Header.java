@@ -100,6 +100,8 @@ public class Header extends AppLayout implements RouterLayout {
     header.setAlignItems(FlexComponent.Alignment.CENTER);
     header.add(toggle);
     header.add(viewTitle);
+    header.addClassNames("bg-base", "border-b", "border-contrast-10", "box-border", "flex", "h-xl", "items-center",
+      "w-full");
     return header;
   }
 
@@ -147,9 +149,9 @@ public class Header extends AppLayout implements RouterLayout {
 
   private List<RouterLink> createLinks() {
     var menuItems = List.of(
-      new MenuItemInfo(USER_MANAGEMENT, "la la-file", UserManagementView.class),
-      new MenuItemInfo(CHAT, "la la-columns", ChatView.class),
-      new MenuItemInfo(CHATS, "la la-columns", ChatSelectView.class));
+      new MenuItemInfo(USER_MANAGEMENT, "la la-columns", UserManagementView.class),
+      new MenuItemInfo(CHAT, "la la-comment", ChatView.class),
+      new MenuItemInfo(CHATS, "la la-comments", ChatSelectView.class));
     var links = new ArrayList<RouterLink>();
     menuItems.forEach(menuItem -> {
       links.add(createLink(menuItem));
