@@ -18,6 +18,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
@@ -48,7 +49,7 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
   private TextField firstName = new TextField("First name");
   private TextField lastName = new TextField("Last name");
   private ComboBox<Role> role = new ComboBox<>("Role");
-  private TextField password = new TextField("Password");
+  private PasswordField password = new PasswordField("Password");
   private DatePicker dob = new DatePicker("Date of birth");
   private Avatar avatar = new Avatar("Avatar");
   private User user;
