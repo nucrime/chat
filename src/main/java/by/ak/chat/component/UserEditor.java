@@ -4,7 +4,6 @@ import by.ak.chat.exception.AnotherUserWithUsernameExists;
 import by.ak.chat.model.Role;
 import by.ak.chat.model.User;
 import by.ak.chat.service.UserService;
-import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.KeyNotifier;
 import com.vaadin.flow.component.avatar.Avatar;
@@ -98,14 +97,6 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
     cancel.addClickListener(e -> editCustomer(user));
 
     setVisible(false);
-  }
-
-  @Override
-  protected void onAttach(AttachEvent attachEvent) {
-    super.onAttach(attachEvent);
-    if (Objects.nonNull(user.getAvatar())) {
-      avatar.setImageResource(streamResourceForBytes("nobodycares", user.getAvatar()));
-    }
   }
 
   private Upload getUploadComponent() {
@@ -224,6 +215,12 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
     // ChangeHandler is notified when either save or delete
     // is clicked
     changeHandler = h;
+  }
+
+  public void setAvatar(User user) {
+    if (Objects.nonNull(user.getAvatar())) {
+      avatar.setImageResource(streamResourceForBytes("nobodycares", user.getAvatar()));
+    }
   }
 
   public interface ChangeHandler {

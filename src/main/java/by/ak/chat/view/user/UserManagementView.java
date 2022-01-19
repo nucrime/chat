@@ -79,6 +79,11 @@ public class UserManagementView extends VerticalLayout {
       actions.setVisible(false);
       grid.select(getCurrentUser());
     }
+    initAvatar(editor);
+  }
+
+  private void initAvatar(UserEditor editor) {
+    editor.setAvatar(getCurrentUser());
   }
 
   // Filter based on a full text search
