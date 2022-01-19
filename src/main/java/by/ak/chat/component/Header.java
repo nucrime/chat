@@ -49,6 +49,7 @@ public class Header extends AppLayout implements RouterLayout {
   public static final String CHATS = "Chat list";
   public static final String USER_MANAGEMENT = "User Management";
   public static final String DARK_MODE = "Dark mode";
+  public static final String LOGOUT = "Logout";
   private final SecurityService securityService;
   private final UserService userService;
   private H2 viewTitle;
@@ -175,7 +176,7 @@ public class Header extends AppLayout implements RouterLayout {
 
       var userMenu = new ContextMenu(avatar);
       userMenu.setOpenOnClick(true);
-      userMenu.addItem("Logout", e -> {
+      userMenu.addItem(LOGOUT, e -> {
         securityService.logout();
       });
 

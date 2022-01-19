@@ -117,11 +117,13 @@ public class ChatView extends VerticalLayout implements HasDynamicTitle {
     chat.setVisible(true);
     add(chat);
     final Grid<ChatMessage> grid;
-    grid = new Grid<>();
+    grid = new Grid<>(ChatMessage.class, false);
     grid.setItems(Optional.ofNullable(currentChat()).orElse(empty()));
-    grid.addColumn(new ComponentRenderer<>(message -> new Html(renderRow(message)))); // renders after each message
+    grid.addColumn(new ComponentRenderer<>(message -> new Html(renderRow(message)))).setAutoWidth(true); // renders after each message
     grid.addThemeVariants(GridVariant.LUMO_WRAP_CELL_CONTENT); // wrap cell content, so that the text wraps
-    chat.addAndExpand(
+    grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
+//    grid.setHeightFull();
+    chat.add(
       grid, messageInput());
     return grid;
   }
