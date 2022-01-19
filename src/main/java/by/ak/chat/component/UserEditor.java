@@ -11,6 +11,7 @@ import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
@@ -63,23 +64,19 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
   public UserEditor(UserService userService) {
     this.userService = userService;
 
-    var firstRow = new HorizontalLayout();
-    firstRow.add(firstName, lastName, username);
+    var formLayout = new FormLayout();
+    formLayout.add(username, email, firstName, lastName, role, password, dob);
 
-    var secondRow = new HorizontalLayout();
     role.setItems(Role.values());
-    secondRow.add(email, role, password);
-
     Upload upload = getUploadComponent();
 
-    var thirdRow = new HorizontalLayout();
-    thirdRow.add(dob, avatar, upload);
-    thirdRow.setAlignItems(Alignment.END); // Place items at the bottom
+    var avatarRow = new HorizontalLayout();
+    avatarRow.add(avatar, upload);
 
-    var fourthRow = new HorizontalLayout();
-    fourthRow.add(actions);
+    var actionsRow = new HorizontalLayout();
+    actionsRow.add(actions);
 
-    add(firstRow, secondRow, thirdRow, fourthRow);
+    add(formLayout, avatarRow, actionsRow);
     this.setAlignItems(Alignment.CENTER);
 
     // bind using naming convention
@@ -87,8 +84,6 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
 
     // Configure and style components
     setSpacing(true);
-
-    // todo password.setVisible(false); ?consider
 
     save.getElement().getThemeList().add("primary");
     delete.getElement().getThemeList().add("error");
